@@ -1,0 +1,88 @@
+﻿@model DatabaseEntities.employee
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>employee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeLastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeLastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeMinHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeMinHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeMaxHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeMaxHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeePrivileges)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeePrivileges)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeEmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeEmailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeePwd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeePwd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeGroupManaged)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeGroupManaged)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

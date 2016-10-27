@@ -1,0 +1,69 @@
+﻿@model IEnumerable<DatabaseEntities.project>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.projectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectEndDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectCapitalCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectAbbreviation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.projectActive)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectEndDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectCapitalCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectAbbreviation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.projectActive)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.projectID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.projectID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.projectID })
+        </td>
+    </tr>
+}
+
+</table>

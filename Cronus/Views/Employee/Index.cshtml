@@ -1,0 +1,75 @@
+﻿@model IEnumerable<DatabaseEntities.employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeFirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeLastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeMinHours)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeMaxHours)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeePrivileges)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeEmailAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeePwd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.employeeGroupManaged)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeFirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeLastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeMinHours)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeMaxHours)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeePrivileges)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeEmailAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeePwd)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.employeeGroupManaged)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.employeeID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.employeeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.employeeID })
+        </td>
+    </tr>
+}
+
+</table>

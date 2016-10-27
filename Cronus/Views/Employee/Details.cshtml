@@ -1,0 +1,82 @@
+﻿@model DatabaseEntities.employee
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>employee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeLastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeLastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeMinHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeMinHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeMaxHours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeMaxHours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeePrivileges)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeePrivileges)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeEmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeEmailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeePwd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeePwd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeeGroupManaged)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeeGroupManaged)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.employeeID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

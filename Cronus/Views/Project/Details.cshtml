@@ -1,0 +1,74 @@
+﻿@model DatabaseEntities.project
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>project</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.projectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectStartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectStartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectCapitalCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectCapitalCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectAbbreviation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectAbbreviation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.projectActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.projectActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.projectID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
