@@ -1,31 +1,391 @@
-﻿@{
+﻿
+@model   CronusProjectSolution.Models.HomeViewModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<h2>Weekly view</h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+@Scripts.Render("~/Scripts/jquery-1.10.2.js")
+@Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+@Scripts.Render("~/Scripts/index.js")
+
+
+
+
+<button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
+<button type="button" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
+<br />
+<br />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th></th>
+            <th></th>
+            <th id="totalHours">Total Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <text class="dayLabel">Monday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableMon">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputMon" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputMon" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableMon.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableMon.id);" name="add">Add Activity</button>
+
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Tuesday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableTues">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputTues" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputTues" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableTues.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableTues.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Wednesday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableWed">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputWed" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputWed" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableWed.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableWed.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Thursday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableThu">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputThu" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputThu" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableThu.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableThu.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Friday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableFri">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputFri" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputFri" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableFri.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableFri.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Saturday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableSat">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputSat" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputSat" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableSat.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableSat.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <text class="dayLabel">Sunday</text>
+                <table class="table table-striped col-md-12" id="actProjSubTableSun">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Project</th>
+                            <th class="col-md-3">Activity</th>
+                            <th class="col-md-1">Hours</th>
+                            <th class="col-md-3">Comments</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="projSelList">
+                                        @foreach (CronusProjectSolution.Models.projecttable project in Model.Projects)
+                                        {
+                                            <option>@project.projectName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control" id="actSelList">
+                                        @foreach (CronusProjectSolution.Models.activitytable activity in Model.Activities)
+                                        {
+                                            <option>@activity.activityName</option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputSun" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="commentsInputSun" />
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableSun.id, this);" width="200%"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableSun.id);" name="add">Add Activity</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
