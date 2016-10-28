@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CronusDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CronusDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="activity">
           <Key>
             <PropertyRef Name="activityID" />
@@ -45,9 +45,9 @@
           <Key>
             <PropertyRef Name="favoriteID" />
           </Key>
+          <Property Name="favoriteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Employee_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Activity_activityID" Type="int" Nullable="false" />
-          <Property Name="favoriteID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="group">
           <Key>
@@ -352,8 +352,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="timeperiod" EntitySet="timeperiod" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CronusDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">

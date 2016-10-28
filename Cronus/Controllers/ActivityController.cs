@@ -25,7 +25,6 @@ namespace Cronus.Controllers
         {
             this.activityRepository = activityRepository;
             this.projectRepository = projectRepository;
-            
         }
 
         //
