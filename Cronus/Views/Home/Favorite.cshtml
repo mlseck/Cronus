@@ -1,0 +1,27 @@
+﻿@model Cronus.ViewModels.FavoriteViewModel
+
+@{
+    ViewBag.Title = "Favorite";
+}
+
+<h2>Favorite</h2>
+<div>
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td>
+                    @Html.DropDownListFor(m=>m.selectedActivityID, Model.ActivityNames, "--Select Activity--")
+                </td>
+                <td>
+                    <input type="submit", value="Add To Favorites" />
+                </td>
+            </tr>
+            <tr>
+                @* Second row will have textbox with all current favorites *@
+               
+            </tr>
+        </table>
+    }
+</div>
+

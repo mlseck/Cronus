@@ -34,7 +34,7 @@ namespace Cronus.Models
 
         public void InsertOrUpdate(activity activity)
         {
-            if (activity.activityID == default(int))
+            if (Find(activity.activityID) == null)
             {
                 // New entity
                 context.activities.Add(activity);

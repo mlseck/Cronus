@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cronus.Models;
+using Cronus.ViewModels;
 
 namespace Cronus.Controllers
 {
@@ -104,6 +106,37 @@ namespace Cronus.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        //Return Favorite View
+        [HttpGet]
+        public ActionResult Favorite()
+        {
+            ViewBag.Message = "Your Favorites Page";
+            FavoriteViewModel favorite = new FavoriteViewModel();
+            favorite.Activities = db.activities.ToList();
+            favorite.Favorites = db.favorites.ToList();
+            favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
+            //favorite.UserFavorites = new SelectList(favorite.Favorites)
+            return View(favorite);
+        }
+
+        [HttpPost]
+        public ActionResult Favorite(FavoriteViewModel favorite)
+        {
+            int selectedActivity = favorite.selectedActivityID;
+            if (selectedActivity != 0)
+            {
+                favorite AddFavorite = new favorite();
+                AddFavorite.Activity_activityID = selectedActivity;
+                AddFavorite.Employee_employeeID = "5X67H8";
+                FavoriteController FavoriteContr = new FavoriteController();
+                FavoriteContr.Create(AddFavorite);
+
+            }
+            favorite.Activities = db.activities.ToList();
+            favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
+            return View(favorite);
         }
     }
 }
