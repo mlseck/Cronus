@@ -113,17 +113,24 @@ namespace Cronus.Controllers
         public ActionResult Favorite()
         {
             ViewBag.Message = "Your Favorites Page";
-            FavoriteViewModel favorite = new FavoriteViewModel();
-            favorite.Activities = db.activities.ToList();
-            favorite.Favorites = db.favorites.ToList();
-            favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
-            //favorite.UserFavorites = new SelectList(favorite.Favorites)
-            return View(favorite);
+            FavoriteViewModel myModel = new FavoriteViewModel();
+            myModel.Activities = db.activities.ToList();
+            myModel.Favorites = db.favorites.ToList();
+            var query = from a in db.activities
+                        join b in db.favorites
+                        on a.activityID equals b.Activity_activityID
+                        where b.Employee_employeeID.Equals("5X67H8")
+                        select a;
+            myModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
+            myModel.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
+            return View(myModel);
         }
 
         [HttpPost]
         public ActionResult Favorite(FavoriteViewModel favorite)
         {
+            //Need to make sure it's not adding favorites that already exist
+            ViewBag.Message = "Your Favorites Page";
             int selectedActivity = favorite.selectedActivityID;
             if (selectedActivity != 0)
             {
@@ -136,6 +143,40 @@ namespace Cronus.Controllers
             }
             favorite.Activities = db.activities.ToList();
             favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
+            var query = from a in db.activities
+                        join b in db.favorites
+                        on a.activityID equals b.Activity_activityID
+                        where b.Employee_employeeID.Equals("5X67H8")
+                        select a;
+            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
+            return View(favorite);
+        }
+
+        //Remove Favorite from Database
+        [HttpPost]
+        public ActionResult RemoveFavorite(FavoriteViewModel favorite)
+        {
+            //if (RemoveActivity != null)
+            //{
+            //    int removeFav = RemoveActivity.activityID;
+            //    new FavoriteController().Delete(removeFav);
+            //}
+            //var selectedValue = favorite.Activities.;
+            //int favID = Convert.ToInt32(favorite.UserFavorites.SelectedValue);
+            //if (favID != 0)
+            //{
+            //    new FavoriteController().Delete(favID);
+            //}
+
+            favorite = new FavoriteViewModel();
+            favorite.Activities = db.activities.ToList();
+            favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
+            var query = from a in db.activities
+                        join b in db.favorites
+                        on a.activityID equals b.Activity_activityID
+                        where b.Employee_employeeID.Equals("5X67H8")
+                        select a;
+            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
             return View(favorite);
         }
     }
