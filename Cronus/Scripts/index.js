@@ -31,3 +31,23 @@ $(document).ready(function () {
         $('#totalHours').text(sum + " Total Hours");
     });
 });
+
+
+$(document).ready(function () {
+    $.ajax({
+        url: '/Home/GetBetweenDates',
+        success: function (data)
+        {
+            console.log(data);
+        },
+        statusCode: {
+            404: function (content) { alert('cannot find resource'); },
+            500: function (content) { alert('internal server error'); }
+        },
+        error: function (req, status, errorObj) {
+            // handle status === "timeout"
+            // handle other errors
+        }
+    });
+});
+
