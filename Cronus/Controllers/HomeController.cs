@@ -47,7 +47,7 @@ namespace Cronus.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetBetweenDates()
+        public JsonResult GetBetweenDates()
         {
             HomeViewModel homeModel = new HomeViewModel();
 
@@ -93,7 +93,7 @@ namespace Cronus.Controllers
                                                 .Where(n => n.date <= endDate)
                                                 .Where(n => n.TimePeriod_Employee_employeeID == "5X67H8");
 
-            return Json(View(homeModel));
+            return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
 
 
