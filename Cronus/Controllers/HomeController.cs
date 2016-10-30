@@ -116,13 +116,13 @@ namespace Cronus.Controllers
             FavoriteViewModel myModel = new FavoriteViewModel();
             myModel.Activities = db.activities.ToList();
             myModel.Favorites = db.favorites.ToList();
+            myModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            myModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
-            myModel.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            myModel.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View(myModel);
         }
 
@@ -147,8 +147,8 @@ namespace Cronus.Controllers
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View(favorite);
         }
 
@@ -156,18 +156,19 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult RemoveFavorite(FavoriteViewModel favorite)
         {
-            //if (RemoveActivity != null)
-            //{
-            //    int removeFav = RemoveActivity.activityID;
-            //    new FavoriteController().Delete(removeFav);
-            //}
-            //var selectedValue = favorite.Activities.;
-            //int favID = Convert.ToInt32(favorite.UserFavorites.SelectedValue);
-            //if (favID != 0)
-            //{
-            //    new FavoriteController().Delete(favID);
-            //}
+            ViewBag.Message = "Your Favorites Page";
+            if (favorite != null)
+            {
+                int[] removeFav = favorite.RemoveFavorites;
+                for (int i = 0; i < removeFav.Length; i++)
+                {
+                    if (removeFav[i] != 0)
+                    {
+                        new FavoriteController().DeleteConfirmed(removeFav[i]);
+                    }
+                }
 
+            }
             favorite = new FavoriteViewModel();
             favorite.Activities = db.activities.ToList();
             favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
@@ -175,9 +176,9 @@ namespace Cronus.Controllers
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
-            return View(favorite);
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
+            return View("Favorite", favorite);
         }
     }
 }

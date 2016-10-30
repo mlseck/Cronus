@@ -6,7 +6,7 @@
 
 <h2>@ViewBag.Message</h2>
 <div>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Favorite", "Home", FormMethod.Post))
     {
         <table>
             <tr>
@@ -23,7 +23,7 @@
 <div>
     @using (Html.BeginForm("RemoveFavorite", "Home", FormMethod.Post))
     {
-        @Html.ListBoxFor(m => m.Activities, Model.UserFavorites)
+        @Html.ListBoxFor(m => m.RemoveFavorites, Model.UserFavorites)
         <input type="submit" , value="Remove From Favorites" />
     }
 
