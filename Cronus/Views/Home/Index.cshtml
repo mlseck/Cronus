@@ -53,7 +53,11 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                    @*@using (Html.BeginForm("UpdateActivities", "Home", FormMethod.Post, new { id = "projectChangeForm" }))
+                                    {
+                                        @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @Id = "Projects", onchange = "$('#projectChangeForm').submit()", name = "action:UpdateActivities" })
+                                    }*@
+                                    
                                 </div>
                             </td>
                             <td>

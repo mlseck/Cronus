@@ -27,6 +27,19 @@ namespace Cronus.Controllers
 
         }
 
+        //Method will update the activities dropdownlist in index page when specific project is picked
+        [HttpPost]
+        [ActionName("UpdateActivities")]
+        public ActionResult UpdateActivities(HomeViewModel myModel)
+        {
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
+            project Selected = db.projects.Find(myModel.SelectedProjectID);
+            myModel.ActivityList = new SelectList(Selected.activities.ToList(), "activityID", "activityName");
+            return View("Index", myModel);
+        }
+
         public ActionResult Monthly()
         {
             //MonthlyViewModel myModel = new MonthlyViewModel();
