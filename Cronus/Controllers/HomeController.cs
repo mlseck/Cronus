@@ -108,7 +108,7 @@ namespace Cronus.Controllers
             return View();
         }
 
-        //Return Favorite View
+        //Return Favorite View with All activities and User's Favorites
         [HttpGet]
         public ActionResult Favorite()
         {
@@ -126,8 +126,9 @@ namespace Cronus.Controllers
             return View(myModel);
         }
 
+        // Add Selected Activity to Favorite Table
         [HttpPost]
-        public ActionResult Favorite(FavoriteViewModel favorite)
+        public ActionResult AddFavorite(FavoriteViewModel favorite)
         {
             //Need to make sure it's not adding favorites that already exist
             ViewBag.Message = "Your Favorites Page";
@@ -137,8 +138,14 @@ namespace Cronus.Controllers
                 favorite AddFavorite = new favorite();
                 AddFavorite.Activity_activityID = selectedActivity;
                 AddFavorite.Employee_employeeID = "5X67H8";
-                FavoriteController FavoriteContr = new FavoriteController();
-                FavoriteContr.Create(AddFavorite);
+                // Check if selected activity is already a favorite. If not, add to Favorite Table
+                var existsQuery = from f in db.favorites
+                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("5X67H8"))
+                                  select f;
+                if (!existsQuery.Any())
+                {
+                    new FavoriteController().Create(AddFavorite);
+                }
 
             }
             favorite.Activities = db.activities.ToList();
@@ -149,10 +156,10 @@ namespace Cronus.Controllers
                         where b.Employee_employeeID.Equals("5X67H8")
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
-            return View(favorite);
+            return View("Favorite",favorite);
         }
 
-        //Remove Favorite from Database
+        // Remove Selected Favorite from Table
         [HttpPost]
         public ActionResult RemoveFavorite(FavoriteViewModel favorite)
         {
