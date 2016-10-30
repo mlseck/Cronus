@@ -17,9 +17,11 @@ namespace Cronus.Controllers
 
         public ActionResult Index()
         {
-
+            HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
+            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
             myModel.HoursWorked = db.hoursworkeds.ToList();
             return View(myModel);
 
