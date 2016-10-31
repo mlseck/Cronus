@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DatabaseEntities;
 using Cronus.Models;
+using System.Data.Entity.Validation;
 
 namespace Cronus.Controllers
 {
@@ -88,6 +89,93 @@ namespace Cronus.Controllers
             ViewBag.PossibleProjects = projectRepository.All;
 
             return PartialView("Create", model);
+        }
+
+        // GET: /Activity/List
+
+        public ActionResult AddActivities(int ProjectID)
+        {
+            ViewBag.ProjectID = ProjectID;
+
+            project model = projectRepository.Find(ProjectID);
+
+            ViewBag.PossibleActivities = activityRepository.All;
+
+            //model.selectedProject = ProjectID;
+
+            //var project = projectRepository.Find(ProjectID);
+            //model.projects.Add(project);
+            //{
+            //    projectIds = new int[0]
+            //};
+
+
+            return PartialView("List", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddActivities(project project)
+        {
+            if (ModelState.IsValid)
+            {
+                project originalProject = this.projectRepository.Find(project.projectID);
+
+                originalProject.projectName = project.projectName;
+                originalProject.projectStartDate = project.projectStartDate;
+                originalProject.projectEndDate = project.projectEndDate;
+                originalProject.projectDescription = project.projectDescription;
+                originalProject.projectCapitalCode = project.projectCapitalCode;
+                originalProject.projectAbbreviation = project.projectAbbreviation;
+                originalProject.projectActive = project.projectActive;
+
+                originalProject.activities.Clear();
+
+
+                if (project.activityIds != null)
+                {
+                    originalProject.activities = (from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
+                }
+
+                projectRepository.InsertOrUpdate(originalProject);
+
+
+                try
+                {
+                    // Your code...
+                    // Could also be before try if you know the exception occurs in SaveChanges
+
+                    projectRepository.Save();
+                }
+                catch (DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Console.WriteLine("- Property: \"{0}\", Value: \"{1}\", Error: \"{2}\"",
+                ve.PropertyName,
+                eve.Entry.CurrentValues.GetValue<object>(ve.PropertyName),
+                ve.ErrorMessage);
+                        }
+                    }
+                    throw;
+                }
+
+                //projectRepository.Save();
+
+
+
+
+                string url = Url.Action("Index", "Activity", new { id = originalProject.projectID });
+                return Json(new { success = true, url = url });
+            }
+            else
+            {
+                ViewBag.PossibleActivities = activityRepository.All;
+                return PartialView("AddActivities", project);
+            }
         }
 
         //

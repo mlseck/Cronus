@@ -79,37 +79,6 @@
             </div>
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.activityIds, "Activities")
-        </div>
-
-        <div class="editor-field">
-            <ul>
-                @foreach (DatabaseEntities.activity activity in ViewBag.PossibleActivities)
-                {
-                    <li>
-                        @if (Model.activities.Select(e => e).Where(e => e.activityID == activity.activityID).Count() > 0)
-                    {
-                            <input type="checkbox" name="activityIds" value="@activity.activityID" id="@activity.activityID" checked="checked" />
-                            @*<label for="@activity.RoleName">@activity.RoleName</label>*@
-
-                        }
-                        else
-                        {
-                            <input type="checkbox" name="activityIds" value="@activity.activityID" id="@activity.activityID" />
-                            @*<label for="@info.RoleName">@info.RoleName</label>*@
-
-                        }
-                        @activity.activityName
-                    </li>
-                }
-                @Html.ValidationMessageFor(model => model.activityIds)
-
-
-            </ul>
-
-
-        </div>
     </div>
 }
 <!-- modal placeholder-->
