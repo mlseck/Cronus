@@ -9,5 +9,6 @@ namespace DatabaseEntities
     public partial class activity
     {
         public int[] projectIds { get; set; }
+        public int selectedProject { get; set; }
     }
 }

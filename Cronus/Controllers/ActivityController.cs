@@ -30,32 +30,64 @@ namespace Cronus.Controllers
         //
         // GET: /Activity/
 
-        public ViewResult Index()
+        //public ActionResult Index()
+        //{
+        //    return PartialView("Index", activityRepository.AllIncluding(activity => activity.projects));
+
+        //}
+
+        public ActionResult Index(int id)
         {
-            return View(activityRepository.AllIncluding(activity => activity.projects));
+            ViewBag.ProjectID = id;
+
+            var project = projectRepository.Find(id);
+
+            if (project == null)
+            {
+                var newActivities = new List<activity>();
+                //{
+                //    projectIds = new int[0]
+                //};
+
+                return PartialView("Index", newActivities.ToList());
+            }
+            //ViewBag.ProjectID = id;
+            //var addresses = db.Addresses.Where(a => a.PersonID == id).OrderBy(a => a.City);
+
+            //(from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
+            int[] activityIds = project.activities.Select(x => x.activityID).ToArray();
+
+            var activities = from s in this.activityRepository.All where activityIds.Contains(s.activityID) select s;
+
+            return PartialView("Index", activities.ToList());
         }
 
         //
         // GET: /Activity/Details/5
 
-        public ViewResult Details(int id)
-        {
-            return View(activityRepository.Find(id));
-        }
+        //public ViewResult Details(int id)
+        //{
+        //    return View(activityRepository.Find(id));
+        //}
 
         //
         // GET: /Activity/Create
 
-        public ActionResult Create()
+        public ActionResult Create(int ProjectID)
         {
-            activity model = new activity
-            {
-                projectIds = new int[0]
-            };
+            activity model = new activity();
+
+            model.selectedProject = ProjectID;
+
+            //var project = projectRepository.Find(ProjectID);
+            //model.projects.Add(project);
+            //{
+            //    projectIds = new int[0]
+            //};
 
             ViewBag.PossibleProjects = projectRepository.All;
 
-            return View(model);
+            return PartialView("Create", model);
         }
 
         //
@@ -67,19 +99,22 @@ namespace Cronus.Controllers
             if (ModelState.IsValid)
             {
 
-                if (activity.projectIds != null)
-                {
-                    activity.projects = (from s in this.projectRepository.All where activity.projectIds.Contains(s.projectID) select s).ToList();
-                }
+                //activity.projects = (from s in this.projectRepository.All where activity.projectIds.Contains(s.projectID) select s).ToList();
+
+                var project = projectRepository.Find(activity.selectedProject);
+                activity.projects.Add(project);
 
                 activityRepository.InsertOrUpdate(activity);
                 activityRepository.Save();
-                return RedirectToAction("Index");
+                //                return RedirectToAction("Index");
+                string url = Url.Action("Index", "Activity", new { id = activity.selectedProject });
+                return Json(new { success = true, url = url });
+
             }
             else
             {
                 ViewBag.PossibleProjects = projectRepository.All;
-                return View(activity);
+                return PartialView("Create",activity);
             }
         }
 
