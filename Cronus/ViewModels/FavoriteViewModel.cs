@@ -13,7 +13,10 @@ namespace Cronus.ViewModels
         public IEnumerable<favorite> Favorites { get; set; }
         public SelectList ActivityNames { get; set; }
         public SelectList UserFavorites { get; set; }
-        public int selectedFavoriteID { get; set; }
+        public activity SelectedActivity { get; set; }
         public int selectedActivityID { get; set; }
+        public favorite SelectedFavorite { get; set; }
+        public int[] RemoveFavorites { get; set; }
+        
     }
 }

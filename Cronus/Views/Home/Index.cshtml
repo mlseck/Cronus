@@ -1,5 +1,5 @@
 ﻿
-@model   DatabaseEntities.HomeViewModel
+@model   Cronus.ViewModels.HomeViewModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -53,17 +53,23 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@using (Html.BeginForm("UpdateActivities", "Home", FormMethod.Post, new { id = "projectChangeForm" }))
+                                    {
+                                        @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @Id = "Projects", onchange = "$('#projectChangeForm').submit()", name = "action:UpdateActivities" })
+                                    }*@
+                                    
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
                                     <select class="form-control" id="actSelList">
                                         @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
+                                            {
+                                                 <option>@activity.activityName</option>
+                                            }
 
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedActivityID, Model.ActivityList, "--- Select Activity ---")*@
                                 </div>
                             </td>
                             <td>
@@ -104,6 +110,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>
@@ -155,6 +162,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>
@@ -206,6 +214,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>
@@ -257,6 +266,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>
@@ -308,6 +318,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>
@@ -359,6 +370,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
+                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
                                 </div>
                             </td>
                             <td>

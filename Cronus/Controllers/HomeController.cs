@@ -17,12 +17,27 @@ namespace Cronus.Controllers
 
         public ActionResult Index()
         {
-
+            HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
+            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
             myModel.HoursWorked = db.hoursworkeds.ToList();
             return View(myModel);
 
+        }
+
+        //Method will update the activities dropdownlist in index page when specific project is picked
+        [HttpPost]
+        [ActionName("UpdateActivities")]
+        public ActionResult UpdateActivities(HomeViewModel myModel)
+        {
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
+            project Selected = db.projects.Find(myModel.SelectedProjectID);
+            myModel.ActivityList = new SelectList(Selected.activities.ToList(), "activityID", "activityName");
+            return View("Index", myModel);
         }
 
         public ActionResult Monthly()
@@ -32,7 +47,7 @@ namespace Cronus.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetBetweenDates()
+        public JsonResult GetBetweenDates()
         {
             HomeViewModel homeModel = new HomeViewModel();
 
@@ -78,7 +93,7 @@ namespace Cronus.Controllers
                                                 .Where(n => n.date <= endDate)
                                                 .Where(n => n.TimePeriod_Employee_employeeID == "5X67H8");
 
-            return Json(View(homeModel));
+            return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -108,7 +123,7 @@ namespace Cronus.Controllers
             return View();
         }
 
-        //Return Favorite View
+        //Return Favorite View with All activities and User's Favorites
         [HttpGet]
         public ActionResult Favorite()
         {
@@ -116,18 +131,19 @@ namespace Cronus.Controllers
             FavoriteViewModel myModel = new FavoriteViewModel();
             myModel.Activities = db.activities.ToList();
             myModel.Favorites = db.favorites.ToList();
+            myModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            myModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
-            myModel.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            myModel.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View(myModel);
         }
 
+        // Add Selected Activity to Favorite Table
         [HttpPost]
-        public ActionResult Favorite(FavoriteViewModel favorite)
+        public ActionResult AddFavorite(FavoriteViewModel favorite)
         {
             //Need to make sure it's not adding favorites that already exist
             ViewBag.Message = "Your Favorites Page";
@@ -137,8 +153,14 @@ namespace Cronus.Controllers
                 favorite AddFavorite = new favorite();
                 AddFavorite.Activity_activityID = selectedActivity;
                 AddFavorite.Employee_employeeID = "5X67H8";
-                FavoriteController FavoriteContr = new FavoriteController();
-                FavoriteContr.Create(AddFavorite);
+                // Check if selected activity is already a favorite. If not, add to Favorite Table
+                var existsQuery = from f in db.favorites
+                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("5X67H8"))
+                                  select f;
+                if (!existsQuery.Any())
+                {
+                    new FavoriteController().Create(AddFavorite);
+                }
 
             }
             favorite.Activities = db.activities.ToList();
@@ -147,27 +169,28 @@ namespace Cronus.Controllers
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
-            return View(favorite);
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
+            return View("Favorite",favorite);
         }
 
-        //Remove Favorite from Database
+        // Remove Selected Favorite from Table
         [HttpPost]
         public ActionResult RemoveFavorite(FavoriteViewModel favorite)
         {
-            //if (RemoveActivity != null)
-            //{
-            //    int removeFav = RemoveActivity.activityID;
-            //    new FavoriteController().Delete(removeFav);
-            //}
-            //var selectedValue = favorite.Activities.;
-            //int favID = Convert.ToInt32(favorite.UserFavorites.SelectedValue);
-            //if (favID != 0)
-            //{
-            //    new FavoriteController().Delete(favID);
-            //}
+            ViewBag.Message = "Your Favorites Page";
+            if (favorite != null)
+            {
+                int[] removeFav = favorite.RemoveFavorites;
+                for (int i = 0; i < removeFav.Length; i++)
+                {
+                    if (removeFav[i] != 0)
+                    {
+                        new FavoriteController().DeleteConfirmed(removeFav[i]);
+                    }
+                }
 
+            }
             favorite = new FavoriteViewModel();
             favorite.Activities = db.activities.ToList();
             favorite.ActivityNames = new SelectList(favorite.Activities, "activityID", "activityName");
@@ -175,9 +198,9 @@ namespace Cronus.Controllers
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
                         where b.Employee_employeeID.Equals("5X67H8")
-                        select a;
-            favorite.UserFavorites = new SelectList(query.ToArray(), "activityID", "activityName");
-            return View(favorite);
+                        select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
+            favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
+            return View("Favorite", favorite);
         }
     }
 }

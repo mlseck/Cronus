@@ -90,7 +90,6 @@
     <Compile Include="Partial\activity.cs" />
     <Compile Include="Partial\employee.cs" />
     <Compile Include="Partial\group.cs" />
-    <Compile Include="Partial\HomeViewModel.cs" />
     <Compile Include="Partial\project.cs" />
     <Compile Include="project.cs">
       <DependentUpon>CronusModel.tt</DependentUpon>
