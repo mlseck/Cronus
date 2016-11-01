@@ -423,6 +423,8 @@
     <Content Include="Views\Favorite\Details.cshtml" />
     <Content Include="Views\Favorite\Edit.cshtml" />
     <Content Include="Views\Favorite\Index.cshtml" />
+    <Content Include="Views\Activity\List.cshtml" />
+    <Content Include="Views\Project\AddActivities.cshtml" />
     <Content Include="Views\Home\Monthly.cshtml" />
   </ItemGroup>
   <ItemGroup>

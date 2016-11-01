@@ -43,6 +43,8 @@ namespace Cronus.Controllers
             return View(projectRepository.Find(id));
         }
 
+        
+
         //
         // GET: /Project/Create
 
@@ -108,6 +110,14 @@ namespace Cronus.Controllers
                 project originalProject = this.projectRepository.Find(project.projectID);
 
                 originalProject.projectName = project.projectName;
+                originalProject.projectStartDate = project.projectStartDate;
+                originalProject.projectEndDate = project.projectEndDate;
+                originalProject.projectDescription = project.projectDescription;
+                originalProject.projectCapitalCode = project.projectCapitalCode;
+                originalProject.projectAbbreviation = project.projectAbbreviation;
+                originalProject.projectActive = project.projectActive;
+                originalProject.projectName = project.projectName;
+
 
                 originalProject.activities.Clear();
 

@@ -29,7 +29,9 @@ namespace Cronus.Models
 
         public project Find(int id)
         {
+            //return context.projects.AsNoTracking().Where(p => p.projectID == id).FirstOrDefault();
             return context.projects.Find(id);
+
         }
 
         public void InsertOrUpdate(project project)
@@ -42,6 +44,15 @@ namespace Cronus.Models
             }
             else
             {
+                //var local = context.Set<project>()
+                //         .Local
+                //         .FirstOrDefault(f => f.projectID == project.projectID);
+                //if (local != null)
+                //{
+                //    context.Entry(local).State = EntityState.Detached;
+                //}
+
+
                 // Existing entity
                 context.Entry(project).State = EntityState.Modified;
             }

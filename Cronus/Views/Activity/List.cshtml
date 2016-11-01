@@ -1,0 +1,67 @@
+﻿@model DatabaseEntities.project
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Add from Activitt</h4>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.projectID)
+            @Html.HiddenFor(model => model.projectName)
+            @Html.HiddenFor(model => model.projectStartDate)
+            @Html.HiddenFor(model => model.projectEndDate)
+            @Html.HiddenFor(model => model.projectDescription)
+            @Html.HiddenFor(model => model.projectCapitalCode)
+            @Html.HiddenFor(model => model.projectAbbreviation)
+            @Html.HiddenFor(model => model.projectActive)
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.activityIds, "Activities")
+            </div>
+
+            <div class="editor-field">
+                @*@{
+                        var Project = (DatabaseEntities.project)ViewBag.Project;
+                    }*@
+                <ul>
+                    @foreach (DatabaseEntities.activity activity in ViewBag.PossibleActivities)
+                    {
+                        <li>
+                            @if (Model.activities.Select(e => e).Where(e => e.activityID == activity.activityID).Count() > 0)
+                    {
+                                <input type="checkbox" name="activityIds" value="@activity.activityID" id="@activity.activityID" checked="checked" />
+                                @*<label for="@activity.RoleName">@activity.RoleName</label>*@
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="activityIds" value="@activity.activityID" id="@activity.activityID" />
+                                @*<label for="@info.RoleName">@info.RoleName</label>*@
+
+                            }
+                            @activity.activityName
+                        </li>
+                    }
+                    @Html.ValidationMessageFor(model => model.activityIds)
+
+
+                </ul>
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" type="button" data-dismiss="modal">Cancel</button>
+        <input class="btn btn-primary" type="submit" value="Add" />
+    </div>
+}
