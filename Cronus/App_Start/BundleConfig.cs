@@ -28,6 +28,20 @@ namespace Cronus
                       "~/Content/site.css"));
             bundles.Add(new ScriptBundle("~/bundles/modalform").Include("~/Scripts/modalform.js"));
 
+            //calender css file
+            bundles.Add(new StyleBundle("~/Content/fullcalendarcss").Include(
+                "~/Content/themes/jquery.ui.all.css",
+                "~/Content/fullcalendar.css"
+                ));
+
+            //Calender Script File
+            bundles.Add(new ScriptBundle("~/bundles/fullcalendarjs").Include(
+                "~/Scripts/jquery-ui-(version).min.js",
+                "~/Scripts/moment.min.js",
+                "~/Scripts/fullCalendar.min.js"));
+
+
+
 
         }
     }
