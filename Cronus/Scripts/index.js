@@ -36,6 +36,10 @@ $(document).ready(function () {
 $(document).ready(function () {
     $.ajax({
         url: '/Home/GetBetweenDates',
+        data: JSON.stringify({
+            //add employeeID here
+        }),
+        //Need to pass through a variable
         success: function (data)
         {
             console.log(data);
