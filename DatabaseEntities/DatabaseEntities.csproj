@@ -100,32 +100,30 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.Config" />
     <EntityDeploy Include="CronusModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CronusModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.Config" />
     <None Include="CronusModel.edmx.diagram">
       <DependentUpon>CronusModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="CronusModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CronusModel.Context.cs</LastGenOutput>
       <DependentUpon>CronusModel.edmx</DependentUpon>
+      <LastGenOutput>CronusModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="CronusModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>CronusModel.edmx</DependentUpon>
       <LastGenOutput>CronusModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

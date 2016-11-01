@@ -8,6 +8,8 @@ namespace DatabaseEntities
 {
     public partial class group
     {
-        public int[] employeeIds { get; set; }
+        public string[] employeeIds { get; set; }
+        public int[] projectIds { get; set; }
+
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2bca8aa032a14424b4d44c0b6679931d" Name="Diagram1">
+      <Diagram DiagramId="8d7fc5c225bd4df3a2ccc60462947981" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="CronusDatabaseModel.activity" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.audittrail" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.employee" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />

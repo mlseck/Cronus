@@ -14,9 +14,9 @@ namespace DatabaseEntities
     
     public partial class favorite
     {
+        public int favoriteID { get; set; }
         public string Employee_employeeID { get; set; }
         public int Activity_activityID { get; set; }
-        public int favoriteID { get; set; }
     
         public virtual activity activity { get; set; }
         public virtual employee employee { get; set; }

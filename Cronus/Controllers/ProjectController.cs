@@ -15,16 +15,18 @@ namespace Cronus.Controllers
     {
         private readonly IProjectRepository projectRepository;
         private readonly IActivityRepository activityRepository;
+        private readonly IGroupRepository groupRepository;
 
         // If you are using Dependency Injection, you can delete the following constructor
-        public ProjectController() : this(new ProjectRepository(), new ActivityRepository())
+        public ProjectController() : this(new ProjectRepository(), new ActivityRepository(), new GroupRepository())
         {
         }
 
-        public ProjectController(IProjectRepository projectRepository, IActivityRepository activityRepository)
+        public ProjectController(IProjectRepository projectRepository, IActivityRepository activityRepository, IGroupRepository groupRepository)
         {
             this.projectRepository = projectRepository;
             this.activityRepository = activityRepository;
+            this.groupRepository = groupRepository;
         }
 
         //
@@ -34,6 +36,31 @@ namespace Cronus.Controllers
         {
             return View(projectRepository.AllIncluding(project => project.activities));
         }
+        //public ActionResult List(int id)
+        //{
+        //    ViewBag.GroupId = id;
+
+        //    var group = groupRepository.Find(id);
+
+        //    if (group == null)
+        //    {
+        //        var newProjects = new List<project>();
+        //        //{
+        //        //    projectIds = new int[0]
+        //        //};
+
+        //        return PartialView("_index", newProjects.ToList());
+        //    }
+        //    //ViewBag.ProjectID = id;
+        //    //var addresses = db.Addresses.Where(a => a.PersonID == id).OrderBy(a => a.City);
+
+        //    //(from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
+        //    int[] projectIds = group.projects.Select(x => x.projectID).ToArray();
+
+        //    var projects = from s in this.projectRepository.All where projectIds.Contains(s.projectID) select s;
+
+        //    return PartialView("_index", projects.ToList());
+        //}
 
         //
         // GET: /Project/Details/5

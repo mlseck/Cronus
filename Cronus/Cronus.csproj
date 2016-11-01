@@ -200,6 +200,7 @@
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\FavoriteController.cs" />
+    <Compile Include="Controllers\groupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -305,7 +306,17 @@
     <Content Include="Views\Favorite\Edit.cshtml" />
     <Content Include="Views\Favorite\Index.cshtml" />
     <Content Include="Views\Activity\List.cshtml" />
-    <Content Include="Views\Project\AddActivities.cshtml" />
+    <Content Include="Views\groups\Create.cshtml" />
+    <Content Include="Views\groups\Delete.cshtml" />
+    <Content Include="Views\groups\Details.cshtml" />
+    <Content Include="Views\groups\Edit.cshtml" />
+    <Content Include="Views\groups\Index.cshtml" />
+    <Content Include="Views\Project\_index.cshtml" />
+    <Content Include="Views\groups\ProjectCheckList.cshtml" />
+    <Content Include="Views\Employee\_index.cshtml" />
+    <Content Include="Views\groups\EmployeeCheckList.cshtml" />
+    <Content Include="Views\groups\ProjectIndex.cshtml" />
+    <Content Include="Views\groups\EmployeeIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="CronusDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="CronusDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="activity">
           <Key>
             <PropertyRef Name="activityID" />
@@ -352,7 +352,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="timeperiod" EntitySet="timeperiod" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CronusDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -404,9 +405,9 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Key>
             <PropertyRef Name="favoriteID" />
           </Key>
+          <Property Name="favoriteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Activity_activityID" Type="Int32" Nullable="false" />
-          <Property Name="favoriteID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="activity" Relationship="Self.favorite_fk_Favorite_Activity1" FromRole="favorite" ToRole="activity" />
           <NavigationProperty Name="employee" Relationship="Self.favorite_fk_Favorite_Employee1" FromRole="favorite" ToRole="employee" />
         </EntityType>
@@ -656,9 +657,9 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <EntitySetMapping Name="favorites">
             <EntityTypeMapping TypeName="CronusDatabaseModel.favorite">
               <MappingFragment StoreEntitySet="favorite">
+                <ScalarProperty Name="favoriteID" ColumnName="favoriteID" />
                 <ScalarProperty Name="Employee_employeeID" ColumnName="Employee_employeeID" />
                 <ScalarProperty Name="Activity_activityID" ColumnName="Activity_activityID" />
-                <ScalarProperty Name="favoriteID" ColumnName="favoriteID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

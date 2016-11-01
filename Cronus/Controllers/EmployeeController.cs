@@ -15,16 +15,19 @@ namespace Cronus.Controllers
     {
         private readonly IFavoriteRepository favoriteRepository;
         private readonly IemployeeRepository employeeRepository;
+        private readonly IGroupRepository groupRepository;
+
 
         // If you are using Dependency Injection, you can delete the following constructor
-        public EmployeeController() : this(new EmployeeRepository(), new FavoriteRepository())
+        public EmployeeController() : this(new EmployeeRepository(), new FavoriteRepository(), new GroupRepository())
         {
         }
 
-        public EmployeeController(IemployeeRepository employeeRepository, IFavoriteRepository favoriteRepository)
+        public EmployeeController(IemployeeRepository employeeRepository, IFavoriteRepository favoriteRepository, IGroupRepository groupRepository)
         {
             this.employeeRepository = employeeRepository;
             this.favoriteRepository = favoriteRepository;
+            this.groupRepository = groupRepository;
         }
 
         //
@@ -34,6 +37,26 @@ namespace Cronus.Controllers
         {
             return View(employeeRepository.AllIncluding(employee => employee.favorites));
         }
+
+        //public ActionResult List(int id)
+        //{
+        //    ViewBag.GroupId = id;
+
+        //    var group = groupRepository.Find(id);
+
+        //    if (group == null)
+        //    {
+        //        var newEmployees = new List<employee>();
+
+        //        return PartialView("_index", newEmployees.ToList());
+        //    }
+        //    string[] employeesIds = group.employees.Select(x => x.employeeID).ToArray();
+
+        //    var employeess = from s in this.employeeRepository.All where employeesIds.Contains(s.employeeID) select s;
+
+        //    return PartialView("_index", employeess.ToList());
+
+        //}
 
         //
         // GET: /employee/Details/5
