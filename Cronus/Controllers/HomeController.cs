@@ -42,12 +42,33 @@ namespace Cronus.Controllers
 
         public ActionResult Monthly()
         {
-            //MonthlyViewModel myModel = new MonthlyViewModel();
-            return View(myModel);
+            MonthlyViewModel monthlyModel = new MonthlyViewModel();
+            return View(monthlyModel);
+        }
+
+        public ActionResult GetEvents()
+        {
+            //will get projects/activities for the month.
+            MonthlyViewModel monthlyModel = new MonthlyViewModel();
+
+            DateTime now = DateTime.Now;
+            var startDate = new DateTime(now.Year, now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+
+            monthlyModel.Projects = db.projects
+                                            .Where(n => n.projectEndDate >= startDate)
+                                            .Where(n => n.projectEndDate <= endDate);
+
+            return Json(monthlyModel, JsonRequestBehavior.AllowGet);
+
+
+
+
         }
 
         [HttpGet]
-        public JsonResult GetBetweenDates()
+        public JsonResult GetBetweenDates(string employeeID)
         {
             HomeViewModel homeModel = new HomeViewModel();
 
@@ -91,7 +112,7 @@ namespace Cronus.Controllers
             homeModel.HoursWorked = db.hoursworkeds
                                                 .Where(n => n.date >= startDate)
                                                 .Where(n => n.date <= endDate)
-                                                .Where(n => n.TimePeriod_Employee_employeeID == "5X67H8");
+                                                .Where(n => n.TimePeriod_Employee_employeeID == employeeID);
 
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
@@ -171,7 +192,7 @@ namespace Cronus.Controllers
                         where b.Employee_employeeID.Equals("5X67H8")
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
-            return View("Favorite",favorite);
+            return View("Favorite", favorite);
         }
 
         // Remove Selected Favorite from Table
