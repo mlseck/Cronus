@@ -7,64 +7,48 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.groupName)
+            Groups
+            &nbsp;
+            &nbsp;
+            @Html.ActionLink(" ", "Create", "groups", routeValues: new { }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-plus" })
+
         </th>
+       
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.groupName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.groupID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.groupID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.groupID })
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.groupName)
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.groupID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.groupID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.groupID })
+            </td>*@
+            <td>
+                @Html.ActionLink(" ", "EmployeeList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-user" })
+                @Html.ActionLink(" ", "ProjectList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-tasks" })
 
-    </tr>
-    <tr>
-        <td>
-            <!-- modal placeholder-->
-            <div id='myModal' class='modal fade in'>
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div id='myModalContent'></div>
-                    </div>
+            </td>
+            @*<td>
+                <div class="pull-right">
+                    @Html.ActionLink(" ", "EmployeeList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-user" })
+                    &nbsp;
+                    @Html.ActionLink(" ", "ProjectList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-tasks" })
+
                 </div>
-            </div>
+            </td>*@
 
-            <div class="row">
-                <div class="col-md-offset-2 col-md-10" id="replacetarget">
-                    @{ Html.RenderAction("List", "Project", new { id = item.groupID }); }
-                </div>
-            </div>
-        </td>
-
-        <td>
-            <!-- modal placeholder-->
-            <div id='myModal' class='modal fade in'>
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div id='myModalContent'></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-2 col-md-10" id="replacetarget">
-                    @{ Html.RenderAction("List", "Employee", new { id = item.groupID }); }
-                </div>
-            </div>
-
-        </td>
-    </tr>
-}
+        </tr>
+      
+    }
 
 </table>
+

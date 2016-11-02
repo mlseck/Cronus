@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DatabaseEntities;
 using Cronus.Models;
+using System.Data.Entity.Validation;
 
 namespace Cronus.Controllers
 {
@@ -36,34 +37,34 @@ namespace Cronus.Controllers
         {
             return View(projectRepository.AllIncluding(project => project.activities));
         }
-        //public ActionResult List(int id)
-        //{
-        //    ViewBag.GroupId = id;
+        public ActionResult ProjectIndex(int id)
+        {
+            ViewBag.GroupId = id;
 
-        //    var group = groupRepository.Find(id);
+            var group = groupRepository.Find(id);
 
-        //    if (group == null)
-        //    {
-        //        var newProjects = new List<project>();
-        //        //{
-        //        //    projectIds = new int[0]
-        //        //};
+            if (group == null)
+            {
+                var newProjects = new List<project>();
+                //{
+                //    projectIds = new int[0]
+                //};
 
-        //        return PartialView("_index", newProjects.ToList());
-        //    }
-        //    //ViewBag.ProjectID = id;
-        //    //var addresses = db.Addresses.Where(a => a.PersonID == id).OrderBy(a => a.City);
+                return PartialView("_index", newProjects.ToList());
+            }
+            //ViewBag.ProjectID = id;
+            //var addresses = db.Addresses.Where(a => a.PersonID == id).OrderBy(a => a.City);
 
-        //    //(from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
-        //    int[] projectIds = group.projects.Select(x => x.projectID).ToArray();
+            //(from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
+            int[] projectIds = group.projects.Select(x => x.projectID).ToArray();
 
-        //    var projects = from s in this.projectRepository.All where projectIds.Contains(s.projectID) select s;
+            var projects = from s in this.projectRepository.All where projectIds.Contains(s.projectID) select s;
 
-        //    return PartialView("_index", projects.ToList());
-        //}
+            return PartialView("_index", projects.ToList());
+        }
 
-        //
-        // GET: /Project/Details/5
+        
+         //GET: /Project/Details/5
 
         public ViewResult Details(int id)
         {
@@ -85,6 +86,68 @@ namespace Cronus.Controllers
             ViewBag.PossibleActivities = activityRepository.All;
 
             return View(model);
+        }
+
+        public ActionResult AddProjects(int GroupId)
+        {
+            //iewBag.ProjectID = ProjectID;
+
+            group model = groupRepository.Find(GroupId);
+
+            ViewBag.PossibleProjects = projectRepository.All;
+
+            //model.selectedProject = ProjectID;
+
+            //var project = projectRepository.Find(ProjectID);
+            //model.projects.Add(project);
+            //{
+            //    projectIds = new int[0]
+            //};
+
+
+            return PartialView("ProjectCheckList", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddProjects(group group)
+        {
+            if (ModelState.IsValid)
+            {
+                group originalGroup = this.groupRepository.Find(group.groupID);
+
+                originalGroup.groupName = group.groupName;
+
+                originalGroup.projects.Clear();
+
+
+                if (group.projectIds != null)
+                {
+                    originalGroup.projects = (from s in this.projectRepository.All where @group.projectIds.Contains(s.projectID) select s).ToList();
+                }
+
+                groupRepository.InsertOrUpdate(originalGroup);
+
+                try
+                {
+                    // Your code...
+                    // Could also be before try if you know the exception occurs in SaveChanges
+
+                    groupRepository.Save();
+                }
+                catch (DbEntityValidationException e)
+                {
+
+                }
+
+                //projectRepository.Save();
+                string url = Url.Action("ProjectIndex", "Project", new { id = originalGroup.groupID });
+                return Json(new { success = true, url = url });
+            }
+            else
+            {
+                ViewBag.PossibleProjects = projectRepository.All;
+                return PartialView("AddProjects", group);
+            }
         }
 
         //

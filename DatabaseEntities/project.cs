@@ -11,7 +11,8 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class project
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,14 +21,22 @@ namespace DatabaseEntities
             this.activities = new HashSet<activity>();
             this.groups = new HashSet<group>();
         }
-    
+
+        [Display(Name = "ID")]
         public int projectID { get; set; }
+        [Display(Name = "Name")]
         public string projectName { get; set; }
+        [Display(Name = "Start Date")]
         public Nullable<System.DateTime> projectStartDate { get; set; }
+        [Display(Name = "End Date")]
         public Nullable<System.DateTime> projectEndDate { get; set; }
+        [Display(Name = "Description")]
         public string projectDescription { get; set; }
+        [Display(Name = "CapCode")]
         public string projectCapitalCode { get; set; }
+        [Display(Name = "Abbreviation")]
         public string projectAbbreviation { get; set; }
+        [Display(Name = "Active")]
         public short projectActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
