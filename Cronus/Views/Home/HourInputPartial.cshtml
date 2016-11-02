@@ -1,0 +1,17 @@
+﻿@model Cronus.ViewModels.HomeViewModel
+
+<div>
+    <table>
+        <tr>
+            <td>
+                @using (Html.BeginForm("UpdateActivities", "Home", FormMethod.Post, new { id = "projectChangeForm" }))
+                {
+                    @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @Id = "Projects", onchange = "$('#projectChangeForm').submit()", name = "action:UpdateActivities" })
+                } 
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.SelectedActivityID, Model.ActivityList, "--- Select Activity ---")
+            </td>
+        </tr>
+    </table>
+</div>
