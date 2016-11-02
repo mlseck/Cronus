@@ -156,7 +156,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("5X67H8")
+                        where b.Employee_employeeID.Equals("TestID")
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             myModel.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View(myModel);
@@ -173,7 +173,7 @@ namespace Cronus.Controllers
             {
                 favorite AddFavorite = new favorite();
                 AddFavorite.Activity_activityID = selectedActivity;
-                AddFavorite.Employee_employeeID = "5X67H8";
+                AddFavorite.Employee_employeeID = "TestID";
                 // Check if selected activity is already a favorite. If not, add to Favorite Table
                 var existsQuery = from f in db.favorites
                                   where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("5X67H8"))
@@ -189,7 +189,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("5X67H8")
+                        where b.Employee_employeeID.Equals("TestID")
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
@@ -218,7 +218,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("5X67H8")
+                        where b.Employee_employeeID.Equals("TestID")
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);

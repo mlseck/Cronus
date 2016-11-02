@@ -49,7 +49,7 @@ namespace Cronus.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Employee_employeeID,Activity_activityID,favoriteID")] favorite favorite)
+        public ActionResult Create([Bind(Include = "favoriteID,Employee_employeeID,Activity_activityID")] favorite favorite)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace Cronus.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Employee_employeeID,Activity_activityID,favoriteID")] favorite favorite)
+        public ActionResult Edit([Bind(Include = "favoriteID,Employee_employeeID,Activity_activityID")] favorite favorite)
         {
             if (ModelState.IsValid)
             {
