@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DatabaseEntities;
 using Cronus.Models;
+using System.Data.Entity.Validation;
 
 namespace Cronus.Controllers
 {
@@ -38,25 +39,25 @@ namespace Cronus.Controllers
             return View(employeeRepository.AllIncluding(employee => employee.favorites));
         }
 
-        //public ActionResult List(int id)
-        //{
-        //    ViewBag.GroupId = id;
+        public ActionResult EmployeeIndex(int id)
+        {
+            ViewBag.GroupId = id;
 
-        //    var group = groupRepository.Find(id);
+            var group = groupRepository.Find(id);
 
-        //    if (group == null)
-        //    {
-        //        var newEmployees = new List<employee>();
+            if (group == null)
+            {
+                var newEmployees = new List<employee>();
 
-        //        return PartialView("_index", newEmployees.ToList());
-        //    }
-        //    string[] employeesIds = group.employees.Select(x => x.employeeID).ToArray();
+                return PartialView("_index", newEmployees.ToList());
+            }
+            string[] employeesIds = group.employees.Select(x => x.employeeID).ToArray();
 
-        //    var employeess = from s in this.employeeRepository.All where employeesIds.Contains(s.employeeID) select s;
+            var employeess = from s in this.employeeRepository.All where employeesIds.Contains(s.employeeID) select s;
 
-        //    return PartialView("_index", employeess.ToList());
+            return PartialView("_index", employeess.ToList());
 
-        //}
+        }
 
         //
         // GET: /employee/Details/5
@@ -106,6 +107,67 @@ namespace Cronus.Controllers
             }
         }
 
+
+        public ActionResult AddEmployees(int GroupId)
+        {
+            //iewBag.ProjectID = ProjectID;
+
+            group model = groupRepository.Find(GroupId);
+
+            ViewBag.PossibleEmployees = employeeRepository.All;
+
+            return PartialView("EmployeeCheckList", model);
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult AddEmployees(group group)
+        {
+            if (ModelState.IsValid)
+            {
+                group originalGroup = this.groupRepository.Find(group.groupID);
+
+                originalGroup.groupName = group.groupName;
+
+                originalGroup.employees.Clear();
+
+
+                if (group.employeeIds != null)
+                {
+                    originalGroup.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
+                }
+
+                groupRepository.InsertOrUpdate(originalGroup);
+
+
+                try
+                {
+                    // Your code...
+                    // Could also be before try if you know the exception occurs in SaveChanges
+
+                    groupRepository.Save();
+                }
+                catch (DbEntityValidationException e)
+                {
+
+                }
+
+                //EmployeeRepository.Save();
+
+
+
+
+                string url = Url.Action("EmployeeIndex", "Employee", new { id = originalGroup.groupID });
+                return Json(new { success = true, url = url });
+            }
+            else
+            {
+                ViewBag.PossibleEmployees = employeeRepository.All;
+                return PartialView("AddEmployees", group);
+            }
+        }
         //
         // GET: /employee/Edit/5
 
