@@ -1,4 +1,8 @@
-﻿
+﻿$(document).load(function () {
+    $('#dateTitle').text("View for the Week of" + new Date(new Date().getTime()).toLocaleDateString());
+    alert('HERE');
+});
+
 
 function addNewRows(table) {
     var t = table.toString();
@@ -33,15 +37,16 @@ $(document).ready(function () {
 });
 
 
+
 $(document).ready(function () {
     $.ajax({
         url: '/Home/GetBetweenDates',
         data: JSON.stringify({
-            //add employeeID here
+            invoker: 'Amill',
+            affected: null
         }),
         //Need to pass through a variable
-        success: function (data)
-        {
+        success: function (data) {
             console.log(data);
         },
         statusCode: {
