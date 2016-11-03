@@ -84,20 +84,26 @@ namespace Cronus.Controllers
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
-        public JsonResult GetHoursWorkedPerDay(int projID, string empID)
+        public JsonResult GetHoursWorkedPerDay()
         {
 
-           // projecthas proj = projectRepository.Find(projID);
-
+            // projecthas proj = projectRepository.Find(projID);
+            //project proj = db.projects.Where(n=>n.projectID == 1);
+            //activity activ = db.activities.Where(activ.activityID == );
+            activity activity = new activity();
+             
+            
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            foreach(hoursworked hrs in db.hoursworkeds)
-            {
-                hrsWrkd.Add(new MonthlyViewModel()
-                {
-                    ActivityName = hrs.activity.ToString(),
-                    HrsWorked = hrs.hours.ToString()
-                });
-            }
+            foreach(hoursworked hrs in db.hoursworkeds
+                                                .Where(n=>n.Activity_activityID == 1)
+                                                .Where(n=>n.TimePeriod_Employee_employeeID == "Amill"))
+                    {
+                        hrsWrkd.Add(new MonthlyViewModel()
+                        {
+                            ActivityName = hrs.activity.ToString(),
+                            HrsWorked = hrs.hours.ToString()
+                        });
+                    }
 
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
@@ -146,12 +152,19 @@ namespace Cronus.Controllers
             }
 
 
-            homeModel.HoursWorked = db.hoursworkeds
-                                                .Where(n => n.date >= startDate)
-                                                .Where(n => n.date <= endDate)
-                                                .Where(n => n.TimePeriod_Employee_employeeID == employeeID);
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            foreach (hoursworked hrs in db.hoursworkeds
+                                                .Where(n => n.date>= startDate)
+                                                .Where(n => n.date<= endDate)
+                                                .Where(n=> n.TimePeriod_Employee_employeeID == employeeID))
+            {
+                hrsWrkd.Add(new MonthlyViewModel()
+                {
+                    HrsWorked = hrs.hours.ToString()
+                });
+            }
 
-            return Json(homeModel, JsonRequestBehavior.AllowGet);
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
         //going to be working on saving the hours listed into the DB.

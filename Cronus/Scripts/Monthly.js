@@ -36,3 +36,19 @@
 
     })
 });
+
+
+$(document).ready(function () {
+    $.ajax({
+        contentType: "application/json",
+        data: "{}",
+        url: "/Home/GetHoursWorkedPerDay/",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        error: function () {
+
+        }
+    });
+});
