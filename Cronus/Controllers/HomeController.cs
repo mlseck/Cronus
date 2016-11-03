@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cronus.Models;
 using Cronus.ViewModels;
+using System.Threading.Tasks;
 
 namespace Cronus.Controllers
 {
@@ -14,6 +15,20 @@ namespace Cronus.Controllers
         private CronusDatabaseEntities db = new CronusDatabaseEntities();
         HomeViewModel myModel = new HomeViewModel();
 
+
+        private readonly IProjectRepository projectRepository;
+
+
+
+        // If you are using Dependency Injection, you can delete the following constructor
+        public HomeController() : this( new ProjectRepository())
+        {
+        }
+
+        public HomeController(IProjectRepository projectRepository)
+        {
+            this.projectRepository = projectRepository;
+        }
 
         public ActionResult Index()
         {
@@ -46,23 +61,23 @@ namespace Cronus.Controllers
             return View(monthlyModel);
         }
 
-        public ActionResult GetEvents()
+        public JsonResult GetEvents()
         {
             //will get projects/activities for the month.
             MonthlyViewModel monthlyModel = new MonthlyViewModel();
+            List<project> proj = db.projects.ToList();
 
-            DateTime now = DateTime.Now;
-            var startDate = new DateTime(now.Year, now.Month, 1);
-            var endDate = startDate.AddMonths(1).AddDays(-1);
-
-
-            monthlyModel.Projects = db.projects
-                                            .Where(n => n.projectEndDate >= startDate)
-                                            .Where(n => n.projectEndDate <= endDate);
-
-            return Json(monthlyModel, JsonRequestBehavior.AllowGet);
+            List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
+            projects.Add(new MonthlyViewModel()
+            {
+                Name = proj.,
+                StartDate = DateTime.Now.ToString("MM-dd-yyyy"),
+                EndDate = DateTime.Now.AddDays(2).ToString("MM-dd-yyyy")
+            });
 
 
+
+            return Json(proj, JsonRequestBehavior.AllowGet);
 
 
         }

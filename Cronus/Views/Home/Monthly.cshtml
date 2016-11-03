@@ -1,9 +1,9 @@
 ﻿
 
 
+@Scripts.Render("~/Scripts/Monthly.js")
 
-
-@section scripts{
+@*@section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             $('#calendar').fullCalendar({
@@ -19,10 +19,13 @@
                 selectTable: true,
                 slotMinutes: 15,
                 events: "/Home/GetEvents/"
+
             });
         });
     </script>
-}
+}*@
+
+
 
 
 <div class="jumbotron">
