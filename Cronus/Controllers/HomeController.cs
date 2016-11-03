@@ -17,17 +17,20 @@ namespace Cronus.Controllers
 
 
         private readonly IProjectRepository projectRepository;
+        private readonly IActivityRepository activityRepository;
+
 
 
 
         // If you are using Dependency Injection, you can delete the following constructor
-        public HomeController() : this(new ProjectRepository())
+        public HomeController() : this(new ProjectRepository(), new ActivityRepository())
         {
         }
 
-        public HomeController(IProjectRepository projectRepository)
+        public HomeController(IProjectRepository projectRepository, IActivityRepository activityRepository)
         {
             this.projectRepository = projectRepository;
+            this.activityRepository = activityRepository;
         }
 
         public ActionResult Index()
@@ -61,13 +64,12 @@ namespace Cronus.Controllers
             return View(monthlyModel);
         }
 
+
+        //gets projects for the calender 
         public JsonResult GetEvents()
         {
             //will get projects/activities for the month.
-            MonthlyViewModel monthlyModel = new MonthlyViewModel();
             List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
-
-
             foreach (project proj in db.projects)
             {
                 projects.Add(new MonthlyViewModel()
@@ -78,9 +80,29 @@ namespace Cronus.Controllers
                 });
             }
             return Json(projects, JsonRequestBehavior.AllowGet);
-
-
         }
+
+        //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
+        [HttpGet]
+        public JsonResult GetHoursWorkedPerDay(int projID, string empID)
+        {
+
+           // projecthas proj = projectRepository.Find(projID);
+
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            foreach(hoursworked hrs in db.hoursworkeds)
+            {
+                hrsWrkd.Add(new MonthlyViewModel()
+                {
+                    ActivityName = hrs.activity.ToString(),
+                    HrsWorked = hrs.hours.ToString()
+                });
+            }
+
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         [HttpGet]
         public JsonResult GetBetweenDates(string employeeID)
@@ -131,7 +153,6 @@ namespace Cronus.Controllers
 
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
-
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]

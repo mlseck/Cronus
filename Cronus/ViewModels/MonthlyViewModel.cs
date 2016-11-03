@@ -18,5 +18,9 @@ namespace Cronus.ViewModels
         public String Name { get; set; }
         public String StartDate { get; set; }
         public String EndDate { get; set; }
+
+
+        public String ActivityName { get; set; }
+        public String HrsWorked { get; set; }
     }
 }
