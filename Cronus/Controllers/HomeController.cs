@@ -21,7 +21,7 @@ namespace Cronus.Controllers
 
 
         // If you are using Dependency Injection, you can delete the following constructor
-        public HomeController() : this( new ProjectRepository())
+        public HomeController() : this(new ProjectRepository())
         {
         }
 
@@ -65,19 +65,19 @@ namespace Cronus.Controllers
         {
             //will get projects/activities for the month.
             MonthlyViewModel monthlyModel = new MonthlyViewModel();
-            List<project> proj = db.projects.ToList();
-
             List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
-            projects.Add(new MonthlyViewModel()
+
+
+            foreach (project proj in db.projects)
             {
-                Name = proj.,
-                StartDate = DateTime.Now.ToString("MM-dd-yyyy"),
-                EndDate = DateTime.Now.AddDays(2).ToString("MM-dd-yyyy")
-            });
-
-
-
-            return Json(proj, JsonRequestBehavior.AllowGet);
+                projects.Add(new MonthlyViewModel()
+                {
+                    Name = proj.projectName,
+                    StartDate = proj.projectStartDate.ToString(),
+                    EndDate = proj.projectEndDate.ToString()
+                });
+            }
+            return Json(projects, JsonRequestBehavior.AllowGet);
 
 
         }
