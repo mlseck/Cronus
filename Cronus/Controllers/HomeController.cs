@@ -164,7 +164,7 @@ namespace Cronus.Controllers
                 });
             }
 
-            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
+            return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
 
         //going to be working on saving the hours listed into the DB.
