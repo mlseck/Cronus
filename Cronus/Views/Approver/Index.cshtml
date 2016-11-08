@@ -1,0 +1,23 @@
+﻿@model IEnumerable<DatabaseEntities.timeperiod>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Pick a time period to approve hours</h2>
+
+<table class="table">
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.periodEndDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "ApproverIndex", new { groupID = ViewBag.GroupId })
+           
+        </td>
+    </tr>
+}
+
+</table>

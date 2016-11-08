@@ -1,0 +1,87 @@
+﻿@model Cronus.ViewModels.ApproverViewModel
+
+
+@{
+    ViewBag.Title = "ApproverIndex";
+}
+
+<script src="~/Scripts/jquery-2.1.1.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
+<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+<link href="~/Content/themes/base/accordion.css" rel="stylesheet" />
+<link href="~/Content/demos.css" rel="stylesheet" />  
+
+@Scripts.Render("~/bundles/jqueryui")
+
+<script>
+      $(function () {
+          $("#accordion").accordion();
+      });
+</script>
+<div class="demo">
+    <div id="accordion">
+        @foreach (var project in Model.Projects)
+        {
+        <h3>
+            --Project @Html.DisplayFor(modelItem => project.projectName)--
+        </h3>
+        <div>
+
+            @foreach (var employee in Model.Employees)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>
+                            @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
+                        </strong>
+                    </div>
+
+                    <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.Label("Activity Name")
+                        </th>
+                        <th>
+                            @Html.Label("Hours logged")
+                        </th>
+                        <th>
+                            @Html.Label("Comment")
+
+                        </th>
+                        <th>
+                            @Html.Label("Entry Date")
+                        </th>
+                    </tr>
+
+                    @foreach (var activity in project.activities)
+                        {
+                            
+                  <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => activity.activityName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().hours)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().comments)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().date)
+                    </td>
+
+                </tr>
+                
+                        }
+
+                    </table>
+                </div>
+            }
+        </div>
+        }
+    </div>
+
+</div>
+
+
+@Scripts.Render("~/bundles/modalform")

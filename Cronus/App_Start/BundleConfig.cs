@@ -40,7 +40,8 @@ namespace Cronus
                 "~/Scripts/moment.min.js",
                 "~/Scripts/fullCalendar.min.js"));
 
-
+            //bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css",
+            //            "~/Content/jquery-ui.css"));
 
 
         }
