@@ -439,6 +439,7 @@
     <Content Include="Views\Home\Monthly.cshtml" />
     <Content Include="Views\Project\ProjectCheckList.cshtml" />
     <Content Include="Views\Employee\EmployeeCheckList.cshtml" />
+    <Content Include="Views\Home\HourInputPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

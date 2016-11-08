@@ -29,15 +29,12 @@ namespace Cronus.Controllers
 
         //Method will update the activities dropdownlist in index page when specific project is picked
         [HttpPost]
-        [ActionName("UpdateActivities")]
-        public ActionResult UpdateActivities(HomeViewModel myModel)
+        public ActionResult FillActivities(int projectID)
         {
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
-            project Selected = db.projects.Find(myModel.SelectedProjectID);
-            myModel.ActivityList = new SelectList(Selected.activities.ToList(), "activityID", "activityName");
-            return View("Index", myModel);
+            List<activity> objactivity = new List<activity>();
+            objactivity = db.projects.Find(projectID).activities.ToList();
+            SelectList myActivities = new SelectList(objactivity, "activityID", "activityName", 0);
+            return Json(myActivities);
         }
 
         public ActionResult Monthly()
@@ -176,7 +173,7 @@ namespace Cronus.Controllers
                 AddFavorite.Employee_employeeID = "TestID";
                 // Check if selected activity is already a favorite. If not, add to Favorite Table
                 var existsQuery = from f in db.favorites
-                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("5X67H8"))
+                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("TestID"))
                                   select f;
                 if (!existsQuery.Any())
                 {
