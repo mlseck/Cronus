@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cronus.Models;
 using Cronus.ViewModels;
+using System.Threading.Tasks;
 
 namespace Cronus.Controllers
 {
@@ -14,6 +15,23 @@ namespace Cronus.Controllers
         private CronusDatabaseEntities db = new CronusDatabaseEntities();
         HomeViewModel myModel = new HomeViewModel();
 
+
+        private readonly IProjectRepository projectRepository;
+        private readonly IActivityRepository activityRepository;
+
+
+
+
+        // If you are using Dependency Injection, you can delete the following constructor
+        public HomeController() : this(new ProjectRepository(), new ActivityRepository())
+        {
+        }
+
+        public HomeController(IProjectRepository projectRepository, IActivityRepository activityRepository)
+        {
+            this.projectRepository = projectRepository;
+            this.activityRepository = activityRepository;
+        }
 
         public ActionResult Index()
         {
@@ -43,26 +61,51 @@ namespace Cronus.Controllers
             return View(monthlyModel);
         }
 
-        public ActionResult GetEvents()
+
+        //gets projects for the calender 
+        public JsonResult GetEvents()
         {
             //will get projects/activities for the month.
-            MonthlyViewModel monthlyModel = new MonthlyViewModel();
-
-            DateTime now = DateTime.Now;
-            var startDate = new DateTime(now.Year, now.Month, 1);
-            var endDate = startDate.AddMonths(1).AddDays(-1);
-
-
-            monthlyModel.Projects = db.projects
-                                            .Where(n => n.projectEndDate >= startDate)
-                                            .Where(n => n.projectEndDate <= endDate);
-
-            return Json(monthlyModel, JsonRequestBehavior.AllowGet);
-
-
-
-
+            List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
+            foreach (project proj in db.projects)
+            {
+                projects.Add(new MonthlyViewModel()
+                {
+                    Name = proj.projectName,
+                    StartDate = proj.projectStartDate.ToString(),
+                    EndDate = proj.projectEndDate.ToString()
+                });
+            }
+            return Json(projects, JsonRequestBehavior.AllowGet);
         }
+
+        //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
+        [HttpGet]
+        public JsonResult GetHoursWorkedPerDay()
+        {
+
+            // projecthas proj = projectRepository.Find(projID);
+            //project proj = db.projects.Where(n=>n.projectID == 1);
+            //activity activ = db.activities.Where(activ.activityID == );
+            activity activity = new activity();
+             
+            
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            foreach(hoursworked hrs in db.hoursworkeds
+                                                .Where(n=>n.Activity_activityID == 1)
+                                                .Where(n=>n.TimePeriod_Employee_employeeID == "Amill"))
+                    {
+                        hrsWrkd.Add(new MonthlyViewModel()
+                        {
+                            ActivityName = hrs.activity.ToString(),
+                            HrsWorked = hrs.hours.ToString()
+                        });
+                    }
+
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         [HttpGet]
         public JsonResult GetBetweenDates(string employeeID)
@@ -106,14 +149,20 @@ namespace Cronus.Controllers
             }
 
 
-            homeModel.HoursWorked = db.hoursworkeds
-                                                .Where(n => n.date >= startDate)
-                                                .Where(n => n.date <= endDate)
-                                                .Where(n => n.TimePeriod_Employee_employeeID == employeeID);
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            foreach (hoursworked hrs in db.hoursworkeds
+                                                .Where(n => n.date>= startDate)
+                                                .Where(n => n.date<= endDate)
+                                                .Where(n=> n.TimePeriod_Employee_employeeID == employeeID))
+            {
+                hrsWrkd.Add(new MonthlyViewModel()
+                {
+                    HrsWorked = hrs.hours.ToString()
+                });
+            }
 
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
-
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]

@@ -1,34 +1,7 @@
 ﻿
 
 
-
-
-@section scripts{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#calendar').fullCalendar({
-                theme: true,
-                header: {
-                    left: 'prev, next, today',
-                    center: 'title',
-                    right: 'month, agendaWeek, agendaDay'
-                },
-                defaultView: 'month',
-                editable: true,
-                allDaySlot: false,
-                selectTable: true,
-                slotMinutes: 15,
-                events: "/Home/GetEvents/"
-            });
-        });
-    </script>
-}
-
-
-<div class="jumbotron">
-    <h3>Calendar</h3>
-</div>
-
+@Scripts.Render("~/Scripts/Monthly.js")
 <div class="row">
 
     <div class="col-md-12">
