@@ -21,7 +21,6 @@ namespace Cronus.Controllers
 
 
 
-
         // If you are using Dependency Injection, you can delete the following constructor
         public HomeController() : this(new ProjectRepository(), new ActivityRepository())
         {
@@ -69,14 +68,14 @@ namespace Cronus.Controllers
         public JsonResult GetEvents()
         {
             //will get projects/activities for the month.
-            List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
+            List<project> projects = new List<project>();
             foreach (project proj in db.projects)
             {
-                projects.Add(new MonthlyViewModel()
+                projects.Add(new project()
                 {
-                    Name = proj.projectName,
-                    StartDate = proj.projectStartDate.ToString(),
-                    EndDate = proj.projectEndDate.ToString()
+                    projectName = proj.projectName,
+                    projectStartDate = proj.projectStartDate,
+                    projectEndDate = proj.projectEndDate
                 });
             }
             return Json(projects, JsonRequestBehavior.AllowGet);
@@ -86,25 +85,29 @@ namespace Cronus.Controllers
         [HttpGet]
         public JsonResult GetHoursWorkedPerDay()
         {
+            //Still need to pass through employee ID, this will do fore now
+            // same with date
+            string empId = "Amill";
+            DateTime date = DateTime.Today;
 
-            // projecthas proj = projectRepository.Find(projID);
-            //project proj = db.projects.Where(n=>n.projectID == 1);
-            //activity activ = db.activities.Where(activ.activityID == );
-            activity activity = new activity();
-             
-            
+            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_Employee_employeeID == empId && s.date == date select s).ToList();
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            foreach(hoursworked hrs in db.hoursworkeds
-                                                .Where(n=>n.Activity_activityID == 1)
-                                                .Where(n=>n.TimePeriod_Employee_employeeID == "Amill"))
-                    {
-                        hrsWrkd.Add(new MonthlyViewModel()
-                        {
-                            ActivityName = hrs.activity.ToString(),
-                            HrsWorked = hrs.hours.ToString()
-                        });
-                    }
 
+            foreach (hoursworked hrsW in hrs)
+            {
+                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
+
+                foreach (activity activ in activities)
+                {
+                    hrsWrkd.Add(new MonthlyViewModel()
+                    {
+                        ActivityName = activ.activityName,
+                        HrsWorked = hrsW.hours.ToString()
+                    });
+                }
+            }
+
+           
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 

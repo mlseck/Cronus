@@ -13,7 +13,6 @@ namespace Cronus.ViewModels
         public IEnumerable<activity> Activities { get; set; }
         public IEnumerable<hoursworked> HoursWorked { get; set; }
 
-        public project prjct { get; set; }
 
         public String Name { get; set; }
         public String StartDate { get; set; }
