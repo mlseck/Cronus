@@ -36,8 +36,6 @@ $(document).ready(function () {
     });
 });
 
-
-
 $(document).ready(function () {
     $.ajax({
         url: '/Home/GetBetweenDates',
@@ -60,3 +58,8 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    $('#save').click(function () {
+        alert("HERE");
+    });
+});

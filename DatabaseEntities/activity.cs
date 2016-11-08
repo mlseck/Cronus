@@ -11,8 +11,7 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class activity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,12 +21,11 @@ namespace DatabaseEntities
             this.hoursworkeds = new HashSet<hoursworked>();
             this.projects = new HashSet<project>();
         }
-        [Display(Name = "ID")]
+    
         public int activityID { get; set; }
-        [Display(Name = "Name")]
         public string activityName { get; set; }
-        [Display(Name = "Cap")]
         public short isCap { get; set; }
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<favorite> favorites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -24,9 +24,7 @@
     </tr>
 
     <tr>
-        @{
-            Html.RenderPartial("HourInputPartial");
-        }
+        @Html.Partial("HourInputPartial")
     </tr>
 </table>*@
 
@@ -64,10 +62,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@using (Html.BeginForm("UpdateActivities", "Home", FormMethod.Post, new { id = "projectChangeForm" }))
-                                    {
-                                        @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @Id = "Projects", onchange = "$('#projectChangeForm').submit()", name = "action:UpdateActivities" })
-                                    }*@
+                                  
                                     
                                 </div>
                             </td>
@@ -80,7 +75,7 @@
                                             }
 
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedActivityID, Model.ActivityList, "--- Select Activity ---")*@
+                                    
                                 </div>
                             </td>
                             <td>
@@ -121,7 +116,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                    
                                 </div>
                             </td>
                             <td>
@@ -173,7 +168,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                   
                                 </div>
                             </td>
                             <td>
@@ -225,7 +220,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                            
                                 </div>
                             </td>
                             <td>
@@ -277,7 +272,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                   
                                 </div>
                             </td>
                             <td>
@@ -329,7 +324,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                   
                                 </div>
                             </td>
                             <td>
@@ -381,7 +376,7 @@
                                             <option>@project.projectName</option>
                                         }
                                     </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
+                                    
                                 </div>
                             </td>
                             <td>
@@ -412,3 +407,12 @@
         </tr>
     </tbody>
 </table>
+<button type="button" width="100px" id="save" class="btn btn-default pull-left">Save <span class="glyphicon glyphicon-check"></span></button>
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
+
