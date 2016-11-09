@@ -8,13 +8,43 @@ $(document).ready(function () {
             url: "/Home/GetEvents",
             dataType: "json",
 
+
+            //On Date Clicked
             success: function (data) {
-                alert(data);
+                //alert(data);
                 $('#calendar').fullCalendar({
+                    dayClick: function (date, allDay, jsEvent, view) {
+
+                        if (allDay) {
+                            $.ajax({
+                                contentType: "application/json",
+                                data: "{}",
+                                url: "/Home/GetHoursWorkedPerDay/",
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data)
+                                    console.log("you clicked on the date " + date.format())                              
+
+                                    //console.log(data.ActivityName)
+
+
+                                    $('#modalTitle').html(data.ActivityName);
+                                    //$('#modalBody').html(data.HrsWorked);
+                                    $('#fullCalModal').modal();
+                                },
+                                error: function () {
+
+                                }
+                            });
+                        }
+                    },
+
+                //Getting events
                     header: {
-                        left: 'prev,next today',
+                        left: 'prev today',
                         center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
+                        right: 'next'
+                        //right: 'month,agendaWeek,agendaDay'
                     },
 
                     defaultView: 'month',
@@ -30,7 +60,6 @@ $(document).ready(function () {
                 });
 
             },
-
             error: function () {
 
             }
@@ -41,29 +70,20 @@ $(document).ready(function () {
 });
 
 
-//$(function () {
-//    $('#calendar').fullCalendar({
-//        dayClick: function (date, allDay, jsEvent, view) {
-
-//            if (allDay) {
-//                $.ajax({
-//                    contentType: "application/json",
-//                    data: "{}",
-//                    url: "/Home/GetHoursWorkedPerDay/",
-//                    dataType: "json",
-//                    success: function (data) {
-//                        console.log(data);
-//                        console.log("you clicked on the date" + date.format())
-//                    },
-//                    error: function () {
-
-//                    }
-
-
-//                });
-//            }
+//$(document).ready(function () {
+//    $('#bootstrapModalFullCalendar').fullCalendar({
+//        events: '/hackyjson/cal/',
+//        header: {
+//            left: '',
+//            center: 'prev title next',
+//            right: ''
+//        },
+//        eventClick: function (event, jsEvent, view) {
+//            $('#modalTitle').html(event.title);
+//            $('#modalBody').html(event.description);
+//            $('#eventUrl').attr('href', event.url);
+//            $('#fullCalModal').modal();
 //        }
 //    });
-//})
-
+//});
 
