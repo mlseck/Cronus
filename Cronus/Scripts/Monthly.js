@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     $(function () {
         $.ajax({
             type: "POST",
@@ -35,47 +36,34 @@
             }
         });
 
-        $('#calendar').fullCalendar({
-            dayClick: function (date, allDay, jsEvent, view) {
-
-                if (allDay) {
-                    $.ajax({
-                        contentType: "application/json",
-                        data: "{}",
-                        url: "/Home/GetHoursWorkedPerDay/",
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            console.log("you clicked on the date" + date.format())
-                        },
-                        error: function () {
-
-                        }
-
-
-                    });
-                }
-            }
-        });
-
 
     })
 });
 
 
-//$(document).ready(function () {
-//    $.ajax({
-//        contentType: "application/json",
-//        data: "{}",
-//        url: "/Home/GetHoursWorkedPerDay/",
-//        dataType: "json",
-//        success: function (data) {
-//            console.log(data);
-//        },
-//        error: function () {
+//$(function () {
+//    $('#calendar').fullCalendar({
+//        dayClick: function (date, allDay, jsEvent, view) {
 
+//            if (allDay) {
+//                $.ajax({
+//                    contentType: "application/json",
+//                    data: "{}",
+//                    url: "/Home/GetHoursWorkedPerDay/",
+//                    dataType: "json",
+//                    success: function (data) {
+//                        console.log(data);
+//                        console.log("you clicked on the date" + date.format())
+//                    },
+//                    error: function () {
+
+//                    }
+
+
+//                });
+//            }
 //        }
-
-
 //    });
-//});
+//})
+
+
