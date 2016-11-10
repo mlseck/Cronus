@@ -33,8 +33,9 @@ $(document).ready(function () {
                                     var newLine = "\n"
                                     $.each(data, function (index, element) {
                                         HrsWrkd += "You worked " + element.HrsWorked + " Hour(s) on " + element.ActivityName + "." + "<br />"
+                                        $('#modalBody').html(HrsWrkd)
                                     });
-                                    $('#modalBody').html(HrsWrkd)
+
 
                                     $('#fullCalModal').modal()
 
