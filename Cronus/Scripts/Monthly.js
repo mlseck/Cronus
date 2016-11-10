@@ -18,19 +18,19 @@ $(document).ready(function () {
                         if (allDay) {
                             $.ajax({
                                 contentType: "application/json",
-                                data: "{}",
+                                data: date.toISOString(),
                                 url: "/Home/GetHoursWorkedPerDay/",
                                 dataType: "json",
                                 success: function (data) {
                                     console.log(data)
                                     console.log("you clicked on the date " + date.format())                              
 
-                                    //console.log(data.ActivityName)
+                                    $.each(data, function (index, element) {
+                                        $('#modalTitle').html("Hours Worked")
 
-
-                                    $('#modalTitle').html(data.ActivityName);
-                                    //$('#modalBody').html(data.HrsWorked);
-                                    $('#fullCalModal').modal();
+                                        $('#modalBody').html("You worked " + element.HrsWorked + " Hour(s) on " + element.ActivityName)
+                                        $('#fullCalModal').modal()
+                                    });
                                 },
                                 error: function () {
 

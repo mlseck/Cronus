@@ -80,12 +80,12 @@ namespace Cronus.Controllers
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
-        public JsonResult GetHoursWorkedPerDay()
+        public JsonResult GetHoursWorkedPerDay(DateTime date)
         {
             //Still need to pass through employee ID, this will do fore now
             // same with date
             string empId = "Amill";
-            DateTime date = DateTime.Today;
+            //DateTime date = DateTime.Today.AddDays(-1);
 
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_Employee_employeeID == empId && s.date == date select s).ToList();
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
