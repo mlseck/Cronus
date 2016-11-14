@@ -38,10 +38,31 @@
     @using (Html.BeginForm())
     {
         var ddlid = Guid.NewGuid().ToString();
-
-        @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @id = @ddlid, @style = "width:200px;", @onchange = "javascript:GetActivities(this);" })
         var actddlid = "actddl" + @ddlid;
-        <select id= @actddlid name=@actddlid style="width: 200px"></select>
-        
-        <br /><br />
+        var hoursinputid = "hoursinput" + @ddlid;
+        var commentsinputid = "commentsinput" + @ddlid;
+
+        <table>
+            <tr>
+                <td>
+                    @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @id = @ddlid, @class = "form-control", @onchange = "javascript:GetActivities(this);" })
+                </td>
+                <td>
+                    <select class="form-control" id=@actddlid name=@actddlid style="width: 200px"></select>
+                </td>
+                <td>
+                    <input type="number" min="0" class="form-control hoursInput" id="@hoursinputid" />
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="@commentsinputid" />
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-remove" onclick="" width="200%"></span>
+                </td>
+            </tr>
+        </table>
+            
+            
+        <br />
+        <br />
     }
