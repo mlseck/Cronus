@@ -1,26 +1,4 @@
-﻿$('#calendar').fullCalendar({
-    dayClick: function (date, allDay, jsEvent, view) {
-
-        if (allDay) {
-            $.ajax({
-                contentType: "application/json",
-                data: "{}",
-                url: "/Home/GetHoursWorkedPerDay/",
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                    console.log("you clicked on the date" + date.format())
-                },
-                error: function () {
-
-                }
-
-
-            });
-        }
-    }
-});
-
+﻿
 $(document).ready(function () {
     $(function () {
         $.ajax({
@@ -30,13 +8,67 @@ $(document).ready(function () {
             url: "/Home/GetEvents",
             dataType: "json",
 
+            //On Date Clicked
             success: function (data) {
-                alert(data);
+                //alert(data);
                 $('#calendar').fullCalendar({
+                    dayClick: function (date, allDay, jsEvent, view) {
+
+                        if (allDay) {
+                            $.ajax({
+                                contentType: "application/json",
+                                data: { date: date.format() },
+                                url: "/Home/GetHoursWorkedPerDay/",
+                                dataType: "json",
+                                success: function (data) {
+                                    //will fill with content if no hours logged
+                                    $('#modalTitle').html("Hours Worked on " + date.format("dddd") + ", " + date.format("MMMM") + " " + date.format('D'))
+                                    $('#modalBody').html("You worked no hours on this date.")
+                                    $('#fullCalModal').modal()
+
+                                    //will overwrite if hours logged
+                                    $('#modalTitle').html("Hours Worked on " + date.format("dddd") + ", " + date.format("MMMM") + " " + date.format("D"))
+
+                                    var HrsWrkd = ""
+                                    var newLine = "\n"
+                                    $.each(data, function (index, element) {
+                                        HrsWrkd += "You worked " + element.HrsWorked + " Hour(s) on " + element.ActivityName + "." + "<br />"
+                                        $('#modalBody').html(HrsWrkd)
+                                    });
+
+
+                                    $('#fullCalModal').modal()
+
+                                },
+                                error: function () {
+
+                                }
+                            });
+                        }
+                    },
+
+                    //Add function for project clicked??
+
+
+
+                    //Getting events
+
+                    //adding buttong to go to weekly
+                    customButtons: {
+                        WeekButton: {
+                            text: 'Go to Weekly view',
+                            click: function () {
+                                window.location.href = '/Home/';
+                                return false;
+                            }
+                        }
+                    },
+
                     header: {
-                        left: 'prev,next today',
+                        left: 'prev today',
                         center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
+                        right: 'WeekButton, next'
+                        //right: 'month,agendaWeek,agendaDay'
                     },
 
                     defaultView: 'month',
@@ -52,30 +84,11 @@ $(document).ready(function () {
                 });
 
             },
-
             error: function () {
 
             }
         });
+
+
     })
 });
-
-
-
-
-//$(document).ready(function () {
-//    $.ajax({
-//        contentType: "application/json",
-//        data: "{}",
-//        url: "/Home/GetHoursWorkedPerDay/",
-//        dataType: "json",
-//        success: function (data) {
-//            console.log(data);
-//        },
-//        error: function () {
-
-//        }
-
-
-//    });
-//});
