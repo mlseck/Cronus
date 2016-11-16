@@ -1717,10 +1717,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .form-control {
-  display: block;
-  width: 100%;
+  float:left;
+  display: inline-block;
+  width: 25%;
   height: 34px;
   padding: 6px 12px;
+  margin-right: 6px;
   font-size: 14px;
   line-height: 1.428571429;
   color: #555555;
@@ -1938,6 +1940,7 @@ textarea.input-lg {
     display: inline-block;
     margin-bottom: 0;
     vertical-align: middle;
+    float: left;
   }
   .form-inline .form-control {
     display: inline-block;
