@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
 
     $(function () {
         $.ajax({
@@ -64,16 +63,26 @@ $(document).ready(function () {
                     },
 
                     dayRender: function (date, cell) {
-                        //var hrsWrkd = ""
-                        ////console.log(hrsWrkd)
-                        //if (false)
-                        //{
+                        var hrsWrkd = ""
 
-                        //}
-                        //else
-                        //{
-                        //    cell.append("<br />" + "<br />" + "<br />" + "<br />" + 0 + " hour(s)")
-                        //}
+
+                        //dont know if this will work, waiting on DB to be fixed
+                        $.ajax({
+                            contentType: "application/json",
+                            data: { date: date.format() },
+                            url: "/Home/GetHoursWorkedPerDay/",
+                            dataType: "json",
+                            success: function (data) {
+                                $.each(data, function (index, element) {
+                                    //link.setAttribute('href', '/');
+                                    hrsWrkd += element.HrsWorked
+                                    cell.append("<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
+                                });
+                            },
+                            error: function () {
+
+                            }
+                        });
                     },
 
                     //Click event
@@ -126,3 +135,28 @@ $(document).ready(function () {
     })
 });
 
+
+
+
+
+function getHoursPerDay() {
+    $.each(date, function (index, element) {
+        $.ajax({
+            contentType: "application/json",
+            data: { date: date.format() },
+            url: "/Home/GetHoursWorkedPerDay/",
+            dataType: "json",
+            success: function (data) {
+
+                $.each(data, function (index, element) {
+                    //link.setAttribute('href', '/');
+                    hrsWrkd += element.HrsWorked
+                });
+                cell.append("<br />" + "<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd)
+            }
+        });
+
+
+    });
+
+}
