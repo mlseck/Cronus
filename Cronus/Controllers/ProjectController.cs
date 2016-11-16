@@ -184,8 +184,14 @@ namespace Cronus.Controllers
 
             project model = projectRepository.Find(id);
 
-            model.activityIds = (from s in model.activities select s.activityID).ToArray();
-
+            try
+            {
+                model.activityIds = (from s in model.activities select s.activityID).ToArray();
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
             return View(model);
         }
 

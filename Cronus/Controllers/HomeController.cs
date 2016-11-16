@@ -70,6 +70,7 @@ namespace Cronus.Controllers
             {
                 projects.Add(new project()
                 {
+                    projectID = proj.projectID,
                     projectName = proj.projectName,
                     projectStartDate = proj.projectStartDate,
                     projectEndDate = proj.projectEndDate

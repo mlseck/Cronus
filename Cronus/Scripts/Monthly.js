@@ -1,7 +1,5 @@
 ﻿
 $(document).ready(function () {
-    var HrsWrkd = ""
-
 
     $(function () {
         $.ajax({
@@ -32,8 +30,9 @@ $(document).ready(function () {
                                     //will overwrite if hours logged
                                     $('#modalTitle').html("Hours Worked on " + date.format("dddd") + ", " + date.format("MMMM") + " " + date.format("D"))
 
-                              
+
                                     var newLine = "\n"
+                                    var HrsWrkd = ""
                                     //add if adminstrative user to edit hours
 
 
@@ -64,15 +63,22 @@ $(document).ready(function () {
                         $(element).tooltip({ title: "Click to edit project." });
                     },
 
-                    //hover over day
                     dayRender: function (date, cell) {
-                        //HrsWorked
-                        12
-                    },
+                        //var hrsWrkd = ""
+                        ////console.log(hrsWrkd)
+                        //if (false)
+                        //{
 
+                        //}
+                        //else
+                        //{
+                        //    cell.append("<br />" + "<br />" + "<br />" + "<br />" + 0 + " hour(s)")
+                        //}
+                    },
 
                     //Click event
                     eventClick: function (event, jsEvent, view) {
+                        console.log(event.id)
                         window.location = "/Project/Edit/" + event.id;
                     },
 
