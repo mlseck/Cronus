@@ -17,34 +17,34 @@
     });
 </script>
 <div class="demo">
-    @{int i = 0;}
-    @foreach (var project in Model.Projects)
-    {
-        @*<div id="accordion">*@
-        <div class="panel-group" id="accordion_@i">
-            <div class="panel panel-default" id="panel_@i">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-target="#collapseOne_@i" href="#collapseOne_@i">
-                            --Project @Html.DisplayFor(modelItem => project.projectName)--
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseOne_@i" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        @foreach (var employee in Model.Employees)
-                {
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <strong>
-                                        @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
-                                    </strong>
-                                    <div class="pull-right">
-                                        <label>Approved</label>
-                                        @Html.CheckBoxFor(modelItem => Model.timeperiod.isApprovedBool)
-                                    </div>
-                                </div>
 
+    @foreach (var employee in Model.Employees)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>
+                    @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
+                </strong>
+                <div class="pull-right">
+                    <label>Approved</label>
+                    @Html.CheckBoxFor(modelItem => Model.timeperiod.isApprovedBool)
+                </div>
+            </div>
+            @{int i = 0;}
+            @foreach (var project in Model.Projects)
+            {
+                @*<div id="accordion">*@
+                <div class="panel-group" id="accordion_@i">
+                    <div class="panel panel-default" id="panel_@i">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-target="#collapseOne_@i" href="#collapseOne_@i">
+                                    --Project @Html.DisplayFor(modelItem => project.projectName)--
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne_@i" class="panel-collapse collapse in">
+                            <div class="panel-body">
                                 <table class="table table-hover">
                                     <tr>
                                         <th>
@@ -80,82 +80,25 @@
                                             </td>
 
                                         </tr>
-
                                     }
 
                                 </table>
                             </div>
-                        }
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-            @*<h3>
-                    --Project @Html.DisplayFor(modelItem => project.projectName)--
-                </h3>
-                <div>
-
-                    @foreach (var employee in Model.Employees)
-                {
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <strong>
-                                    @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
-                                </strong>
-                            </div>
-
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>
-                                        @Html.Label("Activity Name")
-                                    </th>
-                                    <th>
-                                        @Html.Label("Hours logged")
-                                    </th>
-                                    <th>
-                                        @Html.Label("Comment")
-
-                                    </th>
-                                    <th>
-                                        @Html.Label("Entry Date")
-                                    </th>
-                                </tr>
-
-                                @foreach (var activity in project.activities)
-                                {
-
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => activity.activityName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().hours)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().comments)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().date)
-                                        </td>
-
-                                    </tr>
-
-                                }
-
-                            </table>
-                        </div>
-                    }
-                </div>*@
+                i++;
+            }
 
         </div>
-        i++;
-    }
 
 
-</div>
+            }
+
+           
+
+
+        </div>
 
 
 @Scripts.Render("~/bundles/modalform")

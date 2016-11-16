@@ -19,6 +19,7 @@ namespace DatabaseEntities
         {
             this.audittrails = new HashSet<audittrail>();
             this.favorites = new HashSet<favorite>();
+            this.hoursworkeds = new HashSet<hoursworked>();
             this.timeperiods = new HashSet<timeperiod>();
             this.groups = new HashSet<group>();
         }
@@ -37,6 +38,8 @@ namespace DatabaseEntities
         public virtual ICollection<audittrail> audittrails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<favorite> favorites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hoursworked> hoursworkeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<timeperiod> timeperiods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
