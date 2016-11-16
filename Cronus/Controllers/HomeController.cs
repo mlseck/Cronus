@@ -104,16 +104,23 @@ namespace Cronus.Controllers
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_Employee_employeeID == empId && s.date == date select s).ToList();
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
+            project proj;
+            employee emp;
+
             foreach (hoursworked hrsW in hrs)
             {
                 List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
 
                 foreach (activity activ in activities)
                 {
+                    proj = db.projects.Find(activ.selectedProject);
+                    emp = db.employees.Find(empId);
                     hrsWrkd.Add(new MonthlyViewModel()
                     {
                         ActivityName = activ.activityName,
-                        HrsWorked = hrsW.hours.ToString()
+                        HrsWorked = hrsW.hours.ToString(),
+                        ProjectName = proj.projectName,
+                        //isAdmin = 
                     });
                 }
             }

@@ -1,5 +1,8 @@
 ﻿
 $(document).ready(function () {
+    var HrsWrkd = ""
+
+
     $(function () {
         $.ajax({
             type: "POST",
@@ -29,10 +32,18 @@ $(document).ready(function () {
                                     //will overwrite if hours logged
                                     $('#modalTitle').html("Hours Worked on " + date.format("dddd") + ", " + date.format("MMMM") + " " + date.format("D"))
 
-                                    var HrsWrkd = ""
+                              
                                     var newLine = "\n"
+                                    //add if adminstrative user to edit hours
+
+
+                                    //var link = document.createElement('a');
+                                    //link.innerHTML = "Edit Activity";
+
+
                                     $.each(data, function (index, element) {
-                                        HrsWrkd += "You worked " + element.HrsWorked + " Hour(s) on " + element.ActivityName + "." + "<br />"
+                                        //link.setAttribute('href', '/');
+                                        HrsWrkd += "You worked " + element.HrsWorked + " Hour(s) on " + element.ActivityName + " for project: " + element.ProjectName + "<br />"
                                         $('#modalBody').html(HrsWrkd)
                                     });
 
@@ -47,8 +58,23 @@ $(document).ready(function () {
                         }
                     },
 
-                    //Add function for project clicked??
+                    //Add function for project hover??
+                    eventRender: function (event, element) {
+                        //add if statemenet for only administrative users
+                        $(element).tooltip({ title: "Click to edit project." });
+                    },
 
+                    //hover over day
+                    dayRender: function (date, cell) {
+                        //HrsWorked
+                        12
+                    },
+
+
+                    //Click event
+                    eventClick: function (event, jsEvent, view) {
+                        window.location = "/Project/Edit/" + event.id;
+                    },
 
 
                     //Getting events
@@ -76,6 +102,7 @@ $(document).ready(function () {
                     height: 650,
                     events: $.map(data, function (item, i) {
                         var event = new Object();
+                        event.id = item.projectID;
                         event.title = item.projectName;
                         event.start = moment(item.projectStartDate).utc();
                         event.end = moment(item.projectEndDate).utc();
@@ -92,3 +119,4 @@ $(document).ready(function () {
 
     })
 });
+
