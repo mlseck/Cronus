@@ -21,6 +21,8 @@ namespace Cronus.ViewModels
             //Working on pulling hours/activities based on week and employee
             public IEnumerable<hoursworked> HoursWorked { get; set; }
             public hoursworked hrsWorked { get; set; }
+            public int totalHoursWorked { get; set; }
+            public string Comment { get; set; }
          
     }
 }

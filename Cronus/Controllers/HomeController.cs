@@ -44,6 +44,20 @@ namespace Cronus.Controllers
 
         }
 
+
+        public ActionResult AddHourWorked()
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
+            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            return PartialView("_hoursworkedrow", myModel);
+        }
+
+
+
         //Method will update the activities dropdownlist in index page when specific project is picked
         [HttpPost]
         public ActionResult FillActivities(int projectID)

@@ -3,7 +3,6 @@
     alert('HERE');
 });
 
-
 function addNewRows(table) {
     var t = table.toString();
     var x = document.getElementById(t);
@@ -26,6 +25,7 @@ function removeRow(table, row) {
     }
     return;
 }
+
 
 $(document).ready(function () {
     $(".hoursInput").change(function () {
