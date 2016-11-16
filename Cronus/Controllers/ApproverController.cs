@@ -23,7 +23,7 @@ namespace Cronus.Controllers
             return View(db.timeperiods.ToList());
         }
 
-        public ActionResult ApproverIndex(int groupID)
+        public ActionResult ApproverIndex(int groupID, timeperiod timeperiod)
         {
 
             var groupQuery = db.groups.Find(groupID);
@@ -35,7 +35,7 @@ namespace Cronus.Controllers
             var employeeQuery = (from e in db.employees where (employeeIds.Contains(e.employeeID)) select e).ToList();
 
             //getting the first timeperiod to test functionality. Dynamicism will be implemented later
-            timeperiod timeperiod = db.timeperiods.FirstOrDefault();
+            //timeperiod timeperiod = db.timeperiods.FirstOrDefault();
 
             ApproverViewModel approverViewModel = new ApproverViewModel();
             approverViewModel.Projects = projectsQuery;

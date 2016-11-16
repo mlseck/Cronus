@@ -22,6 +22,21 @@ namespace DatabaseEntities
     
         public System.DateTime periodEndDate { get; set; }
         public short isApproved { get; set; }
+
+        public bool isApprovedBool
+        {
+            get { return isApproved == 1; }
+            //set { isApproved = value ? 1 : 0; }
+
+            set
+            {
+                if (value)
+                    isApproved = 1;
+                else
+                    isApproved = 0;
+            }
+        }
+
         public string Employee_employeeID { get; set; }
     
         public virtual employee employee { get; set; }

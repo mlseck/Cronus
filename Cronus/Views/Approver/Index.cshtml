@@ -14,7 +14,7 @@
             @Html.DisplayFor(modelItem => item.periodEndDate)
         </td>
         <td>
-            @Html.ActionLink("Edit", "ApproverIndex", new { groupID = ViewBag.GroupId })
+            @Html.ActionLink("Select", "ApproverIndex", new { groupID = ViewBag.GroupId, timeperiod = item})
            
         </td>
     </tr>

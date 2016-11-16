@@ -17,6 +17,7 @@ namespace DatabaseEntities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public project()
         {
+            this.hoursworkeds = new HashSet<hoursworked>();
             this.activities = new HashSet<activity>();
             this.groups = new HashSet<group>();
         }
@@ -30,6 +31,8 @@ namespace DatabaseEntities
         public string projectAbbreviation { get; set; }
         public short projectActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hoursworked> hoursworkeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<activity> activities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

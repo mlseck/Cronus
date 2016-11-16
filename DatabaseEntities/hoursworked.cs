@@ -21,8 +21,10 @@ namespace DatabaseEntities
         public System.DateTime TimePeriod_periodEndDate { get; set; }
         public string TimePeriod_Employee_employeeID { get; set; }
         public int Activity_activityID { get; set; }
+        public int Project_projectID { get; set; }
     
         public virtual activity activity { get; set; }
+        public virtual project project { get; set; }
         public virtual timeperiod timeperiod { get; set; }
     }
 }

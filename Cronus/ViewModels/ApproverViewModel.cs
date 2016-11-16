@@ -13,6 +13,7 @@ namespace Cronus.ViewModels
         public IEnumerable<employee> Employees { get; set; }
         public ICollection<hoursworked> HoursWorkedList { get; set; }
         public timeperiod timeperiod { get; set; }
+        public bool isApproved { get; set; }
 
     }
 }
