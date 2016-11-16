@@ -13,6 +13,7 @@ function addNewRows(table) {
     new_row.cells[0].innerHTML.id = len;
     x = x.firstElementChild;
     x.appendChild(new_row);
+   
     return;
 }
 

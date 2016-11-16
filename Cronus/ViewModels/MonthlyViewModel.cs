@@ -21,5 +21,7 @@ namespace Cronus.ViewModels
 
         public String ActivityName { get; set; }
         public String HrsWorked { get; set; }
+        public String ProjectName { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
