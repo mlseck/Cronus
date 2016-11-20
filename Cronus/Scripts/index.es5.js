@@ -14,6 +14,8 @@ function addNewRows(table) {
     new_row.cells[0].innerHTML.id = len;
     x = x.firstElementChild;
     x.appendChild(new_row);
+
+    return;
 }
 
 function removeRow(table, row) {
@@ -23,13 +25,8 @@ function removeRow(table, row) {
         document.getElementById(t).deleteRow(i);
         console.log(table.text);
     }
+    return;
 }
-
-$(document).ready(function () {
-    $('#save').click(function () {
-        alert("HERE");
-    });
-});
 
 $(document).ready(function () {
     $(".hoursInput").change(function () {
@@ -64,6 +61,12 @@ $(document).ready(function () {
             // handle status === "timeout"
             // handle other errors
         }
+    });
+});
+
+$(document).ready(function () {
+    $('#save').click(function () {
+        alert("HERE");
     });
 });
 
