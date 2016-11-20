@@ -1,8 +1,9 @@
-﻿$(document).load(function () {
+﻿'use strict';
+
+$(document).load(function () {
     $('#dateTitle').text("View for the Week of" + new Date(new Date().getTime()).toLocaleDateString());
     alert('HERE');
 });
-
 
 function addNewRows(table) {
     var t = table.toString();
@@ -48,18 +49,21 @@ $(document).ready(function () {
             affected: null
         }),
         //Need to pass through a variable
-        success: function (data) {
+        success: function success(data) {
             console.log(data);
         },
         statusCode: {
-            404: function (content) { alert('cannot find resource'); },
-            500: function (content) { alert('internal server error'); }
+            404: function _(content) {
+                alert('cannot find resource');
+            },
+            500: function _(content) {
+                alert('internal server error');
+            }
         },
-        error: function (req, status, errorObj) {
+        error: function error(req, status, errorObj) {
             // handle status === "timeout"
             // handle other errors
         }
     });
 });
-
 
