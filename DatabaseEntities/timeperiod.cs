@@ -18,14 +18,15 @@ namespace DatabaseEntities
         public timeperiod()
         {
             this.hoursworkeds = new HashSet<hoursworked>();
+            this.employees = new HashSet<employee>();
         }
     
         public System.DateTime periodEndDate { get; set; }
         public short isApproved { get; set; }
-        public string Employee_employeeID { get; set; }
     
-        public virtual employee employee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hoursworked> hoursworkeds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<employee> employees { get; set; }
     }
 }

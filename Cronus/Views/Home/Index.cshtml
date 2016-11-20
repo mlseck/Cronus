@@ -9,25 +9,41 @@
 
 @Scripts.Render("~/Scripts/index.js")
 
-
-
-<button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
-
-<button type="button" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
-<br />
-<br />
-
-@*<table>
-    <tr>
-        @Html.Partial("HourInputPartial")
-    </tr>
-
-    <tr>
-        @{
-            Html.RenderPartial("HourInputPartial");
+@section Scripts
+    {
+    <script type="text/javascript">
+        function AddRow(_day) {
+            console.log("Executing Add Script")
+            $.ajax({
+                async: false,
+                url: '/Home/AddHourWorked'
+            }).success(function (partialView) {
+                var divID = "#hoursworkedrow" + _day.id.slice(-3);
+                console.log(divID);
+                $(divID).append(partialView);
+            });
         }
-    </tr>
-</table>*@
+    </script>
+}
+
+<h2 id="dateTitle" align="center"></h2>
+
+<div class="col-lg-12">
+    <div class="row">
+        <div class="col-xs-4">
+            <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
+
+        </div>
+        <div class="col-xs-4">
+            <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
+        </div>
+        <div class="col-xs-4">
+            <button type="button" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
+        </div>
+    </div>
+</div>
+
+<br />
 
 
 <table class="table table-striped">
@@ -54,47 +70,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@using (Html.BeginForm("UpdateActivities", "Home", FormMethod.Post, new { id = "projectChangeForm" }))
-                                    {
-                                        @Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---", new { @Id = "Projects", onchange = "$('#projectChangeForm').submit()", name = "action:UpdateActivities" })
-                                    }*@
-                                    
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                            {
-                                                 <option>@activity.activityName</option>
-                                            }
-
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedActivityID, Model.ActivityList, "--- Select Activity ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputMon" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputMon" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableMon.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                           
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableMon.id);" name="add">Add Activity</button>
+                    <div id="hoursworkedrowMon">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
 
         </tr>
         <tr>
@@ -111,42 +95,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputTues" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputTues" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableTues.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableTues.id);" name="add">Add Activity</button>
+
+                    <div id="hoursworkedrowTue">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
             </td>
         </tr>
         <tr>
@@ -163,42 +121,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputWed" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputWed" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableWed.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+   
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableWed.id);" name="add">Add Activity</button>
+                    <div id="hoursworkedrowWed">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
             </td>
         </tr>
         <tr>
@@ -215,42 +146,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputThu" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputThu" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableThu.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                      
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableThu.id);" name="add">Add Activity</button>
+                <div id="hoursworkedrowThu">
+                    @Html.Partial("_hoursworkedrow")
+                </div>
+                <div>
+                    <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this)" value="Add Activity" />
+                </div>
             </td>
         </tr>
         <tr>
@@ -267,42 +171,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputFri" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputFri" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableFri.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                       
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableFri.id);" name="add">Add Activity</button>
+                <div id="hoursworkedrowFri">
+                    @Html.Partial("_hoursworkedrow")
+                </div>
+                <div>
+                    <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this)" value="Add Activity" />
+                </div>
             </td>
         </tr>
         <tr>
@@ -319,42 +196,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputSat" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputSat" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableSat.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                       
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableSat.id);" name="add">Add Activity</button>
+                <div id="hoursworkedrowSat">
+                    @Html.Partial("_hoursworkedrow")
+                </div>
+                <div>
+                    <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this)" value="Add Activity" />
+                </div>
             </td>
         </tr>
         <tr>
@@ -371,42 +221,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="projSelList">
-                                        @foreach (DatabaseEntities.project project in Model.Projects)
-                                        {
-                                            <option>@project.projectName</option>
-                                        }
-                                    </select>
-                                    @*@Html.DropDownListFor(m => m.SelectedProjectID, Model.ProjectList, "--- Select Project ---")*@
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select class="form-control" id="actSelList">
-                                        @foreach (DatabaseEntities.activity activity in Model.Activities)
-                                        {
-                                            <option>@activity.activityName</option>
-                                        }
-
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="number" min="0" class="form-control hoursInput" id="hoursInputSun" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="commentsInputSun" />
-                            </td>
-                            <td>
-                                <span class="glyphicon glyphicon-remove" onclick="removeRow(actProjSubTableSun.id, this);" width="200%"></span>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
-                <button type="button" class="add-button" onclick="addNewRows(actProjSubTableSun.id);" name="add">Add Activity</button>
+                <div id="hoursworkedrowSun">
+                    @Html.Partial("_hoursworkedrow")
+                </div>
+                <div>
+                    <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this)" value="Add Activity" />
+                </div>
             </td>
         </tr>
     </tbody>

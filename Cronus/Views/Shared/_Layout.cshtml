@@ -29,14 +29,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("CRONUS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style = "color:#ffcc00" })
+                @Html.ActionLink("CRONUS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style = "color:#FFDF00" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", null, new { style = "color:#ffcc00" })</li>
-                    <li>@Html.ActionLink("Project", "Index", "Project", null, new { style = "color:#ffcc00" })</li>
-                    <li>@Html.ActionLink("Favorite", "Favorite", "Home", null, new { style = "color:#ffcc00" })</li>
-                    <li>@Html.ActionLink("Groups", "Index", "groups", null, new { style = "color:#ffcc00" })</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home", null, new { style = "color:#ffffff" })</li>
+                    <li>@Html.ActionLink("Project", "Index", "Project", null, new { style = "color:#ffffff" })</li>
+                    <li>@Html.ActionLink("Favorite", "Favorite", "Home", null, new { style = "color:#ffffff" })</li>
+                    <li>@Html.ActionLink("Groups", "Index", "groups", null, new { style = "color:#ffffff" })</li>
+                    <li>@Html.ActionLink("Manage group", "Index", "Approver", null, new { style = "color:#ffffff" })</li>
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

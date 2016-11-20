@@ -11,8 +11,7 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class employee
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,29 +19,18 @@ namespace DatabaseEntities
         {
             this.audittrails = new HashSet<audittrail>();
             this.favorites = new HashSet<favorite>();
+            this.hoursworkeds = new HashSet<hoursworked>();
             this.timeperiods = new HashSet<timeperiod>();
             this.groups = new HashSet<group>();
         }
-        [Display(Name = "ID")]
+    
         public string employeeID { get; set; }
-        [Display(Name = "First Name")]
         public string employeeFirstName { get; set; }
-        [Display(Name = "Last Name")]
         public string employeeLastName { get; set; }
-
-        [Display(Name = "Min Hours")]
         public Nullable<int> employeeMinHours { get; set; }
-
-        [Display(Name = "Max Hours")]
         public Nullable<int> employeeMaxHours { get; set; }
-
-        
         public int employeePrivileges { get; set; }
-
-        [Display(Name = "Email Address")]
         public string employeeEmailAddress { get; set; }
-
-        [Display(Name = "Password")]
         public string employeePwd { get; set; }
         public string employeeGroupManaged { get; set; }
     
@@ -50,6 +38,8 @@ namespace DatabaseEntities
         public virtual ICollection<audittrail> audittrails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<favorite> favorites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<hoursworked> hoursworkeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<timeperiod> timeperiods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -3,7 +3,6 @@
     alert('HERE');
 });
 
-
 function addNewRows(table) {
     var t = table.toString();
     var x = document.getElementById(t);
@@ -13,6 +12,8 @@ function addNewRows(table) {
     new_row.cells[0].innerHTML.id = len;
     x = x.firstElementChild;
     x.appendChild(new_row);
+   
+    return;
 }
 
 function removeRow(table, row) {
@@ -22,13 +23,9 @@ function removeRow(table, row) {
         document.getElementById(t).deleteRow(i);
         console.log(table.text);
     }
+    return;
 }
 
-$(document).ready(function () {
-    $('#save').click(function () {
-        alert("HERE");
-    });
-});
 
 $(document).ready(function () {
     $(".hoursInput").change(function () {
@@ -62,4 +59,8 @@ $(document).ready(function () {
     });
 });
 
-
+$(document).ready(function () {
+    $('#save').click(function () {
+        alert("HERE");
+    });
+});

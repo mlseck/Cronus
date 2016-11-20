@@ -21,7 +21,6 @@ namespace Cronus.Controllers
 
 
 
-
         // If you are using Dependency Injection, you can delete the following constructor
         public HomeController() : this(new ProjectRepository(), new ActivityRepository())
         {
@@ -45,17 +44,28 @@ namespace Cronus.Controllers
 
         }
 
-        //Method will update the activities dropdownlist in index page when specific project is picked
-        [HttpPost]
-        [ActionName("UpdateActivities")]
-        public ActionResult UpdateActivities(HomeViewModel myModel)
+
+        public ActionResult AddHourWorked()
         {
+            HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
             myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
-            project Selected = db.projects.Find(myModel.SelectedProjectID);
-            myModel.ActivityList = new SelectList(Selected.activities.ToList(), "activityID", "activityName");
-            return View("Index", myModel);
+            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            return PartialView("_hoursworkedrow", myModel);
+        }
+
+
+
+        //Method will update the activities dropdownlist in index page when specific project is picked
+        [HttpPost]
+        public ActionResult FillActivities(int projectID)
+        {
+            List<activity> objactivity = new List<activity>();
+            objactivity = db.projects.Find(projectID).activities.ToList();
+            SelectList myActivities = new SelectList(objactivity, "activityID", "activityName", 0);
+            return Json(myActivities);
         }
 
         public ActionResult Monthly()
@@ -69,14 +79,15 @@ namespace Cronus.Controllers
         public JsonResult GetEvents()
         {
             //will get projects/activities for the month.
-            List<MonthlyViewModel> projects = new List<MonthlyViewModel>();
+            List<project> projects = new List<project>();
             foreach (project proj in db.projects)
             {
-                projects.Add(new MonthlyViewModel()
+                projects.Add(new project()
                 {
-                    Name = proj.projectName,
-                    StartDate = proj.projectStartDate.ToString(),
-                    EndDate = proj.projectEndDate.ToString()
+                    projectID = proj.projectID,
+                    projectName = proj.projectName,
+                    projectStartDate = proj.projectStartDate,
+                    projectEndDate = proj.projectEndDate
                 });
             }
             return Json(projects, JsonRequestBehavior.AllowGet);
@@ -84,27 +95,38 @@ namespace Cronus.Controllers
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
-        public JsonResult GetHoursWorkedPerDay()
+        public JsonResult GetHoursWorkedPerDay(DateTime date)
         {
+            //Still need to pass through employee ID, this will do fore now
+            // same with date
+            string empId = "Amill";
+            //DateTime date = DateTime.Today.AddDays(-1);
 
-            // projecthas proj = projectRepository.Find(projID);
-            //project proj = db.projects.Where(n=>n.projectID == 1);
-            //activity activ = db.activities.Where(activ.activityID == );
-            activity activity = new activity();
-             
-            
+            List<hoursworked> hrs = (from s in db.hoursworkeds where s.Employee_employeeID == empId && s.date == date select s).ToList();
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            foreach(hoursworked hrs in db.hoursworkeds
-                                                .Where(n=>n.Activity_activityID == 1)
-                                                .Where(n=>n.TimePeriod_Employee_employeeID == "Amill"))
-                    {
-                        hrsWrkd.Add(new MonthlyViewModel()
-                        {
-                            ActivityName = hrs.activity.ToString(),
-                            HrsWorked = hrs.hours.ToString()
-                        });
-                    }
 
+            project proj;
+            employee emp;
+
+            foreach (hoursworked hrsW in hrs)
+            {
+                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
+
+                foreach (activity activ in activities)
+                {
+                    proj = db.projects.Find(hrsW.Project_projectID);
+                    emp = db.employees.Find(empId);
+                    hrsWrkd.Add(new MonthlyViewModel()
+                    {
+                        ActivityName = activ.activityName,
+                        HrsWorked = hrsW.hours.ToString(),
+                        ProjectName = proj.projectName,
+                        //isAdmin = 
+                    });
+                }
+            }
+
+           
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
@@ -156,7 +178,7 @@ namespace Cronus.Controllers
             foreach (hoursworked hrs in db.hoursworkeds
                                                 .Where(n => n.date>= startDate)
                                                 .Where(n => n.date<= endDate)
-                                                .Where(n=> n.TimePeriod_Employee_employeeID == employeeID))
+                                                .Where(n=> n.Employee_employeeID == employeeID))
             {
                 hrsWrkd.Add(new MonthlyViewModel()
                 {
@@ -225,7 +247,7 @@ namespace Cronus.Controllers
                 AddFavorite.Employee_employeeID = "TestID";
                 // Check if selected activity is already a favorite. If not, add to Favorite Table
                 var existsQuery = from f in db.favorites
-                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("5X67H8"))
+                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("TestID"))
                                   select f;
                 if (!existsQuery.Any())
                 {
