@@ -12,17 +12,21 @@ namespace DatabaseEntities
     using System;
     using System.Collections.Generic;
     
-    public partial class timeperiod
+    public partial class employeetimeperiod
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public timeperiod()
+        public employeetimeperiod()
         {
-            this.employeetimeperiods = new HashSet<employeetimeperiod>();
+            this.hoursworkeds = new HashSet<hoursworked>();
         }
     
-        public System.DateTime periodEndDate { get; set; }
+        public string Employee_employeeID { get; set; }
+        public System.DateTime TimePeriod_periodEndDate { get; set; }
+        public bool isApproved { get; set; }
     
+        public virtual employee employee { get; set; }
+        public virtual timeperiod timeperiod { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<employeetimeperiod> employeetimeperiods { get; set; }
+        public virtual ICollection<hoursworked> hoursworkeds { get; set; }
     }
 }

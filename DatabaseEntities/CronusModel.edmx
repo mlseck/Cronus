@@ -41,13 +41,14 @@
           <Property Name="employeePwd" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="employeeGroupManaged" Type="nvarchar" MaxLength="45" />
         </EntityType>
-        <EntityType Name="employee_has_timeperiod">
+        <EntityType Name="employeetimeperiod">
           <Key>
             <PropertyRef Name="Employee_employeeID" />
             <PropertyRef Name="TimePeriod_periodEndDate" />
           </Key>
           <Property Name="Employee_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="TimePeriod_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="isApproved" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="favorite">
           <Key>
@@ -75,8 +76,8 @@
         <EntityType Name="hoursworked">
           <Key>
             <PropertyRef Name="entryID" />
+            <PropertyRef Name="TimePeriod_employeeID" />
             <PropertyRef Name="TimePeriod_periodEndDate" />
-            <PropertyRef Name="Employee_employeeID" />
             <PropertyRef Name="Activity_activityID" />
             <PropertyRef Name="Project_projectID" />
           </Key>
@@ -84,8 +85,8 @@
           <Property Name="hours" Type="decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="date" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="comments" Type="nvarchar" MaxLength="100" />
+          <Property Name="TimePeriod_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="TimePeriod_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
-          <Property Name="Employee_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Activity_activityID" Type="int" Nullable="false" />
           <Property Name="Project_projectID" Type="int" Nullable="false" />
         </EntityType>
@@ -123,7 +124,12 @@
             <PropertyRef Name="periodEndDate" />
           </Key>
           <Property Name="periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
-          <Property Name="isApproved" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -155,27 +161,27 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="employee_has_timeperiod$fk_Employee_has_TimePeriod_Employee1">
-          <End Role="employee" Type="Self.employee" Multiplicity="1" />
-          <End Role="employee_has_timeperiod" Type="Self.employee_has_timeperiod" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="employee">
-              <PropertyRef Name="employeeID" />
-            </Principal>
-            <Dependent Role="employee_has_timeperiod">
-              <PropertyRef Name="Employee_employeeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="employee_has_timeperiod$fk_Employee_has_TimePeriod_TimePeriod1">
+        <Association Name="employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1">
           <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="1" />
-          <End Role="employee_has_timeperiod" Type="Self.employee_has_timeperiod" Multiplicity="*" />
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="timeperiod">
               <PropertyRef Name="periodEndDate" />
             </Principal>
-            <Dependent Role="employee_has_timeperiod">
+            <Dependent Role="employeetimeperiod">
               <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="employeetimeperiod$fk_EmployeTimePeriod_Employee1">
+          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="employeeID" />
+            </Principal>
+            <Dependent Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -239,18 +245,6 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="hoursworked$fk_HoursWorked_Employee1">
-          <End Role="employee" Type="Self.employee" Multiplicity="1" />
-          <End Role="hoursworked" Type="Self.hoursworked" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="employee">
-              <PropertyRef Name="employeeID" />
-            </Principal>
-            <Dependent Role="hoursworked">
-              <PropertyRef Name="Employee_employeeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="hoursworked$fk_HoursWorked_Project1">
           <End Role="project" Type="Self.project" Multiplicity="1" />
           <End Role="hoursworked" Type="Self.hoursworked" Multiplicity="*" />
@@ -264,13 +258,15 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           </ReferentialConstraint>
         </Association>
         <Association Name="hoursworked$fk_HoursWorked_TimePeriod1">
-          <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="1" />
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
           <End Role="hoursworked" Type="Self.hoursworked" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="timeperiod">
-              <PropertyRef Name="periodEndDate" />
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
             </Principal>
             <Dependent Role="hoursworked">
+              <PropertyRef Name="TimePeriod_employeeID" />
               <PropertyRef Name="TimePeriod_periodEndDate" />
             </Dependent>
           </ReferentialConstraint>
@@ -327,7 +323,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <EntitySet Name="activity" EntityType="Self.activity" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="audittrail" EntityType="Self.audittrail" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="employee" EntityType="Self.employee" Schema="cronus2.0" store:Type="Tables" />
-          <EntitySet Name="employee_has_timeperiod" EntityType="Self.employee_has_timeperiod" Schema="cronus2.0" store:Type="Tables" />
+          <EntitySet Name="employeetimeperiod" EntityType="Self.employeetimeperiod" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="favorite" EntityType="Self.favorite" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="group" EntityType="Self.group" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="group_has_employee" EntityType="Self.group_has_employee" Schema="cronus2.0" store:Type="Tables" />
@@ -336,6 +332,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <EntitySet Name="project_has_activity" EntityType="Self.project_has_activity" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="project_has_group" EntityType="Self.project_has_group" Schema="cronus2.0" store:Type="Tables" />
           <EntitySet Name="timeperiod" EntityType="Self.timeperiod" Schema="cronus2.0" store:Type="Tables" />
+          <EntitySet Name="Table" EntityType="Self.Table" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
             <DefiningQuery>SELECT 
     [database_firewall_rules].[id] AS [id], 
@@ -350,13 +347,13 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employee" />
             <End Role="audittrail" EntitySet="audittrail" />
           </AssociationSet>
-          <AssociationSet Name="employee_has_timeperiod$fk_Employee_has_TimePeriod_Employee1" Association="Self.employee_has_timeperiod$fk_Employee_has_TimePeriod_Employee1">
-            <End Role="employee" EntitySet="employee" />
-            <End Role="employee_has_timeperiod" EntitySet="employee_has_timeperiod" />
-          </AssociationSet>
-          <AssociationSet Name="employee_has_timeperiod$fk_Employee_has_TimePeriod_TimePeriod1" Association="Self.employee_has_timeperiod$fk_Employee_has_TimePeriod_TimePeriod1">
+          <AssociationSet Name="employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1" Association="Self.employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1">
             <End Role="timeperiod" EntitySet="timeperiod" />
-            <End Role="employee_has_timeperiod" EntitySet="employee_has_timeperiod" />
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
+          </AssociationSet>
+          <AssociationSet Name="employeetimeperiod$fk_EmployeTimePeriod_Employee1" Association="Self.employeetimeperiod$fk_EmployeTimePeriod_Employee1">
+            <End Role="employee" EntitySet="employee" />
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
           </AssociationSet>
           <AssociationSet Name="favorite$fk_Favorite_Activity1" Association="Self.favorite$fk_Favorite_Activity1">
             <End Role="activity" EntitySet="activity" />
@@ -378,16 +375,12 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="activity" EntitySet="activity" />
             <End Role="hoursworked" EntitySet="hoursworked" />
           </AssociationSet>
-          <AssociationSet Name="hoursworked$fk_HoursWorked_Employee1" Association="Self.hoursworked$fk_HoursWorked_Employee1">
-            <End Role="employee" EntitySet="employee" />
-            <End Role="hoursworked" EntitySet="hoursworked" />
-          </AssociationSet>
           <AssociationSet Name="hoursworked$fk_HoursWorked_Project1" Association="Self.hoursworked$fk_HoursWorked_Project1">
             <End Role="project" EntitySet="project" />
             <End Role="hoursworked" EntitySet="hoursworked" />
           </AssociationSet>
           <AssociationSet Name="hoursworked$fk_HoursWorked_TimePeriod1" Association="Self.hoursworked$fk_HoursWorked_TimePeriod1">
-            <End Role="timeperiod" EntitySet="timeperiod" />
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
             <End Role="hoursworked" EntitySet="hoursworked" />
           </AssociationSet>
           <AssociationSet Name="project_has_activity$fk_Project_has_Activity_Activity1" Association="Self.project_has_activity$fk_Project_has_Activity_Activity1">
@@ -452,10 +445,21 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Property Name="employeePwd" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="employeeGroupManaged" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="audittrails" Relationship="Self.audittrail_fk_AuditTrail_Employee1" FromRole="employee" ToRole="audittrail" />
+          <NavigationProperty Name="employeetimeperiods" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employee" ToRole="employeetimeperiod" />
           <NavigationProperty Name="favorites" Relationship="Self.favorite_fk_Favorite_Employee1" FromRole="employee" ToRole="favorite" />
-          <NavigationProperty Name="hoursworkeds" Relationship="Self.hoursworked_fk_HoursWorked_Employee1" FromRole="employee" ToRole="hoursworked" />
-          <NavigationProperty Name="timeperiods" Relationship="Self.employee_has_timeperiod" FromRole="employee" ToRole="timeperiod" />
           <NavigationProperty Name="groups" Relationship="Self.group_has_employee" FromRole="employee" ToRole="group" />
+        </EntityType>
+        <EntityType Name="employeetimeperiod">
+          <Key>
+            <PropertyRef Name="Employee_employeeID" />
+            <PropertyRef Name="TimePeriod_periodEndDate" />
+          </Key>
+          <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TimePeriod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="employee" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employeetimeperiod" ToRole="employee" />
+          <NavigationProperty Name="timeperiod" Relationship="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" FromRole="employeetimeperiod" ToRole="timeperiod" />
+          <NavigationProperty Name="hoursworkeds" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="employeetimeperiod" ToRole="hoursworked" />
         </EntityType>
         <EntityType Name="favorite">
           <Key>
@@ -479,8 +483,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
         <EntityType Name="hoursworked">
           <Key>
             <PropertyRef Name="entryID" />
+            <PropertyRef Name="TimePeriod_employeeID" />
             <PropertyRef Name="TimePeriod_periodEndDate" />
-            <PropertyRef Name="Employee_employeeID" />
             <PropertyRef Name="Activity_activityID" />
             <PropertyRef Name="Project_projectID" />
           </Key>
@@ -488,14 +492,13 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Property Name="hours" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="comments" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TimePeriod_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TimePeriod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Activity_activityID" Type="Int32" Nullable="false" />
           <Property Name="Project_projectID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="activity" Relationship="Self.hoursworked_fk_HoursWorked_Activity1" FromRole="hoursworked" ToRole="activity" />
-          <NavigationProperty Name="employee" Relationship="Self.hoursworked_fk_HoursWorked_Employee1" FromRole="hoursworked" ToRole="employee" />
+          <NavigationProperty Name="employeetimeperiod" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="hoursworked" ToRole="employeetimeperiod" />
           <NavigationProperty Name="project" Relationship="Self.hoursworked_fk_HoursWorked_Project1" FromRole="hoursworked" ToRole="project" />
-          <NavigationProperty Name="timeperiod" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="hoursworked" ToRole="timeperiod" />
         </EntityType>
         <EntityType Name="project">
           <Key>
@@ -518,9 +521,13 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <PropertyRef Name="periodEndDate" />
           </Key>
           <Property Name="periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="isApproved" Type="Int16" Nullable="false" />
-          <NavigationProperty Name="hoursworkeds" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="timeperiod" ToRole="hoursworked" />
-          <NavigationProperty Name="employees" Relationship="Self.employee_has_timeperiod" FromRole="timeperiod" ToRole="employee" />
+          <NavigationProperty Name="employeetimeperiods" Relationship="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" FromRole="timeperiod" ToRole="employeetimeperiod" />
+        </EntityType>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="database_firewall_rules">
           <Key>
@@ -574,6 +581,18 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="employeetimeperiod_fk_EmployeTimePeriod_Employee1">
+          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="employeeID" />
+            </Principal>
+            <Dependent Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="favorite_fk_Favorite_Employee1">
           <End Role="employee" Type="Self.employee" Multiplicity="1" />
           <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
@@ -586,15 +605,29 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="hoursworked_fk_HoursWorked_Employee1">
-          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+        <Association Name="employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1">
+          <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="1" />
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="timeperiod">
+              <PropertyRef Name="periodEndDate" />
+            </Principal>
+            <Dependent Role="employeetimeperiod">
+              <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="hoursworked_fk_HoursWorked_TimePeriod1">
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
           <End Role="hoursworked" Type="Self.hoursworked" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="employee">
-              <PropertyRef Name="employeeID" />
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
             </Principal>
             <Dependent Role="hoursworked">
-              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -609,22 +642,6 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
               <PropertyRef Name="Project_projectID" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <Association Name="hoursworked_fk_HoursWorked_TimePeriod1">
-          <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="1" />
-          <End Role="hoursworked" Type="Self.hoursworked" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="timeperiod">
-              <PropertyRef Name="periodEndDate" />
-            </Principal>
-            <Dependent Role="hoursworked">
-              <PropertyRef Name="TimePeriod_periodEndDate" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="employee_has_timeperiod">
-          <End Role="employee" Type="Self.employee" Multiplicity="*" />
-          <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="*" />
         </Association>
         <Association Name="group_has_employee">
           <End Role="employee" Type="Self.employee" Multiplicity="*" />
@@ -642,11 +659,13 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <EntitySet Name="activities" EntityType="Self.activity" />
           <EntitySet Name="audittrails" EntityType="Self.audittrail" />
           <EntitySet Name="employees" EntityType="Self.employee" />
+          <EntitySet Name="employeetimeperiods" EntityType="Self.employeetimeperiod" />
           <EntitySet Name="favorites" EntityType="Self.favorite" />
           <EntitySet Name="groups" EntityType="Self.group" />
           <EntitySet Name="hoursworkeds" EntityType="Self.hoursworked" />
           <EntitySet Name="projects" EntityType="Self.project" />
           <EntitySet Name="timeperiods" EntityType="Self.timeperiod" />
+          <EntitySet Name="Tables" EntityType="Self.Table" />
           <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" />
           <AssociationSet Name="favorite_fk_Favorite_Activity1" Association="Self.favorite_fk_Favorite_Activity1">
             <End Role="activity" EntitySet="activities" />
@@ -660,25 +679,25 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employees" />
             <End Role="audittrail" EntitySet="audittrails" />
           </AssociationSet>
+          <AssociationSet Name="employeetimeperiod_fk_EmployeTimePeriod_Employee1" Association="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1">
+            <End Role="employee" EntitySet="employees" />
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
+          </AssociationSet>
           <AssociationSet Name="favorite_fk_Favorite_Employee1" Association="Self.favorite_fk_Favorite_Employee1">
             <End Role="employee" EntitySet="employees" />
             <End Role="favorite" EntitySet="favorites" />
           </AssociationSet>
-          <AssociationSet Name="hoursworked_fk_HoursWorked_Employee1" Association="Self.hoursworked_fk_HoursWorked_Employee1">
-            <End Role="employee" EntitySet="employees" />
+          <AssociationSet Name="employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" Association="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1">
+            <End Role="timeperiod" EntitySet="timeperiods" />
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
+          </AssociationSet>
+          <AssociationSet Name="hoursworked_fk_HoursWorked_TimePeriod1" Association="Self.hoursworked_fk_HoursWorked_TimePeriod1">
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
             <End Role="hoursworked" EntitySet="hoursworkeds" />
           </AssociationSet>
           <AssociationSet Name="hoursworked_fk_HoursWorked_Project1" Association="Self.hoursworked_fk_HoursWorked_Project1">
             <End Role="project" EntitySet="projects" />
             <End Role="hoursworked" EntitySet="hoursworkeds" />
-          </AssociationSet>
-          <AssociationSet Name="hoursworked_fk_HoursWorked_TimePeriod1" Association="Self.hoursworked_fk_HoursWorked_TimePeriod1">
-            <End Role="timeperiod" EntitySet="timeperiods" />
-            <End Role="hoursworked" EntitySet="hoursworkeds" />
-          </AssociationSet>
-          <AssociationSet Name="employee_has_timeperiod" Association="Self.employee_has_timeperiod">
-            <End Role="employee" EntitySet="employees" />
-            <End Role="timeperiod" EntitySet="timeperiods" />
           </AssociationSet>
           <AssociationSet Name="group_has_employee" Association="Self.group_has_employee">
             <End Role="employee" EntitySet="employees" />
@@ -735,6 +754,15 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="employeetimeperiods">
+            <EntityTypeMapping TypeName="CronusDatabaseModel.employeetimeperiod">
+              <MappingFragment StoreEntitySet="employeetimeperiod">
+                <ScalarProperty Name="Employee_employeeID" ColumnName="Employee_employeeID" />
+                <ScalarProperty Name="TimePeriod_periodEndDate" ColumnName="TimePeriod_periodEndDate" />
+                <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="favorites">
             <EntityTypeMapping TypeName="CronusDatabaseModel.favorite">
               <MappingFragment StoreEntitySet="favorite">
@@ -759,8 +787,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
                 <ScalarProperty Name="hours" ColumnName="hours" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="TimePeriod_employeeID" ColumnName="TimePeriod_employeeID" />
                 <ScalarProperty Name="TimePeriod_periodEndDate" ColumnName="TimePeriod_periodEndDate" />
-                <ScalarProperty Name="Employee_employeeID" ColumnName="Employee_employeeID" />
                 <ScalarProperty Name="Activity_activityID" ColumnName="Activity_activityID" />
                 <ScalarProperty Name="Project_projectID" ColumnName="Project_projectID" />
               </MappingFragment>
@@ -784,7 +812,13 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <EntityTypeMapping TypeName="CronusDatabaseModel.timeperiod">
               <MappingFragment StoreEntitySet="timeperiod">
                 <ScalarProperty Name="periodEndDate" ColumnName="periodEndDate" />
-                <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tables">
+            <EntityTypeMapping TypeName="CronusDatabaseModel.Table">
+              <MappingFragment StoreEntitySet="Table">
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -800,14 +834,6 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="employee_has_timeperiod" TypeName="CronusDatabaseModel.employee_has_timeperiod" StoreEntitySet="employee_has_timeperiod">
-            <EndProperty Name="employee">
-              <ScalarProperty Name="employeeID" ColumnName="Employee_employeeID" />
-            </EndProperty>
-            <EndProperty Name="timeperiod">
-              <ScalarProperty Name="periodEndDate" ColumnName="TimePeriod_periodEndDate" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="group_has_employee" TypeName="CronusDatabaseModel.group_has_employee" StoreEntitySet="group_has_employee">
             <EndProperty Name="employee">
               <ScalarProperty Name="employeeID" ColumnName="Employee_employeeID" />

@@ -5,45 +5,52 @@
     ViewBag.Title = "ApproverIndex";
 }
 
-<h2>Approve hours</h2>
-
+<h3>Approve hours for the time peried ending @Html.DisplayFor(modelItem => Model.timeperiod.periodEndDate)</h3>
+<h2> </h2>
 
 
 @Scripts.Render("~/bundles/jqueryui")
 
 <script>
     $(function () {
-        $("#accordion").accordion();
+        $("#accordion").accordion({ header: "h3", collapsible: true, active: false });
     });
 </script>
 <div class="demo">
-
+    @{int i = 0;}
     @foreach (var employee in Model.Employees)
     {
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        @*<div class="panel-heading">
                 <strong>
                     @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
                 </strong>
-                <div class="pull-right">
+            <div class="pull-right">
                     <label>Approved</label>
                     @Html.CheckBoxFor(modelItem => Model.timeperiod.isApprovedBool)
-                </div>
             </div>
-            @{int i = 0;}
+        </div>*@
+
+        <h3 class="panel-title">
+            <strong>
+                @*@Html.CheckBoxFor(modelItem => Model.timeperiod.isApprovedBool)*@   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
+            </strong>
+        </h3>
+
+        <div class="panel panel-default">
+            
             @foreach (var project in Model.Projects)
             {
                 @*<div id="accordion">*@
                 <div class="panel-group" id="accordion_@i">
                     <div class="panel panel-default" id="panel_@i">
                         <div class="panel-heading">
-                            <h4 class="panel-title">
+                            <h3 class="panel-title">
                                 <a data-toggle="collapse" data-target="#collapseOne_@i" href="#collapseOne_@i">
                                     --Project @Html.DisplayFor(modelItem => project.projectName)--
                                 </a>
-                            </h4>
+                            </h3>
                         </div>
-                        <div id="collapseOne_@i" class="panel-collapse collapse in">
+                        <div id="collapseOne_@i" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <table class="table table-hover">
                                     <tr>
@@ -70,13 +77,13 @@
                                                 @Html.DisplayFor(modelItem => activity.activityName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().hours)
+                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().hours)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().comments)
+                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().comments)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_Employee_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().date)
+                                                @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().date)
                                             </td>
 
                                         </tr>

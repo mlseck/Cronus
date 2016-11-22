@@ -102,7 +102,7 @@ namespace Cronus.Controllers
             string empId = "Amill";
             //DateTime date = DateTime.Today.AddDays(-1);
 
-            List<hoursworked> hrs = (from s in db.hoursworkeds where s.Employee_employeeID == empId && s.date == date select s).ToList();
+            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date == date select s).ToList();
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
             project proj;
@@ -178,7 +178,7 @@ namespace Cronus.Controllers
             foreach (hoursworked hrs in db.hoursworkeds
                                                 .Where(n => n.date>= startDate)
                                                 .Where(n => n.date<= endDate)
-                                                .Where(n=> n.Employee_employeeID == employeeID))
+                                                .Where(n=> n.TimePeriod_employeeID == employeeID))
             {
                 hrsWrkd.Add(new MonthlyViewModel()
                 {

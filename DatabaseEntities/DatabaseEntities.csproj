@@ -78,6 +78,9 @@
     <Compile Include="employee.cs">
       <DependentUpon>CronusModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="employeetimeperiod.cs">
+      <DependentUpon>CronusModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="favorite.cs">
       <DependentUpon>CronusModel.tt</DependentUpon>
     </Compile>
@@ -95,6 +98,9 @@
       <DependentUpon>CronusModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Table.cs">
+      <DependentUpon>CronusModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="timeperiod.cs">
       <DependentUpon>CronusModel.tt</DependentUpon>
     </Compile>

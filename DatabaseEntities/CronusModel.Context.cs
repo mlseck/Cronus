@@ -28,11 +28,13 @@ namespace DatabaseEntities
         public virtual DbSet<activity> activities { get; set; }
         public virtual DbSet<audittrail> audittrails { get; set; }
         public virtual DbSet<employee> employees { get; set; }
+        public virtual DbSet<employeetimeperiod> employeetimeperiods { get; set; }
         public virtual DbSet<favorite> favorites { get; set; }
         public virtual DbSet<group> groups { get; set; }
         public virtual DbSet<hoursworked> hoursworkeds { get; set; }
         public virtual DbSet<project> projects { get; set; }
         public virtual DbSet<timeperiod> timeperiods { get; set; }
+        public virtual DbSet<Table> Tables { get; set; }
         public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
     }
 }
