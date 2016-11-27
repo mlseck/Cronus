@@ -40,11 +40,8 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $.ajax({
+        type: 'GET',
         url: '/Home/GetBetweenDates',
-        data: JSON.stringify({
-            invoker: 'Amill',
-            affected: null
-        }),
         //Need to pass through a variable
         success: function success(data) {
             console.log(data);

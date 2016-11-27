@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Cronus.Models;
 using Cronus.ViewModels;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Cronus.Controllers
 {
@@ -133,7 +134,7 @@ namespace Cronus.Controllers
 
 
         [HttpGet]
-        public JsonResult GetBetweenDates(string employeeID)
+        public JsonResult GetBetweenDates(String employeeID)
         {
             HomeViewModel homeModel = new HomeViewModel();
 
@@ -174,20 +175,37 @@ namespace Cronus.Controllers
             }
 
 
-            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            foreach (hoursworked hrs in db.hoursworkeds
-                                                .Where(n => n.date>= startDate)
-                                                .Where(n => n.date<= endDate)
-                                                .Where(n=> n.Employee_employeeID == employeeID))
-            {
-                hrsWrkd.Add(new MonthlyViewModel()
-                {
-                    HrsWorked = hrs.hours.ToString()
-                });
-            }
+            //List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            //foreach (hoursworked hrs in db.hoursworkeds
+            //                                    .Where(n => n.date>= startDate)
+            //                                    .Where(n => n.date<= endDate)
+            //                                    .Where(n=> n.Employee_employeeID == employeeID))
+            //{
+            //    hrsWrkd.Add(new MonthlyViewModel()
+            //    {
+            //        HrsWorked = hrs.hours.ToString()
+            //    });
+            //}
 
+            var getHoursQuery = from hrs in db.hoursworkeds
+                                where (hrs.Employee_employeeID == "Amill" &&
+                                hrs.date >= startDate &&
+                                hrs.date <= endDate)
+                                select hrs ;
+            homeModel.HoursWorked = getHoursQuery.ToList();
+
+            JsonConvert.SerializeObject(homeModel, Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            });
+
+            
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpPost]
+        //public JsonResult GetPreviousHours()
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]
