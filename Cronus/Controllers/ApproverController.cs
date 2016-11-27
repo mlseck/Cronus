@@ -23,8 +23,9 @@ namespace Cronus.Controllers
             return View(db.timeperiods.ToList());
         }
 
-        public ActionResult ApproverIndex(int groupID, timeperiod timeperiod)
+        public ActionResult ApproverIndex(int groupID, DateTime periodEnddate)
         {
+            var perioudEndDateQuery = db.timeperiods.Find(periodEnddate);
 
             var groupQuery = db.groups.Find(groupID);
 
@@ -34,6 +35,9 @@ namespace Cronus.Controllers
             string [] employeeIds = groupQuery.employees.Select(x => x.employeeID).ToArray();
             var employeeQuery = (from e in db.employees where (employeeIds.Contains(e.employeeID)) select e).ToList();
 
+           // var timeperiods = db.timeperiods.ToArray();
+           //var employeeTimeperiods = (from et in db.employeetimeperiods where (timeperiods.con)) 
+
             //getting the first timeperiod to test functionality. Dynamicism will be implemented later
             //timeperiod timeperiod = db.timeperiods.FirstOrDefault();
 
@@ -42,7 +46,8 @@ namespace Cronus.Controllers
             approverViewModel.Activities = db.activities.ToList();
             approverViewModel.HoursWorkedList = db.hoursworkeds.ToList();
             approverViewModel.Employees = employeeQuery;
-            approverViewModel.timeperiod = timeperiod;
+            approverViewModel.timeperiod = perioudEndDateQuery;
+            //approverViewModel.employeetimeperiods
             //approverViewModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
 
             return View(approverViewModel);
