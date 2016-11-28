@@ -33,7 +33,7 @@
 
 }
 function DeleteRow(_row) {
-    console.log("Executing Delete Script")
-    $(_row).parents("#hoursRow:first").remove();
+    console.log("Executing Updated Delete Script")
+    $(_row).parents("#hoursWorkedRow:first").remove();
     return false;
 }
