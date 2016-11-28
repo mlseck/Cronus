@@ -12,6 +12,7 @@
             success: function (data) {
                 //alert(data);
                 $('#calendar').fullCalendar({
+
                     dayClick: function (date, allDay, jsEvent, view) {
 
                         if (allDay) {
@@ -33,7 +34,6 @@
                                     var newLine = "\n"
                                     var HrsWrkd = ""
                                     //add if adminstrative user to edit hours
-
 
                                     //var link = document.createElement('a');
                                     //link.innerHTML = "Edit Activity";
@@ -65,7 +65,6 @@
                     dayRender: function (date, cell) {
                         var hrsWrkd = ""
 
-
                         //dont know if this will work, waiting on DB to be fixed
                         $.ajax({
                             contentType: "application/json",
@@ -73,10 +72,12 @@
                             url: "/Home/GetHoursWorkedPerDay/",
                             dataType: "json",
                             success: function (data) {
+
                                 $.each(data, function (index, element) {
                                     //link.setAttribute('href', '/');
                                     hrsWrkd += element.HrsWorked
-                                    cell.append("<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
+                                    weeklyHours(element.HrsWorked, date)
+                                    cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
                                 });
                             },
                             error: function () {
@@ -84,6 +85,7 @@
                             }
                         });
                     },
+                   
 
                     //Click event
                     eventClick: function (event, jsEvent, view) {
@@ -104,6 +106,7 @@
                             }
                         }
                     },
+
 
                     header: {
                         left: 'prev today',
@@ -138,25 +141,22 @@
 
 
 
-
-function getHoursPerDay() {
-    $.each(date, function (index, element) {
-        $.ajax({
-            contentType: "application/json",
-            data: { date: date.format() },
-            url: "/Home/GetHoursWorkedPerDay/",
-            dataType: "json",
-            success: function (data) {
-
-                $.each(data, function (index, element) {
-                    //link.setAttribute('href', '/');
-                    hrsWrkd += element.HrsWorked
-                });
-                cell.append("<br />" + "<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd)
-            }
-        });
+function weeklyHours(hrs, date) {
+    var dateDay = date.format("dddd");
+    var count = count++
+    var weeklyHours = 0
+    var weekCount = 1;
+    weeklyHours = weeklyHours + hrs
 
 
-    });
+
+    if (count = 7) {
+        $('#week' + weekCount).html(hrs + " hours logged this week. ")
+        weeklyHours = 0
+        weekCount = weekCount+1
+
+    }
+
+
 
 }
