@@ -50,7 +50,7 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            return PartialView("_hoursworkedrow", myModel);
+            return PartialView("_hoursworkedrow", myModel.hrsWorked);
         }
 
 
@@ -220,12 +220,12 @@ namespace Cronus.Controllers
             //    });
             //}
 
-            var getHoursQuery = from hrs in db.hoursworkeds
-                                where (hrs.TimePeriod_employeeID == "Amill" &&
-                                hrs.date >= startDate &&
-                                hrs.date <= endDate)
-                                select hrs ;
-            homeModel.HoursWorked = getHoursQuery.ToList();
+            //var getHoursQuery = from hrs in db.hoursworkeds
+            //                    where (hrs.TimePeriod_employeeID == "Amill" &&
+            //                    hrs.date >= startDate &&
+            //                    hrs.date <= endDate)
+            //                    select hrs ;
+            //homeModel.HoursWorked = getHoursQuery.ToList();
 
             //JsonConvert.SerializeObject(homeModel, Formatting.Indented,
             //                new JsonSerializerSettings

@@ -1,7 +1,7 @@
 ﻿function GetActivities(_projectID) {
     var selectedProj = _projectID.value;
     var ddlid = _projectID.id;
-    var ddlstring = ddlid.replace("Project", "Activity");
+    var ddlstring = ddlid.replace("project_project", "activity_activity");
     ddlstring = "#" + ddlstring;
     console.log(ddlid);
     console.log(ddlstring);
