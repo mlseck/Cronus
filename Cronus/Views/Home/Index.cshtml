@@ -1,5 +1,5 @@
 ﻿
-@model   Cronus.ViewModels.HomeViewModel
+@model  Cronus.ViewModels.HomeViewModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -45,59 +45,58 @@
 
 <br />
 
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Day</th>
-            <th></th>
-            <th></th>
-            <th id="totalHours">Total Hours</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                <text class="dayLabel">Monday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableMon">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                           
-                    </tbody>
-                </table>
+@*@using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
+{*@
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th></th>
+                <th></th>
+                <th id="totalHours">Total Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <text class="dayLabel">Monday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableMon">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                     <div id="hoursworkedrowMon">
-                        @Html.Partial("_hoursworkedrow")
+
+                            @Html.Partial("_hoursworkedrow", Model)
+                        
                     </div>
                     <div>
                         <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
                     </div>
 
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Tuesday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableTues">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Tuesday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableTues">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
                     <div id="hoursworkedrowTue">
                         @Html.Partial("_hoursworkedrow")
@@ -105,135 +104,128 @@
                     <div>
                         <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this)" value="Add Activity" />
                     </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Wednesday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableWed">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-   
-                    </tbody>
-                </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Wednesday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableWed">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                     <div id="hoursworkedrowWed">
                         @Html.Partial("_hoursworkedrow")
                     </div>
                     <div>
                         <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this)" value="Add Activity" />
                     </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Thursday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableThu">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      
-                    </tbody>
-                </table>
-                <div id="hoursworkedrowThu">
-                    @Html.Partial("_hoursworkedrow")
-                </div>
-                <div>
-                    <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this)" value="Add Activity" />
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Friday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableFri">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                    </tbody>
-                </table>
-                <div id="hoursworkedrowFri">
-                    @Html.Partial("_hoursworkedrow")
-                </div>
-                <div>
-                    <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this)" value="Add Activity" />
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Saturday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableSat">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                    </tbody>
-                </table>
-                <div id="hoursworkedrowSat">
-                    @Html.Partial("_hoursworkedrow")
-                </div>
-                <div>
-                    <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this)" value="Add Activity" />
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <text class="dayLabel">Sunday</text>
-                <table class="table table-striped col-md-12" id="actProjSubTableSun">
-                    <thead>
-                        <tr>
-                            <th class="col-md-3">Project</th>
-                            <th class="col-md-3">Activity</th>
-                            <th class="col-md-1">Hours</th>
-                            <th class="col-md-3">Comments</th>
-                            <th class="col-md-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
-                <div id="hoursworkedrowSun">
-                    @Html.Partial("_hoursworkedrow")
-                </div>
-                <div>
-                    <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this)" value="Add Activity" />
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Thursday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableThu">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="hoursworkedrowThu">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Friday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableFri">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="hoursworkedrowFri">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Saturday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableSat">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="hoursworkedrowSat">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <text class="dayLabel">Sunday</text>
+                    <table class="table table-striped col-md-12" id="actProjSubTableSun">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">Project</th>
+                                <th class="col-md-3">Activity</th>
+                                <th class="col-md-1">Hours</th>
+                                <th class="col-md-3">Comments</th>
+                                <th class="col-md-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div id="hoursworkedrowSun">
+                        @Html.Partial("_hoursworkedrow")
+                    </div>
+                    <div>
+                        <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this)" value="Add Activity" />
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" , value="Submit" />
+@*}*@
+
 <button type="button" width="100px" id="save" class="btn btn-default pull-left">Save <span class="glyphicon glyphicon-check"></span></button>
 <br />
 <br />
