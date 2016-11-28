@@ -1,8 +1,10 @@
-﻿
-@model  Cronus.ViewModels.HomeViewModel
+﻿@using DatabaseEntities
+@using Cronus.ViewModels
+@model  HomeViewModel
 
 @{
     ViewBag.Title = "Home Page";
+
 }
 
 <h2>Weekly view</h2>
@@ -50,12 +52,20 @@
 <div id="hoursworkedrowMon">
     @foreach (var entry in Model.HoursWorked)
     {
-        @Html.Partial("_hoursworkedrow", entry)
+            if (entry.date.DayOfWeek == DayOfWeek.Monday)
+            {
+                @Html.Partial("_hoursworkedrow", entry);
+            }
     }
+    
+    @Html.Partial("_hoursworkedrow", new hoursworked())
 </div>
 <div>
     <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
 </div>
+
+
+
 
 @*<div id="hoursworkedrowTue">
     @Html.Partial("_hoursworkedrow")
