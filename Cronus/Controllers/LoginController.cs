@@ -1,4 +1,5 @@
 ﻿using Cronus.Login;
+using DatabaseEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,11 @@ using System.Web.Mvc;
 
 namespace Cronus.Controllers
 {
+
     public class LoginController : Controller
     {
+        private CronusDatabaseEntities db = new CronusDatabaseEntities();
+
         //public ActionResult Login()
         //{
 
@@ -29,7 +33,7 @@ namespace Cronus.Controllers
                 {
                     // Redirect to the secure area.
                     return RedirectToAction("Index", "Home");
-                    
+
                     //if (string.IsNullOrWhiteSpace(logon.RedirectUrl))
                     //{
                     //    logon.RedirectUrl = Url.Action("Index", "Home");
@@ -38,7 +42,7 @@ namespace Cronus.Controllers
                     //status = "OK";
                     //string url = Url.Action("Index", "Home");
                     //return Json(new { success = true, url = url });
-                    
+
 
                     //return Json(new { RedirectUrl = logon.RedirectUrl, Status = status, isRedirect = true }, JsonRequestBehavior.AllowGet);
                 }
