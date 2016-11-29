@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using Cronus.Login;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Cronus
@@ -7,7 +8,7 @@ namespace Cronus
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new LogonAuthorize());
         }
     }
 }

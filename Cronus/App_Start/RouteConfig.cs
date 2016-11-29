@@ -13,6 +13,9 @@ namespace Cronus
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoute("login", "login", new { controller = "Login", action = "Login" });
+            //routes.MapRoute("logout", "logout", new { controller = "Login", action = "Logout" });
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
