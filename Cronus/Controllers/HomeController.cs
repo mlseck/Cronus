@@ -32,6 +32,7 @@ namespace Cronus.Controllers
             this.activityRepository = activityRepository;
         }
 
+        [AllowAnonymous]
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
