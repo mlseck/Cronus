@@ -1,4 +1,7 @@
-﻿$(document).ready(function () {
+﻿var weeklyHrs = 0;
+var weekCount = 1;
+
+$(document).ready(function () {
 
     $(function () {
         $.ajax({
@@ -62,9 +65,11 @@
                         $(element).tooltip({ title: "Click to edit project." });
                     },
 
+
+                    //adds hours on each day cell for each hours worked on each day. 
                     dayRender: function (date, cell) {
                         var hrsWrkd = ""
-
+                        //weeklyHours(0, date)
                         //dont know if this will work, waiting on DB to be fixed
                         $.ajax({
                             contentType: "application/json",
@@ -73,19 +78,29 @@
                             dataType: "json",
                             success: function (data) {
 
-                                $.each(data, function (index, element) {
-                                    //link.setAttribute('href', '/');
-                                    hrsWrkd += element.HrsWorked
-                                    weeklyHours(element.HrsWorked, date)
-                                    cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
-                                });
+                                if (data.length == 0) {
+                                    weeklyHours(0, date)
+                                }
+
+                                else {
+
+                                    $.each(data, function (index, element) {
+                                        //link.setAttribute('href', '/');
+                                        hrsWrkd += element.HrsWorked
+                                        weeklyHours(element.HrsWorked, date)
+                                        cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
+                                    });
+
+                                }
+
+                               
                             },
                             error: function () {
 
                             }
                         });
                     },
-                   
+
 
                     //Click event
                     eventClick: function (event, jsEvent, view) {
@@ -143,18 +158,21 @@
 
 function weeklyHours(hrs, date) {
     var dateDay = date.format("dddd");
-    var count = count++
-    var weeklyHours = 0
-    var weekCount = 1;
-    weeklyHours = weeklyHours + hrs
+    if (hrs != 0) {
+        weeklyHrs = weeklyHrs + hrs
+    }
 
 
 
-    if (count = 7) {
-        $('#week' + weekCount).html(hrs + " hours logged this week. ")
-        weeklyHours = 0
-        weekCount = weekCount+1
+    if (dateDay=="Saturday") {
+        $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
 
+        console.log(weeklyHrs)
+        console.log(weekCount)
+        console.log("<\br>")
+
+        weeklyHrs = 0
+        weekCount = weekCount + 1
     }
 
 
