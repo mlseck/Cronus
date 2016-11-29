@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using Cronus.Models;
 using Cronus.ViewModels;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace Cronus.Controllers
 {
@@ -38,8 +40,6 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
-            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
             myModel.HoursWorked = db.hoursworkeds.ToList();
             return View(myModel);
 
@@ -51,9 +51,6 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.ProjectList = new SelectList(myModel.Projects, "projectID", "projectName");
-            myModel.ActivityList = new SelectList(myModel.Activities, "activityID", "activityName");
-            myModel.HoursWorked = db.hoursworkeds.ToList();
             return PartialView("_hoursworkedrow", myModel);
         }
 
@@ -131,10 +128,47 @@ namespace Cronus.Controllers
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
+        //this wil lget hours per week per employee
+        [HttpGet]
+        public JsonResult GetHoursWorkedPerWeek(WeeklyHoursModel model, string empId)
+        {
+            //Still need to pass through employee ID, this will do fore now
+            // same with date
+            empId = "Amill";
+            //DateTime date = DateTime.Today.AddDays(-1);
+
+            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId select s).ToList();
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+
+            project proj;
+            employee emp;
+
+            foreach (hoursworked hrsW in hrs)
+            {
+                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
+
+                foreach (activity activ in activities)
+                {
+                    proj = db.projects.Find(hrsW.Project_projectID);
+                    emp = db.employees.Find(empId);
+                    hrsWrkd.Add(new MonthlyViewModel()
+                    {
+                        ActivityName = activ.activityName,
+                        HrsWorked = hrsW.hours.ToString(),
+                        ProjectName = proj.projectName,
+                        //isAdmin = 
+                    });
+                }
+            }
+
+
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         [HttpGet]
-        public JsonResult GetBetweenDates(string employeeID)
+        public JsonResult GetBetweenDates(String employeeID)
         {
             HomeViewModel homeModel = new HomeViewModel();
 
@@ -175,20 +209,37 @@ namespace Cronus.Controllers
             }
 
 
-            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            foreach (hoursworked hrs in db.hoursworkeds
-                                                .Where(n => n.date>= startDate)
-                                                .Where(n => n.date<= endDate)
-                                                .Where(n=> n.TimePeriod_employeeID == employeeID))
-            {
-                hrsWrkd.Add(new MonthlyViewModel()
-                {
-                    HrsWorked = hrs.hours.ToString()
-                });
-            }
+            //List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            //foreach (hoursworked hrs in db.hoursworkeds
+            //                                    .Where(n => n.date>= startDate)
+            //                                    .Where(n => n.date<= endDate)
+            //                                    .Where(n=> n.Employee_employeeID == employeeID))
+            //{
+            //    hrsWrkd.Add(new MonthlyViewModel()
+            //    {
+            //        HrsWorked = hrs.hours.ToString()
+            //    });
+            //}
 
+            var getHoursQuery = from hrs in db.hoursworkeds
+                                where (hrs.TimePeriod_employeeID == "Amill" &&
+                                hrs.date >= startDate &&
+                                hrs.date <= endDate)
+                                select hrs ;
+            homeModel.HoursWorked = getHoursQuery.ToList();
+
+            //JsonConvert.SerializeObject(homeModel, Formatting.Indented,
+            //                new JsonSerializerSettings
+            //                {
+            //                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //                });
+
+            
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpPost]
+        //public JsonResult GetPreviousHours()
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]
@@ -294,6 +345,15 @@ namespace Cronus.Controllers
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitHours(HomeViewModel submittedHours)
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            return View("Index", myModel);
         }
     }
 }

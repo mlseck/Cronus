@@ -1,4 +1,4 @@
-﻿@using Cronus.Login
+﻿w@using Cronus.Login
 @model   Cronus.ViewModels.HomeViewModel
 
 @{
@@ -51,7 +51,8 @@
 
     <br />
 
-
+@*@using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
+{*@
     <table class="table table-striped">
         <thead>
             <tr>
@@ -78,7 +79,9 @@
                         <tbody></tbody>
                     </table>
                     <div id="hoursworkedrowMon">
-                        @Html.Partial("_hoursworkedrow")
+
+                            @Html.Partial("_hoursworkedrow", Model)
+                        
                     </div>
                     <div>
                         <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
@@ -226,12 +229,15 @@
             </tr>
         </tbody>
     </table>
-    <button type="button" width="100px" id="save" class="btn btn-default pull-left">Save <span class="glyphicon glyphicon-check"></span></button>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
+    <input type="submit" , value="Submit" />
+@*}*@
+
+<button type="button" width="100px" id="save" class="btn btn-default pull-left">Save <span class="glyphicon glyphicon-check"></span></button>
+<br />
+<br />
+<br />
+<br />
+<br />
 
 }
 else

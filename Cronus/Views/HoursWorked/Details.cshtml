@@ -1,0 +1,66 @@
+﻿@model DatabaseEntities.hoursworked
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>hoursworked</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.hours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.hours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.comments)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.comments)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.activity.activityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.activity.activityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employeetimeperiod.Employee_employeeID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employeetimeperiod.Employee_employeeID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.project.projectName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.project.projectName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
