@@ -1,7 +1,9 @@
-﻿
-
+﻿@using Cronus.Login
 @model   Cronus.ViewModels.MonthlyViewModel
 
+
+
+@{var empID = UserManager.User.employeeID;}
 
 
 @*@Scripts.Render("~/Scripts/MonthlyClickDate.js")*@

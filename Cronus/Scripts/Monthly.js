@@ -7,7 +7,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            data: "{}",
+            data: { empId: $("#empID").val() },
             url: "/Home/GetEvents",
             dataType: "json",
 
@@ -21,7 +21,7 @@ $(document).ready(function () {
                         if (allDay) {
                             $.ajax({
                                 contentType: "application/json",
-                                data: { date: date.format() },
+                                data: { date: date.format() , empId: $("#empID").val() },
                                 url: "/Home/GetHoursWorkedPerDay/",
                                 dataType: "json",
                                 success: function (data) {
@@ -73,7 +73,7 @@ $(document).ready(function () {
                         //dont know if this will work, waiting on DB to be fixed
                         $.ajax({
                             contentType: "application/json",
-                            data: { date: date.format() },
+                            data: { date: date.format() , empId: $("#empID").val() },
                             url: "/Home/GetHoursWorkedPerDay/",
                             dataType: "json",
                             success: function (data) {

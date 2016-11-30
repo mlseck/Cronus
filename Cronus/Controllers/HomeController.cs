@@ -74,30 +74,52 @@ namespace Cronus.Controllers
 
 
         //gets projects for the calender 
-        public JsonResult GetEvents()
+        public JsonResult GetEvents(string empId)
         {
             //will get projects/activities for the month.
+            //List<project> projects = new List<project>();
+            //foreach (project proj in db.projects)
+            //{
+            //    projects.Add(new project()
+            //    {
+            //        projectID = proj.projectID,
+            //        projectName = proj.projectName,
+            //        projectStartDate = proj.projectStartDate,
+            //        projectEndDate = proj.projectEndDate
+            //    });
+            //}
+            //return Json(projects, JsonRequestBehavior.AllowGet);
             List<project> projects = new List<project>();
-            foreach (project proj in db.projects)
+            employee emp = db.employees.Find(empId);
+            var dbGrps = db.groups.ToList();
+            var groups = (from s in dbGrps where s.employees.Contains(emp) select s).ToList();
+
+            foreach (group grp in groups)
             {
-                projects.Add(new project()
+                projects = (from s in db.projects where s.groups.Contains(grp) select s).ToList();
+
+                foreach (project proj in projects)
                 {
-                    projectID = proj.projectID,
-                    projectName = proj.projectName,
-                    projectStartDate = proj.projectStartDate,
-                    projectEndDate = proj.projectEndDate
-                });
+                    projects.Add(new project()
+                    {
+                        projectID = proj.projectID,
+                        projectName = proj.projectName,
+                        projectStartDate = proj.projectStartDate,
+                        projectEndDate = proj.projectEndDate
+                    });
+                }
             }
+
             return Json(projects, JsonRequestBehavior.AllowGet);
         }
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
-        public JsonResult GetHoursWorkedPerDay(DateTime date)
+        public JsonResult GetHoursWorkedPerDay(DateTime date, string empId)
         {
             //Still need to pass through employee ID, this will do fore now
             // same with date
-            string empId = "Amill";
+            //sempId = "Amill";
             //DateTime date = DateTime.Today.AddDays(-1);
 
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date == date select s).ToList();
