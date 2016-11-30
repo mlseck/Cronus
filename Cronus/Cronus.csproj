@@ -302,6 +302,7 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\gcal.js" />
+    <Content Include="Scripts\GetWeeklyHours.js" />
     <Content Include="Scripts\hoursworked.js" />
     <Content Include="Scripts\index.js" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />

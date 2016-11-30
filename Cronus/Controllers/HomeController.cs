@@ -74,43 +74,127 @@ namespace Cronus.Controllers
         }
 
 
-        //gets projects for the calender 
-        public JsonResult GetEvents()
+        //gets projects for the calender
+        public JsonResult GetEvents(string empId)
         {
+            //empId = "Amill";
             //will get projects/activities for the month.
-            List<project> projects = new List<project>();
-            foreach (project proj in db.projects)
+            //List<project> projects = new List<project>();
+            //foreach (project proj in db.projects)
+            //{
+            //    projects.Add(new project()
+            //    {
+            //        projectID = proj.projectID,
+            //        projectName = proj.projectName,
+            //        projectStartDate = proj.projectStartDate,
+            //        projectEndDate = proj.projectEndDate
+            //    });
+            //}
+            //return Json(projects, JsonRequestBehavior.AllowGet);
+            //var projects = db.projects.ToList();
+
+            //create an employee object mathcing the empId passed through
+            employee emp = db.employees.Find(empId);
+            var dbGrps = db.groups.ToList();
+            //all groups where the employee is within the list of employees assigned to the group.
+            var groups = (from s in dbGrps where s.employees.Contains(emp) select s).ToList();
+
+            //list of projects to return
+            List<project> returnProj = new List<project>();
+
+            //for each group found for that employee
+            foreach (group grp in groups)
             {
-                projects.Add(new project()
+                group grpObject = db.groups.Find(grp.groupID);
+                var dbProjects = db.projects.ToList();
+                //you find a list of projects where the project has that group assigned to it. 
+                List<project> projects = (from s in dbProjects where s.groups.Contains(grpObject) select s).ToList();
+
+                foreach (project proj in projects)
                 {
-                    projectID = proj.projectID,
-                    projectName = proj.projectName,
-                    projectStartDate = proj.projectStartDate,
-                    projectEndDate = proj.projectEndDate
-                });
+                    //for each of those projects, add them to the returnProj list. 
+                    returnProj.Add(new project()
+                    {
+                        projectID = proj.projectID,
+                        projectName = proj.projectName,
+                        projectStartDate = proj.projectStartDate,
+                        projectEndDate = proj.projectEndDate
+                    });
+                }
             }
-            return Json(projects, JsonRequestBehavior.AllowGet);
+
+            //return a list of projects defined above
+            return Json(returnProj, JsonRequestBehavior.AllowGet);
         }
+
+        //GetWeeklyHours
+        [HttpGet]
+        public JsonResult GetWeeklyHours(string empId)
+        {
+            //empId = "Amill";
+            DateTime date = DateTime.Now;
+            var StartDate = new DateTime(date.Year, date.Month, 1);
+            var EndDate = StartDate.AddMonths(1).AddDays(-1);
+            double numDays = (EndDate - StartDate).TotalDays;
+            var dailyHours = 0;
+            bool isEnd = false;
+
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
+            var dbHours = db.hoursworkeds.ToList();
+            for (int i=0; i < numDays; i++)
+            {
+                List<hoursworked> hrs = (from s in dbHours where s.TimePeriod_employeeID == empId && s.date == StartDate.AddDays(i) select s).ToList();
+                foreach(hoursworked hrsW in hrs)
+                {
+                    dailyHours = dailyHours + (int)hrsW.hours;
+                }
+                if (StartDate.AddDays(i) == EndDate.AddDays(-1))
+                {
+                     isEnd = true;
+                }
+                else
+                {
+                    isEnd = false;
+                }
+                hrsWrkd.Add(new MonthlyViewModel()
+                {
+                    HrsWorked = dailyHours.ToString(),
+                    entryDate = StartDate.AddDays(i),
+                    isLastDay = isEnd
+
+                });
+                dailyHours = 0;
+            }
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
+    }
+
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
-        public JsonResult GetHoursWorkedPerDay(DateTime date)
+        public JsonResult GetHoursWorkedPerDay(DateTime date, string empId)
         {
+            //empId = "Amill";
             //Still need to pass through employee ID, this will do fore now
             // same with date
-            string empId = "Amill";
+            //sempId = "Amill";
             //DateTime date = DateTime.Today.AddDays(-1);
 
+            //creates a list of all hours worked for that employee, on the date passed through
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date == date select s).ToList();
+            //using this to add each enitity of hours worked to store in a list.
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
             project proj;
             employee emp;
 
+            //for each set of hours worked we have, we will get a list of activities that were worked on those hours.
             foreach (hoursworked hrsW in hrs)
             {
+                
                 List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
 
+                //for each of those activitires, we will find the project of the activity worked on, and add  all of 
+                //the cooresponding varaibles we need to the HrsWrked list
                 foreach (activity activ in activities)
                 {
                     proj = db.projects.Find(hrsW.Project_projectID);
@@ -125,7 +209,8 @@ namespace Cronus.Controllers
                 }
             }
 
-           
+            //return a list of models that hold all the varaibles we need. Each object in the list stores activity name, hrs worked,
+            //and project name on the date passed through date. 
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
@@ -133,11 +218,11 @@ namespace Cronus.Controllers
 
 
         [HttpGet]
-        public JsonResult GetBetweenDates(String employeeID)
+        public JsonResult GetBetweenDates(string empId)
         {
-            HomeViewModel homeModel = new HomeViewModel();
 
-            //DateTime previousWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 7);
+            //empId = "Amill";
+
             DateTime startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
             DateTime endDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
 
@@ -174,33 +259,33 @@ namespace Cronus.Controllers
             }
 
 
-            //List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-            //foreach (hoursworked hrs in db.hoursworkeds
-            //                                    .Where(n => n.date>= startDate)
-            //                                    .Where(n => n.date<= endDate)
-            //                                    .Where(n=> n.Employee_employeeID == employeeID))
-            //{
-            //    hrsWrkd.Add(new MonthlyViewModel()
-            //    {
-            //        HrsWorked = hrs.hours.ToString()
-            //    });
-            //}
 
-            var getHoursQuery = from hrs in db.hoursworkeds
-                                where (hrs.TimePeriod_employeeID == "Amill" &&
-                                hrs.date >= startDate &&
-                                hrs.date <= endDate)
-                                select hrs ;
-            homeModel.HoursWorked = getHoursQuery.ToList();
+            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date >startDate && s.date < endDate select s).ToList();
+            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
-            //JsonConvert.SerializeObject(homeModel, Formatting.Indented,
-            //                new JsonSerializerSettings
-            //                {
-            //                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            //                });
+            project proj;
+            employee emp;
 
-            
-            return Json(homeModel, JsonRequestBehavior.AllowGet);
+            foreach (hoursworked hrsW in hrs)
+            {
+                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
+
+                foreach (activity activ in activities)
+                {
+                    proj = db.projects.Find(hrsW.Project_projectID);
+                    emp = db.employees.Find(empId);
+                    hrsWrkd.Add(new MonthlyViewModel()
+                    {
+                        ActivityName = activ.activityName,
+                        HrsWorked = hrsW.hours.ToString(),
+                        ProjectName = proj.projectName,
+                        //isAdmin = 
+                    });
+                }
+            }
+
+
+            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
         //[HttpPost]
