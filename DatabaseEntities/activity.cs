@@ -11,7 +11,8 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class activity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,6 +24,7 @@ namespace DatabaseEntities
         }
     
         public int activityID { get; set; }
+        [Display(Name = "Activity Name")]
         public string activityName { get; set; }
         public short isCap { get; set; }
     

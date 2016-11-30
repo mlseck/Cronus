@@ -4,6 +4,7 @@
 /// <reference path="bootstrap.js" />
 /// <reference path="fullcalendar.min.js" />
 /// <reference path="gcal.js" />
+/// <reference path="getweeklyhours.js" />
 /// <reference path="hoursworked.js" />
 /// <reference path="index.js" />
 /// <reference path="jquery.validate.js" />

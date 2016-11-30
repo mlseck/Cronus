@@ -4,10 +4,24 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h3>Projects @Html.ActionLink(" ", "Create", "Project", routeValues: new { }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-plus" })
+</h3>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @*@Html.ActionLink("Create New", "Create")*@
+
+    @using (Html.BeginForm("Index", "Project", FormMethod.Get))
+    {
+        <div class="pull-right">
+            Project Name: @Html.TextBox("SearchString")  <input type="submit" value="Search" />
+            </div>
+<p>
+        
+    &nbsp;
+        
+    </p>
+    }
+    
 </p>
 <table class="table">
     <tr>
@@ -26,15 +40,15 @@
         <th>
             @Html.DisplayNameFor(model => model.projectCapitalCode)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.projectAbbreviation)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.projectActive)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.activities)
-        </th>
+        </th>*@
         <th></th>
     </tr>
 
@@ -55,15 +69,15 @@
         <td>
             @Html.DisplayFor(modelItem => item.projectCapitalCode)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.projectAbbreviation)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.projectActive)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.ListBox("Id", new SelectList(item.activities, "activityID", "activityName"))
-        </td>
+        </td>*@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.projectID }) |
             @Html.ActionLink("Details", "Details", new { id=item.projectID }) |

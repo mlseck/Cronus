@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DatabaseEntities;
 using Cronus.ViewModels;
-
+using Cronus.Login;
 
 namespace Cronus.Controllers
 {
@@ -19,7 +19,11 @@ namespace Cronus.Controllers
         // GET: Approver
         public ActionResult Index()
         {
-            ViewBag.GroupId = 1;
+            var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
+
+            //loggedinEmp.employeeGroupManaged
+
+            ViewBag.GroupId = loggedinEmp.employeeGroupManaged;
             return View(db.timeperiods.ToList());
         }
 
@@ -35,8 +39,9 @@ namespace Cronus.Controllers
             string [] employeeIds = groupQuery.employees.Select(x => x.employeeID).ToArray();
             var employeeQuery = (from e in db.employees where (employeeIds.Contains(e.employeeID)) select e).ToList();
 
-           // var timeperiods = db.timeperiods.ToArray();
-           //var employeeTimeperiods = (from et in db.employeetimeperiods where (timeperiods.con)) 
+            // var timeperiods = db.timeperiods.ToArray();
+            var employeeTimeperiods = (from et in db.employeetimeperiods where (et.TimePeriod_periodEndDate.Equals(periodEnddate) && employeeIds.Contains(et.Employee_employeeID)) select et).ToList();
+            //var employeeTimeperiods = (from et in db.employeetimeperiods where (periodEnddate.Equals(et.TimePeriod_periodEndDate) && perioudEndDateQuery.employeetimeperiods.Select(e => e.Employee_employeeID).Contains(et.timeperiod)) select et).ToList();
 
             //getting the first timeperiod to test functionality. Dynamicism will be implemented later
             //timeperiod timeperiod = db.timeperiods.FirstOrDefault();
@@ -47,11 +52,36 @@ namespace Cronus.Controllers
             approverViewModel.HoursWorkedList = db.hoursworkeds.ToList();
             approverViewModel.Employees = employeeQuery;
             approverViewModel.timeperiod = perioudEndDateQuery;
-            //approverViewModel.employeetimeperiods
+            approverViewModel.isApproved = false;
+            approverViewModel.employeetimeperiods = employeeTimeperiods.ToList();
             //approverViewModel.ActivityNames = new SelectList(myModel.Activities, "activityID", "activityName");
 
             return View(approverViewModel);
         }
+
+        [HttpPost]
+        public ActionResult ApproverIndex(ApproverViewModel approverViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+
+                //if (project.activityIds != null)
+                //{
+                //    project.activities = (from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
+                //}
+                foreach(employeetimeperiod employeetp in approverViewModel.employeetimeperiods)
+                {
+                    db.Entry(employeetp).State = EntityState.Modified;
+                }
+                
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(approverViewModel);
+
+
+        }
+
         //// GET: Approver/Details/5
         //public ActionResult Details(int? id)
         //{

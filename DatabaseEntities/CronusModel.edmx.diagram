@@ -8,7 +8,7 @@
         <EntityTypeShape EntityType="CronusDatabaseModel.activity" Width="1.5" PointX="3.75" PointY="1.875" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.audittrail" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.employee" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.employeetimeperiod" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.employeetimeperiod" Width="1.875" PointX="3" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.favorite" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.group" Width="1.5" PointX="3" PointY="14.25" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.hoursworked" Width="2" PointX="7.5" PointY="11.125" IsExpanded="true" />

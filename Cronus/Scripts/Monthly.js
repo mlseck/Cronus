@@ -1,10 +1,32 @@
-﻿$(document).ready(function () {
+﻿var weeklyHrs = 0;
+var weekCount = 1;
+var count = 0;
+var empID = ''
+
+
+//$('.fc-button-prev span').click(function () {
+//    getWeekHours();
+//    console.log("hey")
+//});
+
+//$('.fc-button-next span').click(function () {
+//    getWeekHours();
+//    console.log("hey")
+//});
+
+
+$(document).ready(function () {
+    empID = $("#empId").html()
+})
+
+
+
+$(document).ready(function () {
 
     $(function () {
         $.ajax({
-            type: "POST",
             contentType: "application/json",
-            data: "{}",
+            data: { empId: empID },
             url: "/Home/GetEvents",
             dataType: "json",
 
@@ -18,7 +40,7 @@
                         if (allDay) {
                             $.ajax({
                                 contentType: "application/json",
-                                data: { date: date.format() },
+                                data: { date: date.format(), empId: empID },
                                 url: "/Home/GetHoursWorkedPerDay/",
                                 dataType: "json",
                                 success: function (data) {
@@ -57,40 +79,55 @@
                     },
 
                     //Add function for project hover??
-                    eventRender: function (event, element) {
-                        //add if statemenet for only administrative users
-                        $(element).tooltip({ title: "Click to edit project." });
-                    },
+                    //eventRender: function (event, element) {
+                    //    //add if statemenet for only administrative users
+                    //    $(element).tooltip({ title: "Click to edit project." });
+                    //},
 
+
+                    //adds hours on each day cell for each hours worked on each day. 
                     dayRender: function (date, cell) {
-                        var hrsWrkd = ""
-
-                        //dont know if this will work, waiting on DB to be fixed
                         $.ajax({
                             contentType: "application/json",
-                            data: { date: date.format() },
+                            data: { date: date.format(), empId: empID },
                             url: "/Home/GetHoursWorkedPerDay/",
                             dataType: "json",
                             success: function (data) {
-
-                                $.each(data, function (index, element) {
-                                    //link.setAttribute('href', '/');
-                                    hrsWrkd += element.HrsWorked
-                                    weeklyHours(element.HrsWorked, date)
+                                var hrsWrkd = 0
+                                if (data.length == 0) {
+                                    //weeklyHours(parseInt(0), date)
+                                }
+                                else {
+                                    $.each(data, function (index, element) {
+                                        //link.setAttribute('href', '/');
+                                        hrsWrkd = hrsWrkd + parseInt(element.HrsWorked)
+                                        //weeklyHours(parseInt(element.HrsWorked), date)
+                                    });
                                     cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
-                                });
+                                }
+
+                               
                             },
                             error: function () {
 
                             }
                         });
                     },
-                   
+
 
                     //Click event
                     eventClick: function (event, jsEvent, view) {
-                        console.log(event.id)
-                        window.location = "/Project/Edit/" + event.id;
+                        $('#modalTitle').html(event.title)
+                        $('#modalBody').html(
+                            event.title + " starts " + event.start.format("dddd") + ", " + event.start.format("MMMM") + " " + event.start.format('D')
+                            + " and ends "
+                            + event.end.format("dddd") + ", " + event.end.format("MMMM") + " " + event.end.format('D')
+                            );
+                        $('#fullCalModal').modal()
+
+
+                        //console.log(event.id)
+                        //window.location = "/Project/Edit/" + event.id;
                     },
 
 
@@ -141,22 +178,15 @@
 
 
 
-function weeklyHours(hrs, date) {
-    var dateDay = date.format("dddd");
-    var count = count++
-    var weeklyHours = 0
-    var weekCount = 1;
-    weeklyHours = weeklyHours + hrs
+//function weeklyHours(hrs, date) {
+//    var dateDay = date.format("dddd");
+//    weeklyHrs = weeklyHrs + hrs
+//    count++
 
-
-
-    if (count = 7) {
-        $('#week' + weekCount).html(hrs + " hours logged this week. ")
-        weeklyHours = 0
-        weekCount = weekCount+1
-
-    }
-
-
-
-}
+//    if (dateDay == "Saturday") {
+//        $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
+//        count = 0;
+//        weeklyHrs = 0
+//        weekCount ++
+//    }
+//}
