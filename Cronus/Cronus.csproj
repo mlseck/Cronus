@@ -239,6 +239,7 @@
     <Compile Include="ViewModels\WeeklyHoursModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\American_Chemical_Society_logo.svg.png" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fullcalendar.css" />
@@ -482,13 +483,12 @@
     <Content Include="Views\Home\_hoursworkedrow.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Approver\TestView.cshtml" />
-    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\EmployeeTimeperiods\" />
     <Folder Include="Views\EmployeeTimePeriod\" />
-    <Folder Include="Views\Login\" />
     <Folder Include="Views\Manage\Project\" />
   </ItemGroup>
   <ItemGroup>

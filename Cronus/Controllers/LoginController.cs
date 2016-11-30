@@ -23,7 +23,6 @@ namespace Cronus.Controllers
         public ActionResult Login(Logon logon)
         {
 
-            string status = "The username or password provided is incorrect.";
 
             // Verify the fields.
             if (ModelState.IsValid)
@@ -38,7 +37,7 @@ namespace Cronus.Controllers
                     //{
                     //    logon.RedirectUrl = Url.Action("Index", "Home");
                     //}
-
+                    
                     //status = "OK";
                     //string url = Url.Action("Index", "Home");
                     //return Json(new { success = true, url = url });
@@ -47,10 +46,10 @@ namespace Cronus.Controllers
                     //return Json(new { RedirectUrl = logon.RedirectUrl, Status = status, isRedirect = true }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return PartialView("Login", new Logon());
+            return PartialView("Login", new Logon() {ErrorMessage = "The username or password provided is incorrect."});
 
-            //return Json(new { RedirectUrl = logon.RedirectUrl, Status = status, isRedirect = false }, JsonRequestBehavior.AllowGet);
-        }
+                //return Json(new { RedirectUrl = logon.RedirectUrl, Status = status, isRedirect = false }, JsonRequestBehavior.AllowGet);
+            }
 
         public ActionResult Logout()
         {

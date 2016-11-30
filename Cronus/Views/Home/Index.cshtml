@@ -8,7 +8,7 @@
 @if (User.Identity.IsAuthenticated)
 {
     <div>
-        You're logged in as @UserManager.User.employeeFirstName (@UserManager.User.employeeLastName)
+        You're logged in as @UserManager.User.employeeFirstName @UserManager.User.employeeLastName
     </div>
 
     <h2>Weekly view</h2>
@@ -242,7 +242,7 @@
 }
 else
 {
-    @Html.Partial("Login", new Logon());
+    @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
 }
 
 
