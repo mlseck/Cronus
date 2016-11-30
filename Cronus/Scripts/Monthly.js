@@ -1,5 +1,13 @@
 ﻿var weeklyHrs = 0;
-var weekCount = 1;
+var weekCount = 0;
+var count = 0;
+$('.fc-button-prev span').click(function () {
+    dayRender();
+});
+
+$('.fc-button-next span').click(function () {
+    dayRender();
+});
 
 $(document).ready(function () {
 
@@ -60,10 +68,10 @@ $(document).ready(function () {
                     },
 
                     //Add function for project hover??
-                    eventRender: function (event, element) {
-                        //add if statemenet for only administrative users
-                        $(element).tooltip({ title: "Click to edit project." });
-                    },
+                    //eventRender: function (event, element) {
+                    //    //add if statemenet for only administrative users
+                    //    $(element).tooltip({ title: "Click to edit project." });
+                    //},
 
 
                     //adds hours on each day cell for each hours worked on each day. 
@@ -79,7 +87,7 @@ $(document).ready(function () {
                             success: function (data) {
 
                                 if (data.length == 0) {
-                                    weeklyHours(0, date)
+                                    weeklyHours(parseInt(0), date)
                                 }
 
                                 else {
@@ -87,7 +95,7 @@ $(document).ready(function () {
                                     $.each(data, function (index, element) {
                                         //link.setAttribute('href', '/');
                                         hrsWrkd += element.HrsWorked
-                                        weeklyHours(element.HrsWorked, date)
+                                        weeklyHours(parseInt(element.HrsWorked), date)
                                         cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
                                     });
 
@@ -104,8 +112,17 @@ $(document).ready(function () {
 
                     //Click event
                     eventClick: function (event, jsEvent, view) {
-                        console.log(event.id)
-                        window.location = "/Project/Edit/" + event.id;
+                        $('#modalTitle').html(event.title)
+                        $('#modalBody').html(
+                            event.title + " starts " + event.start.format("dddd") + ", " + event.start.format("MMMM") + " " + event.start.format('D')
+                            + " and ends "
+                            + event.end.format("dddd") + ", " + event.end.format("MMMM") + " " + event.end.format('D')
+                            );
+                        $('#fullCalModal').modal()
+
+
+                        //console.log(event.id)
+                        //window.location = "/Project/Edit/" + event.id;
                     },
 
 
@@ -158,23 +175,13 @@ $(document).ready(function () {
 
 function weeklyHours(hrs, date) {
     var dateDay = date.format("dddd");
-    if (hrs != 0) {
-        weeklyHrs = weeklyHrs + hrs
-    }
+    weeklyHrs = weeklyHrs + hrs
+    count++
 
-
-
-    if (dateDay=="Saturday") {
+    if (count == 7) {
         $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
-
-        console.log(weeklyHrs)
-        console.log(weekCount)
-        console.log("<\br>")
-
+        count = 0;
         weeklyHrs = 0
-        weekCount = weekCount + 1
+        weekCount ++
     }
-
-
-
 }

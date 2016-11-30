@@ -77,6 +77,7 @@ namespace Cronus.Controllers
         //gets projects for the calender 
         public JsonResult GetEvents(string empId)
         {
+            empId = "Amill";
             //will get projects/activities for the month.
             //List<project> projects = new List<project>();
             //foreach (project proj in db.projects)
@@ -90,18 +91,23 @@ namespace Cronus.Controllers
             //    });
             //}
             //return Json(projects, JsonRequestBehavior.AllowGet);
-            List<project> projects = new List<project>();
+            //var projects = db.projects.ToList();
             employee emp = db.employees.Find(empId);
             var dbGrps = db.groups.ToList();
             var groups = (from s in dbGrps where s.employees.Contains(emp) select s).ToList();
 
+            List<project> returnProj = new List<project>();
+
+
             foreach (group grp in groups)
             {
-                projects = (from s in db.projects where s.groups.Contains(grp) select s).ToList();
+                group grpObject = db.groups.Find(grp.groupID);
+                var dbProjects = db.projects.ToList();
+                List<project> projects = (from s in dbProjects where s.groups.Contains(grpObject) select s).ToList();
 
                 foreach (project proj in projects)
                 {
-                    projects.Add(new project()
+                    returnProj.Add(new project()
                     {
                         projectID = proj.projectID,
                         projectName = proj.projectName,
@@ -111,13 +117,14 @@ namespace Cronus.Controllers
                 }
             }
 
-            return Json(projects, JsonRequestBehavior.AllowGet);
+            return Json(returnProj, JsonRequestBehavior.AllowGet);
         }
 
         //This will take in a project ID, and EmployeeID, and get the hours worked on each activity for a day
         [HttpGet]
         public JsonResult GetHoursWorkedPerDay(DateTime date, string empId)
         {
+            empId = "Amill";
             //Still need to pass through employee ID, this will do fore now
             // same with date
             //sempId = "Amill";
