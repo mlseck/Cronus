@@ -9,6 +9,7 @@ using Cronus.ViewModels;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Data.Entity;
 
 namespace Cronus.Controllers
 {
@@ -349,10 +350,82 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours)
         {
+            foreach(var entry in submittedHours.HoursWorked)
+            {
+                if (entry.hours > 0 )
+                {
+                    if (entry.entryID == 0)
+                    {
+                        // Check if the activity was already logged on the current date
+                        // If it was, just add hours to the entry
+                        // Otherwise, create a new entry
+                        hoursworked newEntry = new hoursworked();
+                        DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = DateTime.Now;
+                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = "Amill"; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+
+                        if (ExtensionMethods.EntryExists(newEntry) == null)
+                        {
+                            try
+                            {
+                                new HoursWorkedController().Create(newEntry);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
+                            existingEntry.hours += newEntry.hours;
+                            existingEntry.comments += newEntry.comments;
+                            new HoursWorkedController().AddHours(existingEntry);
+                        }
+                    }
+                    // Updating already existing entry
+                    else
+                    {
+                        ////entry.Activity_activityID = entry.activity.activityID; entry.Project_projectID = entry.project.projectID;
+                        //hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                        //existingEntry.Activity_activityID = entry.activity.activityID; existingEntry.activity = entry.activity;
+                        //existingEntry.Project_projectID = entry.project.projectID; existingEntry.project = entry.project;
+                        //existingEntry.hours = entry.hours;
+                        //existingEntry.comments = entry.comments;
+                        //new HoursWorkedController().AddHours(existingEntry);
+                    }
+                }
+            }
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            myModel.HoursWorked = db.hoursworkeds.ToList();
             return View("Index", myModel);
+        }
+
+        
+    }
+
+    public static class ExtensionMethods{
+        public static DateTime Next(this DateTime from, DayOfWeek dayOfWeek)
+        {
+            int start = (int)from.DayOfWeek;
+            int target = (int)dayOfWeek;
+            if (target <= start)
+                target += 7;
+            return from.AddDays(target - start);
+        }
+
+        public static hoursworked EntryExists(hoursworked entry)
+        {
+            var existsQuery = from hw in new CronusDatabaseEntities().hoursworkeds
+                              where (hw.TimePeriod_employeeID.Equals(entry.TimePeriod_employeeID) && DbFunctions.TruncateTime(hw.date) == DbFunctions.TruncateTime(entry.date) && hw.Project_projectID == entry.Project_projectID && hw.Activity_activityID == entry.Activity_activityID)
+                              select hw;
+           if(existsQuery.Any())
+            {
+                return existsQuery.First();
+            }
+            return null;
         }
     }
 }

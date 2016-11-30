@@ -44,39 +44,95 @@
         </div>
     </div>
 </div>
-
 <br />
-@*@using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
-    {*@
-
-<div id="hoursworkedrowMon">
-    @foreach (var entry in Model.HoursWorked)
-    {
-            if (entry.date.DayOfWeek == DayOfWeek.Monday)
+<div style="display:inline;float:right; font-weight:bold" id="totalHours">Hours</div>
+<br />
+<br />
+@using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
+{
+    @*<text class="dayLabel" style="font-weight:bold">Monday</text>*@
+    <table class="table table-striped col-md-12" id="actProjSubTableMon">
+        <thead>
+            <tr>
+                <th class="col-md-3">Project</th>
+                <th class="col-md-3">Activity</th>
+                <th class="col-md-1">Hours</th>
+                <th class="col-md-3">Comments</th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+    </table>
+    <div id="hoursworkedrowMon">
+        @foreach (var entry in Model.HoursWorked)
+        {
+                if (entry.date.DayOfWeek == DayOfWeek.Monday)
+                {
+                    @Html.Partial("_hoursworkedrow", entry);
+                }
+        }
+    
+        @Html.Partial("_hoursworkedrow", new hoursworked())
+    </div>
+    <div>
+        <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
+    </div>
+    <br />
+    <br />
+    @*<text class="dayLabel" style="font-weight:bold">Tuesday</text>*@
+    <table class="table table-striped col-md-12" id="actProjSubTableTue">
+        <thead>
+            <tr>
+                <th class="col-md-3">Project</th>
+                <th class="col-md-3">Activity</th>
+                <th class="col-md-1">Hours</th>
+                <th class="col-md-3">Comments</th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+    </table>
+    <div id="hoursworkedrowTue">
+        @foreach (var entry in Model.HoursWorked)
+        {
+            if (entry.date.DayOfWeek == DayOfWeek.Tuesday)
             {
                 @Html.Partial("_hoursworkedrow", entry);
             }
-    }
-    
-    @Html.Partial("_hoursworkedrow", new hoursworked())
-</div>
-<div>
-    <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
-</div>
+        }
 
+        @Html.Partial("_hoursworkedrow", new hoursworked())
+    </div>
+    <div>
+        <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this)" value="Add Activity" />
+    </div>
+    <br />
+    <br />
+    <table class="table table-striped col-md-12" id="actProjSubTableWed">
+        <thead>
+            <tr>
+                <th class="col-md-3">Project</th>
+                <th class="col-md-3">Activity</th>
+                <th class="col-md-1">Hours</th>
+                <th class="col-md-3">Comments</th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+    </table>
+    <div id="hoursworkedrowTue">
+        @foreach (var entry in Model.HoursWorked)
+        {
+            if (entry.date.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                @Html.Partial("_hoursworkedrow", entry);
+            }
+        }
 
-
-
-@*<div id="hoursworkedrowTue">
-    @Html.Partial("_hoursworkedrow")
-</div>
-<div>
-    <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this)" value="Add Activity" />
-</div>*@
-
-@*}*@
-
-
+        @Html.Partial("_hoursworkedrow", new hoursworked())
+    </div>
+    <div>
+        <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this)" value="Add Activity" />
+    </div>
+    <input type="submit" value="Submit Hours" />
+}
 <button type="button" width="100px" id="save" class="btn btn-default pull-left">Save <span class="glyphicon glyphicon-check"></span></button>
 <br />
 <br />

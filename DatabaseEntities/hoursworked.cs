@@ -11,7 +11,8 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.Web.Mvc;
+
     public partial class hoursworked
     {
         public int entryID { get; set; }
@@ -22,7 +23,6 @@ namespace DatabaseEntities
         public System.DateTime TimePeriod_periodEndDate { get; set; }
         public int Activity_activityID { get; set; }
         public int Project_projectID { get; set; }
-    
         public virtual activity activity { get; set; }
         public virtual employeetimeperiod employeetimeperiod { get; set; }
         public virtual project project { get; set; }
