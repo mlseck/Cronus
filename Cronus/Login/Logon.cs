@@ -9,12 +9,14 @@ namespace Cronus.Login
     public class Logon
     {
         [Required]
-        public string Username { get; set; }
+        public string EmployeeID { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         public string RedirectUrl { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

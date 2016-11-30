@@ -9,6 +9,7 @@ namespace Cronus.Login
 {
     public class MyMembershipProvider : MembershipProvider
     {
+        CronusDatabaseEntities db = new CronusDatabaseEntities();
         #region Not Used
 
         public override string ApplicationName
@@ -167,10 +168,11 @@ namespace Cronus.Login
         ///<param name="username">Username</param>
         ///<param name="password">Password</param>
         /// <returns>bool</returns>
+        
         public override bool ValidateUser(string username, string password)
         {
             // Check if this is a valid user.
-            employee user = UserManager.AuthenticateUser(username, password);
+            employee user = UserManager.AuthenticateUser(username, password, db);
             if (user != null)
             {
                 // Store the user temporarily in the context for this request.

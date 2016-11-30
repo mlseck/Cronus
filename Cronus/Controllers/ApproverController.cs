@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DatabaseEntities;
 using Cronus.ViewModels;
-
+using Cronus.Login;
 
 namespace Cronus.Controllers
 {
@@ -19,7 +19,11 @@ namespace Cronus.Controllers
         // GET: Approver
         public ActionResult Index()
         {
-            ViewBag.GroupId = 1;
+            var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
+
+            //loggedinEmp.employeeGroupManaged
+
+            ViewBag.GroupId = loggedinEmp.employeeGroupManaged;
             return View(db.timeperiods.ToList());
         }
 

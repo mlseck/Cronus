@@ -68,7 +68,6 @@
                     @*@Html.CheckBoxFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)*@
                     @*@Html.CheckBoxFor(modelItem => modelItem.employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate && e.Employee_employeeID == employee.employeeID).FirstOrDefault().isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)*@
                     @Html.CheckBoxFor(modelItem => modelItem.employeetimeperiods[j].isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
-                    @Html.CheckBoxFor(modelItem => modelItem.isApproved)  
                     
 
                 </strong>

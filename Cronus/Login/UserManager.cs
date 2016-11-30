@@ -41,15 +41,30 @@ namespace Cronus.Login
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
         /// <returns>User</returns>
-        public static employee AuthenticateUser(string username, string password)
+        public static employee AuthenticateUser(string username, string password, CronusDatabaseEntities db)
         {
             employee user = null;
 
             // Lookup user in database, web service, etc. We'll just generate a fake user for this demo.
-            if (username == "abel" && password == "abel")
+
+            var employeeIDList = db.employees.Select(x => x.employeeID).ToList();
+            if (employeeIDList.Contains(username))
             {
-                user = new employee { employeeID = "125", employeeFirstName = "Abel", employeeLastName = "Teferra" };
+                user = db.employees.Find(username);
+                if(user.employeePwd == password)
+                {
+                    user = new employee { employeeID = user.employeeID, employeeFirstName = user.employeeFirstName,
+                        employeeLastName = user.employeeLastName, employeePrivileges = user.employeePrivileges,
+                        employeeGroupManaged = user.employeeGroupManaged};
+                    return user;
+                }
+
+                return null;
             }
+            //if (username == "abel" && password == "abel")
+            //{
+            //    user = new employee { employeeID = "125", employeeFirstName = "Abel", employeeLastName = "Teferra" };
+            //}
 
             return user;
         }
@@ -64,14 +79,14 @@ namespace Cronus.Login
         {
             bool result = false;
 
-            if (Membership.ValidateUser(logon.Username, logon.Password))
+            if (Membership.ValidateUser(logon.EmployeeID, logon.Password))
             {
                 // Create the authentication ticket with custom user data.
                 var serializer = new JavaScriptSerializer();
                 string userData = serializer.Serialize(UserManager.User);
 
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(1,
-                        logon.Username,
+                        logon.EmployeeID,
                         DateTime.Now,
                         DateTime.Now.AddDays(30),
                         true,
