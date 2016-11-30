@@ -33,9 +33,16 @@ namespace Cronus.Controllers
         //
         // GET: /Project/
 
-        public ViewResult Index()
+        public ViewResult Index(string searchString)
         {
-            return View(projectRepository.AllIncluding(project => project.activities));
+
+            var projectList = projectRepository.AllIncluding(project => project.activities);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                projectList = projectList.Where(s => s.projectName.Contains(searchString));
+            }
+            return View(projectList);
         }
         public ActionResult ProjectIndex(int id)
         {

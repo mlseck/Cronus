@@ -11,7 +11,8 @@ namespace DatabaseEntities
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class employee
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -24,11 +25,16 @@ namespace DatabaseEntities
         }
     
         public string employeeID { get; set; }
+        [Display(Name = "First Name")]
         public string employeeFirstName { get; set; }
+        [Display(Name = "Last Name")]
         public string employeeLastName { get; set; }
+        [Display(Name = "Min Hours")]
         public Nullable<int> employeeMinHours { get; set; }
+        [Display(Name = "Max Hours")]
         public Nullable<int> employeeMaxHours { get; set; }
         public int employeePrivileges { get; set; }
+        [Display(Name = "Email Address")]
         public string employeeEmailAddress { get; set; }
         public string employeePwd { get; set; }
         public string employeeGroupManaged { get; set; }
