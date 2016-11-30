@@ -1,6 +1,5 @@
 ﻿$(document).load(function () {
     $('#dateTitle').text("View for the Week of" + new Date(new Date().getTime()).toLocaleDateString());
-    alert('HERE');
 });
 
 function addNewRows(table) {
@@ -38,10 +37,11 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+    var emp_id='Amill';
     $.ajax({
         type: 'GET',
         url: '/Home/GetBetweenDates',
-        //Need to pass through a variable
+        data: { employeeID: emp_id },
         success: function (data) {
             console.log(data);
         },
@@ -50,11 +50,21 @@ $(document).ready(function () {
             500: function (content) { alert('internal server error'); }
         },
         error: function (req, status, errorObj) {
-            // handle status === "timeout"
-            // handle other errors
         }
     });
 });
+
+function AddRow(_day) {
+    console.log("Executing Add Script")
+    $.ajax({
+        async: false,
+        url: '/Home/AddHourWorked'
+    }).success(function (partialView) {
+        var divID = "#hoursworkedrow" + _day.id.slice(-3);
+        console.log(divID);
+        $(divID).append(partialView);
+    });
+}
 
 $(document).ready(function () {
     $('#save').click(function () {

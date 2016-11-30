@@ -9,29 +9,13 @@
 
 @Scripts.Render("~/Scripts/index.js")
 
-@section Scripts
-    {
-    <script type="text/javascript">
-        function AddRow(_day) {
-            console.log("Executing Add Script")
-            $.ajax({
-                async: false,
-                url: '/Home/AddHourWorked'
-            }).success(function (partialView) {
-                var divID = "#hoursworkedrow" + _day.id.slice(-3);
-                console.log(divID);
-                $(divID).append(partialView);
-            });
-        }
-    </script>
-}
 
 <h2 id="dateTitle" align="center"></h2>
 
 <div class="col-lg-12">
     <div class="row">
         <div class="col-xs-4">
-            <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
+            <button type="button" width="100px" id="prevWeek" onclick="" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
 
         </div>
         <div class="col-xs-4">
