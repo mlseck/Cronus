@@ -1,7 +1,4 @@
-﻿$(document).load(function () {
-    $('#dateTitle').text("View for the Week of" + new Date(new Date().getTime()).toLocaleDateString());
-});
-
+﻿
 function addNewRows(table) {
     var t = table.toString();
     var x = document.getElementById(t);

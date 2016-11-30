@@ -15,22 +15,7 @@
 
     @Scripts.Render("~/Scripts/index.js")
 
-    @section Scripts
-    {
-        <script type="text/javascript">
-        function AddRow(_day) {
-            console.log("Executing Add Script")
-            $.ajax({
-                async: false,
-                url: '/Home/AddHourWorked'
-            }).success(function (partialView) {
-                var divID = "#hoursworkedrow" + _day.id.slice(-3);
-                console.log(divID);
-                $(divID).append(partialView);
-            });
-        }
-        </script>
-    }
+
 
     <h2 id="dateTitle" align="center"></h2>
 
@@ -59,7 +44,7 @@
                 <th>Day</th>
                 <th></th>
                 <th></th>
-                <th id="totalHours">Total Hours</th>
+                <th id="totalHours">0 Total Hours</th>
             </tr>
         </thead>
         <tbody>
