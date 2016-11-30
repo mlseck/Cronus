@@ -6,51 +6,19 @@
 @{var empID = UserManager.User.employeeID;}
 
 
-@*@Scripts.Render("~/Scripts/MonthlyClickDate.js")*@
+
+@Scripts.Render("~/Scripts/GetWeeklyHours.js")
 @Scripts.Render("~/Scripts/Monthly.js")
 
 
 
-
-
-
+<div id="empId" style="display: none;">@empID</div>
 
 <div style="padding-top: 25px">
 
     <div class="col-xs-9">
         <div id="calendar"></div>
     </div>
-
-
-    @*<div class="col-md-push-3">
-        <table class="table table-striped col-md-push-3">
-            <thead>
-                <tr>
-                    <th class="col-md-push-3">Weekly Hours</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="col-md-push-3" id="week1">0 Hours</td>
-                </tr>
-                <tr>
-                    <td class="col-md-push-3" id="week2">0 Hours</td>
-                </tr>
-                <tr>
-                    <td class="col-md-push-3" id="week3">0 Hours</td>
-                </tr>
-                <tr>
-                    <td class="col-md-push-3" id="week4">0 Hours</td>
-                </tr>
-                <tr>
-                    <td class="col-md-push-3" id="week5">0 Hours</td>
-                </tr>
-                <tr>
-                    <td class="col-md-push-3" id="week6">0 Hours</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>*@
 
     <div class="col-sm-push-3">
         <br />

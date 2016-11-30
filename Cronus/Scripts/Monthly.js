@@ -1,21 +1,32 @@
 ﻿var weeklyHrs = 0;
-var weekCount = 0;
+var weekCount = 1;
 var count = 0;
-$('.fc-button-prev span').click(function () {
-    dayRender();
-});
+var empID = ''
 
-$('.fc-button-next span').click(function () {
-    dayRender();
-});
+
+//$('.fc-button-prev span').click(function () {
+//    getWeekHours();
+//    console.log("hey")
+//});
+
+//$('.fc-button-next span').click(function () {
+//    getWeekHours();
+//    console.log("hey")
+//});
+
+
+$(document).ready(function () {
+    empID = $("#empId").html()
+})
+
+
 
 $(document).ready(function () {
 
     $(function () {
         $.ajax({
-            type: "POST",
             contentType: "application/json",
-            data: { empId: $("#empID").val() },
+            data: { empId: empID },
             url: "/Home/GetEvents",
             dataType: "json",
 
@@ -29,7 +40,7 @@ $(document).ready(function () {
                         if (allDay) {
                             $.ajax({
                                 contentType: "application/json",
-                                data: { date: date.format() , empId: $("#empID").val() },
+                                data: { date: date.format(), empId: empID },
                                 url: "/Home/GetHoursWorkedPerDay/",
                                 dataType: "json",
                                 success: function (data) {
@@ -76,29 +87,23 @@ $(document).ready(function () {
 
                     //adds hours on each day cell for each hours worked on each day. 
                     dayRender: function (date, cell) {
-                        var hrsWrkd = ""
-                        //weeklyHours(0, date)
-                        //dont know if this will work, waiting on DB to be fixed
                         $.ajax({
                             contentType: "application/json",
-                            data: { date: date.format() , empId: $("#empID").val() },
+                            data: { date: date.format(), empId: empID },
                             url: "/Home/GetHoursWorkedPerDay/",
                             dataType: "json",
                             success: function (data) {
-
+                                var hrsWrkd = 0
                                 if (data.length == 0) {
-                                    weeklyHours(parseInt(0), date)
+                                    //weeklyHours(parseInt(0), date)
                                 }
-
                                 else {
-
                                     $.each(data, function (index, element) {
                                         //link.setAttribute('href', '/');
-                                        hrsWrkd += element.HrsWorked
-                                        weeklyHours(parseInt(element.HrsWorked), date)
-                                        cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
+                                        hrsWrkd = hrsWrkd + parseInt(element.HrsWorked)
+                                        //weeklyHours(parseInt(element.HrsWorked), date)
                                     });
-
+                                    cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
                                 }
 
                                
@@ -173,15 +178,15 @@ $(document).ready(function () {
 
 
 
-function weeklyHours(hrs, date) {
-    var dateDay = date.format("dddd");
-    weeklyHrs = weeklyHrs + hrs
-    count++
+//function weeklyHours(hrs, date) {
+//    var dateDay = date.format("dddd");
+//    weeklyHrs = weeklyHrs + hrs
+//    count++
 
-    if (count == 7) {
-        $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
-        count = 0;
-        weeklyHrs = 0
-        weekCount ++
-    }
-}
+//    if (dateDay == "Saturday") {
+//        $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
+//        count = 0;
+//        weeklyHrs = 0
+//        weekCount ++
+//    }
+//}
