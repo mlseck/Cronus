@@ -17,7 +17,6 @@ namespace Cronus.ViewModels
             public hoursworked hrsWorked { get; set; }
             public int totalHoursWorked { get; set; }
             public string Comment { get; set; }
-
             public virtual List<hoursworked> HoursWorked { get; set; }
             public HomeViewModel(){
             HoursWorked = new List<hoursworked>();

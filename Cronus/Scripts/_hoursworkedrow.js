@@ -34,6 +34,8 @@
 }
 function DeleteRow(_row) {
     console.log("Executing Delete Script")
+    var entryID = $(_row).parentNode;
+    console.log("Parent Node: " + entryID)
     $(_row).parents("#hoursWorkedRow:first").remove();
     return false;
 }

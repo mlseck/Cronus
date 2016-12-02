@@ -238,8 +238,6 @@ namespace Cronus.Controllers
             return Json(homeModel, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public JsonResult GetPreviousHours()
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]
@@ -361,7 +359,7 @@ namespace Cronus.Controllers
                         // Otherwise, create a new entry
                         hoursworked newEntry = new hoursworked();
                         DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
-                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = DateTime.Now;
+                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
                         newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = "Amill"; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
 
                         if (ExtensionMethods.EntryExists(newEntry) == null)
@@ -386,13 +384,14 @@ namespace Cronus.Controllers
                     // Updating already existing entry
                     else
                     {
-                        ////entry.Activity_activityID = entry.activity.activityID; entry.Project_projectID = entry.project.projectID;
-                        //hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
-                        //existingEntry.Activity_activityID = entry.activity.activityID; existingEntry.activity = entry.activity;
-                        //existingEntry.Project_projectID = entry.project.projectID; existingEntry.project = entry.project;
-                        //existingEntry.hours = entry.hours;
-                        //existingEntry.comments = entry.comments;
-                        //new HoursWorkedController().AddHours(existingEntry);
+                        // If we get to this point, entry is already saved to DB, and we're editing it
+                        hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                        existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
+                        existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
+                        existingEntry.hours = entry.hours;
+                        existingEntry.comments = entry.comments;
+                        existingEntry.date = entry.date;
+                        new HoursWorkedController().AddHours(existingEntry); 
                     }
                 }
             }
@@ -416,6 +415,13 @@ namespace Cronus.Controllers
             return from.AddDays(target - start);
         }
 
+        public static DateTime GetDateInWeek(this DateTime end, DayOfWeek dayOfWeek)
+        {
+            int day = (int)dayOfWeek;
+            if (day == 0) { day = 7; }
+            DateTime date = end.Date.AddDays(-(7-day));
+            return date;
+        }
         public static hoursworked EntryExists(hoursworked entry)
         {
             var existsQuery = from hw in new CronusDatabaseEntities().hoursworkeds
