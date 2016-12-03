@@ -51,6 +51,7 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            myModel.HoursWorked = db.hoursworkeds.ToList();
             return PartialView("_hoursworkedrow", myModel.hrsWorked);
         }
 
