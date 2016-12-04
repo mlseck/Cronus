@@ -77,22 +77,6 @@ namespace Cronus.Controllers
         //gets projects for the calender
         public JsonResult GetEvents(string empId)
         {
-            //empId = "Amill";
-            //will get projects/activities for the month.
-            //List<project> projects = new List<project>();
-            //foreach (project proj in db.projects)
-            //{
-            //    projects.Add(new project()
-            //    {
-            //        projectID = proj.projectID,
-            //        projectName = proj.projectName,
-            //        projectStartDate = proj.projectStartDate,
-            //        projectEndDate = proj.projectEndDate
-            //    });
-            //}
-            //return Json(projects, JsonRequestBehavior.AllowGet);
-            //var projects = db.projects.ToList();
-
             //create an employee object mathcing the empId passed through
             employee emp = db.employees.Find(empId);
             var dbGrps = db.groups.ToList();
@@ -129,10 +113,10 @@ namespace Cronus.Controllers
 
         //GetWeeklyHours
         [HttpGet]
-        public JsonResult GetWeeklyHours(string empId)
+        public JsonResult GetWeeklyHours(string empId, int monthOffSet)
         {
             //empId = "Amill";
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now.AddMonths(monthOffSet);
             var StartDate = new DateTime(date.Year, date.Month, 1);
             var EndDate = StartDate.AddMonths(1).AddDays(-1);
             double numDays = (EndDate - StartDate).TotalDays;
