@@ -5,37 +5,40 @@
 }
 @Scripts.Render("~/Scripts/_hoursworkedrow.js")
 
-    @{
-        SelectList test;
-        try
-        {
-            var activities = Model.project.activities;
-            test = new SelectList(activities, "activityID", "activityName");
-        }
-        catch(Exception)
-        {
-            test = new SelectList(Enumerable.Empty<SelectListItem>());
-        }
+@{
+    SelectList test;
+    try
+    {
+        var activities = Model.project.activities;
+        test = new SelectList(activities, "activityID", "activityName");
     }
-        @using (Html.BeginCollectionItem("HoursWorked"))
-        {
-            <div id="hoursWorkedRow"class="hoursWorkedRow">
-                @Html.HiddenFor(m => m.entryID)
-                @Html.HiddenFor(m=> m.date)
-                @Html.HiddenFor(m => m.currentDay)
-                @Html.HiddenFor(m => m.isDeleted)
-                @Html.DropDownListFor(m => m.Project_projectID, new SelectList(context.projects, "projectID", "projectName"), "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
-                @Html.DropDownListFor(m => m.Activity_activityID, test, "---Select Activity", new { @class = "form-control" })
-                @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:7%;", @min = "0", @type = "number" } })
-                @Html.TextBoxFor(m => m.comments, new { @class = "form-control" })
-                <span id="deleteRow" class="glyphicon glyphicon-remove deleteRow" onclick="DeleteRow(this); SetDeleted(this)" width="200%"></span>
-                <br />
-                <br />
-            </div>
+    catch (Exception)
+    {
+        test = new SelectList(Enumerable.Empty<SelectListItem>());
+    }
+}
+@using (Html.BeginCollectionItem("HoursWorked"))
+{
+    <div id="hoursWorkedRow" class="hoursWorkedRow">
+        @Html.HiddenFor(m => m.entryID)
+        @Html.HiddenFor(m => m.date)
+        @Html.HiddenFor(m => m.currentDay)
+        @Html.HiddenFor(m => m.isDeleted)
+        @Html.DropDownListFor(m => m.Project_projectID, new SelectList(context.projects, "projectID", "projectName"), "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
+        @Html.DropDownListFor(m => m.Activity_activityID, test, "---Select Activity", new { @class = "form-control" })
+        @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:7%;", @min = "0", @type = "number" } })
+        @Html.TextBoxFor(m => m.comments, new { @class = "form-control" })
+        @Html.Label(" ",new {@class = "glyphicon glyphicon-remove deleteRow", @onclick = "DeleteRow(this); SetDeleted(this)", @width = "200%" })
+        @*<span id="deleteRow" class="glyphicon glyphicon-remove deleteRow" onclick="DeleteRow(this); SetDeleted($('#hoursWorkedRow').prev())" width="200%"></span>*@
+        <br />
+        <br />
+    </div>
+}
+@*@{
+    var partialGuid = $('#hoursWorkedRow').children().first();
+}*@
 
-        }
 
- 
 
 
 

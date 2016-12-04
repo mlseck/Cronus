@@ -21,6 +21,7 @@ namespace Cronus.ViewModels
             public HomeViewModel(){
             HoursWorked = new List<hoursworked>();
             }
+            public DateTime currentWeekEndDate { get; set; }
 
 
     }

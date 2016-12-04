@@ -34,13 +34,11 @@
 }
 function DeleteRow(_row) {
     console.log("Executing Delete Script")
-    var entryID = $(_row).parentNode;
-    console.log("Parent Node: " + entryID)
     //$(_row).parents("#hoursWorkedRow:first").remove();
     $(_row).parents("#hoursWorkedRow:first").hide();
     return false;
 }
 function SetDeleted(_element) {
-    console.log($(_element).parent().prev().prop("id"));
-    document.getElementById('isDeleted').value = true;
+    var elementID = _element.getAttribute("for").replace("___","__isDeleted");
+    document.getElementById(elementID).value = true;
 }

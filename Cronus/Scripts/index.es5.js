@@ -28,6 +28,9 @@ function removeRow(table, row) {
     return;
 }
 
+function getPreviousWeek(_currentWeek) {}
+function getNextWeek(_currentWeek) {}
+
 $(document).ready(function () {
     $(".hoursInput").change(function () {
         var sum = 0;
