@@ -9,7 +9,14 @@
     Approve hours for the time peried ending @Html.DisplayFor(modelItem => Model.timeperiod.periodEndDate)
 </h3>
 
-@using (Html.BeginForm("ApproverIndex", "Approver"))
+@if(Model.employeetimeperiods.Count() != Model.Employees.Count())
+{
+@:
+    <script type="text/javascript">alert('Employees do not have times recorded for this timeperiod')</script>
+}
+else
+{
+using (Html.BeginForm("ApproverIndex", "Approver"))
 {
 
 
@@ -23,21 +30,21 @@
 
     <div class="demo">
         @{int i = 0;}
-        
+
         @*@foreach (var employee in Model.Employees)*@
-            @for (var j = 0; j < Model.Employees.Count; j++)
-            {
-                var employee = Model.Employees[j];
+        @for (var j = 0; j < Model.Employees.Count; j++)
+        {
+            var employee = Model.Employees[j];
 
-                @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].Employee_employeeID)
-                @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].isApproved)
-                @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].TimePeriod_periodEndDate)
+            @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].Employee_employeeID)
+            @*@Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].isApproved)*@
+            @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].TimePeriod_periodEndDate)
 
-                @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeeID)
+            @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeeID)
                 @Html.HiddenFor(modelItem => modelItem.Employees[j].employeeLastName)
                 @Html.HiddenFor(modelItem => modelItem.Employees[j].employeeFirstName)*@
 
-                @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().Employee_employeeID)
+            @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().Employee_employeeID)
                 @Html.HiddenFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().TimePeriod_periodEndDate)*@
 
 
@@ -54,13 +61,13 @@
 
             <h3 class="panel-title">
                 <strong>
-                    @*@Html.CheckBoxFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)*@
-                    @*@Html.CheckBoxFor(modelItem => modelItem.employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate && e.Employee_employeeID == employee.employeeID).FirstOrDefault().isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)*@
                     @Html.CheckBoxFor(modelItem => modelItem.employeetimeperiods[j].isApproved)   @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
-                    
-
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Total Hours:
+                    @Html.Label(Model.HoursWorkedList.Select(e => e).Where(e => e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).Sum(h => h.hours).ToString())
                 </strong>
             </h3>
+
 
             <div class="panel panel-default">
 
@@ -74,6 +81,11 @@
                                 <h3 class="panel-title">
                                     <a data-toggle="collapse" data-target="#collapseOne_@i" href="#collapseOne_@i">
                                         --Project @Html.DisplayFor(modelItem => project.projectName)--
+                                        @*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*@
+                                        <div style="float:right">
+                                            Total Project Hours:
+                                            @Html.Label(Model.HoursWorkedList.Select(e => e).Where(e => e.TimePeriod_employeeID == employee.employeeID && e.Project_projectID == project.projectID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).Sum(h => h.hours).ToString())
+                                        </div>
                                     </a>
                                 </h3>
                             </div>
@@ -98,22 +110,26 @@
 
                                         @foreach (var activity in project.activities)
                                         {
+                                            var act = Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate);
+                                            if (act != null && act.Count() != 0)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => activity.activityName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => act.FirstOrDefault().hours)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => act.FirstOrDefault().comments)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => act.FirstOrDefault().date)
+                                                    </td>
 
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => activity.activityName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().hours)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().comments)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => Model.HoursWorkedList.Select(e => e).Where(e => e.Activity_activityID == activity.activityID && e.Project_projectID == project.projectID && e.TimePeriod_employeeID == employee.employeeID && e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().date)
-                                                </td>
+                                                </tr>
+                                            }
 
-                                            </tr>
                                         }
 
                                     </table>
@@ -126,9 +142,9 @@
 
             </div>
 
-            
 
-            }
+
+        }
 
         <div class="pull-right">
             <div class="form-group">
@@ -140,7 +156,12 @@
 
 
     </div>
+
             }
+
+
+            }
+
 
 
 
