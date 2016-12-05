@@ -236,6 +236,7 @@
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\MonthlyViewModel.cs" />
+    <Compile Include="ViewModels\TimePeriodViewModel.cs" />
     <Compile Include="ViewModels\WeeklyHoursModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -480,7 +481,7 @@
     <Content Include="Views\Approver\Details.cshtml" />
     <Content Include="Views\Approver\Edit.cshtml" />
     <Content Include="Views\Approver\Index.cshtml" />
-    <Content Include="Views\Approver\ApproverIndex.cshtml" />
+    <Content Include="Views\Approver\Approver_Index.cshtml" />
     <Content Include="Views\Home\_hoursworkedrow.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Approver\TestView.cshtml" />

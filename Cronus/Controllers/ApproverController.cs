@@ -19,15 +19,29 @@ namespace Cronus.Controllers
         // GET: Approver
         public ActionResult Index()
         {
-            var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
+            TimePeriodViewModel model = new TimePeriodViewModel();
+            List<timeperiod> timeperiod = db.timeperiods.ToList();
+
+            model.timePeriods = timeperiod.ConvertAll(a =>
+            {
+                return new SelectListItem()
+                {
+                    Text = a.periodEndDateString.ToString(),
+                    Value = a.periodEndDate.ToString()
+                };
+            });
+
+                var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
 
             //loggedinEmp.employeeGroupManaged
 
             ViewBag.GroupId = loggedinEmp.employeeGroupManaged;
-            return View(db.timeperiods.ToList());
+            return View(model);
+
+            //return View(db.timeperiods.ToList());
         }
 
-        public ActionResult ApproverIndex(int groupID, DateTime periodEnddate)
+        public ActionResult Approver_Index(int groupID, DateTime periodEnddate)
         {
             var perioudEndDateQuery = db.timeperiods.Find(periodEnddate);
 

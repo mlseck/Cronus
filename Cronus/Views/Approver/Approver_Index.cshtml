@@ -9,10 +9,10 @@
     Approve hours for the time peried ending @Html.DisplayFor(modelItem => Model.timeperiod.periodEndDate)
 </h3>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ApproverIndex", "Approver"))
 {
 
-    
+
     //&nbsp;
     //&nbsp;
 
@@ -21,17 +21,6 @@
 
     @Html.HiddenFor(modelItem => modelItem.isApproved)
 
-
-
-
-
-
-
-    @*<script>
-        $(function () {
-            $("#accordion").accordion({ header: "h3", collapsible: true, active: false });
-        });
-    </script>*@
     <div class="demo">
         @{int i = 0;}
         
