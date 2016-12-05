@@ -9,7 +9,7 @@ using Cronus.ViewModels;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections;
-
+using System.Data.Entity;
 
 namespace Cronus.Controllers
 {
