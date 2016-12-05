@@ -22,6 +22,8 @@ namespace Cronus.Controllers
             TimePeriodViewModel model = new TimePeriodViewModel();
             List<timeperiod> timeperiod = db.timeperiods.ToList();
 
+            timeperiod = timeperiod.OrderByDescending(d => d.periodEndDate).ToList();
+
             model.timePeriods = timeperiod.ConvertAll(a =>
             {
                 return new SelectListItem()
@@ -30,6 +32,8 @@ namespace Cronus.Controllers
                     Value = a.periodEndDate.ToString()
                 };
             });
+
+            
 
                 var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
 
