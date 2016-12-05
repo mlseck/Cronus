@@ -22,7 +22,7 @@ namespace DatabaseEntities
             this.activities = new HashSet<activity>();
             this.groups = new HashSet<group>();
         }
-    
+
         public int projectID { get; set; }
         [Display(Name = "Project Name")]
         public string projectName { get; set; }
@@ -42,7 +42,7 @@ namespace DatabaseEntities
         public string projectAbbreviation { get; set; }
         [Display(Name = "Status")]
         public short projectActive { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<hoursworked> hoursworkeds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

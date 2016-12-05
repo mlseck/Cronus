@@ -26,5 +26,7 @@ namespace DatabaseEntities
         public virtual activity activity { get; set; }
         public virtual employeetimeperiod employeetimeperiod { get; set; }
         public virtual project project { get; set; }
+        public DayOfWeek currentDay { get; set; }
+        public Boolean isDeleted { get; set; }
     }
 }
