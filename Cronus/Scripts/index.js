@@ -51,17 +51,17 @@ $(document).ready(function () {
     });
 });
 
-function AddRow(_day) {
-    console.log("Executing Add Script")
-    $.ajax({
-        async: false,
-        url: '/Home/AddHourWorked'
-    }).success(function (partialView) {
-        var divID = "#hoursworkedrow" + _day.id.slice(-3);
-        console.log(divID);
-        $(divID).append(partialView);
-    });
-}
+//function AddRow(_day) {
+//    console.log("Executing Add Script")
+//    $.ajax({
+//        async: false,
+//        url: '/Home/AddHourWorked'
+//    }).success(function (partialView) {
+//        var divID = "#hoursworkedrow" + _day.id.slice(-3);
+//        console.log(divID);
+//        $(divID).append(partialView);
+//    })`-^$
+//}
 
 $(document).ready(function () {
     $('#save').click(function () {

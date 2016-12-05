@@ -6,6 +6,22 @@
     ViewBag.Title = "Home Page";
     DateTime timePeriod = Model.currentWeekEndDate;
 }
+@section Scripts
+    {
+    <script type="text/javascript">
+        function AddRow(_day) {
+            console.log("Executing Add Script")
+            $.ajax({
+                async: false,
+                url: '/Home/AddHourWorked'
+            }).success(function (partialView) {
+                var divID = "#hoursworkedrow" + _day.id.slice(-3);
+                console.log(divID);
+                $(divID).append(partialView);
+            });
+        }
+    </script>
+}
 
 @if (User.Identity.IsAuthenticated)
 {
