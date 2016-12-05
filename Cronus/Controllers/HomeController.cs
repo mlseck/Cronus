@@ -56,7 +56,6 @@ namespace Cronus.Controllers
                     hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
                     if (deleteEntry != null)
                     {
-                        //Error is coming from here because PK is not only entryId. We need to update that from dbentities
                         new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
                     }
                 }
