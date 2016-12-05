@@ -1,7 +1,7 @@
 ﻿function GetActivities(_projectID) {
     var selectedProj = _projectID.value;
     var ddlid = _projectID.id;
-    var ddlstring = ddlid.replace("Project", "Activity");
+    var ddlstring = ddlid.replace("Project_project", "Activity_activity");
     ddlstring = "#" + ddlstring;
     console.log(ddlid);
     console.log(ddlstring);
@@ -33,7 +33,12 @@
 
 }
 function DeleteRow(_row) {
-    console.log("Executing Updated Delete Script")
-    $(_row).parents("#hoursWorkedRow:first").remove();
+    console.log("Executing Delete Script")
+    //$(_row).parents("#hoursWorkedRow:first").remove();
+    $(_row).parents("#hoursWorkedRow:first").hide();
     return false;
+}
+function SetDeleted(_element) {
+    var elementID = _element.getAttribute("for").replace("___", "__isDeleted");
+    document.getElementById(elementID).value = true;
 }

@@ -42,8 +42,68 @@ namespace Cronus.Controllers
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
             myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
             return View(myModel);
+        }
 
+        [HttpPost]
+        public ActionResult SubmitHours(HomeViewModel submittedHours)
+        {
+            foreach (var entry in submittedHours.HoursWorked)
+            {
+                if (entry.isDeleted)
+                {
+                    hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
+                    if (deleteEntry != null)
+                    {
+                        //Error is coming from here because PK is not only entryId. We need to update that from dbentities
+                        new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
+                    }
+                }
+                else if (entry.hours > 0)
+                {
+                    if (entry.entryID == 0)
+                    {
+                        // Check if the activity was already logged on the current date
+                        // If it was, just add hours to the entry
+                        // Otherwise, create a new entry
+                        hoursworked newEntry = new hoursworked();
+                        DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
+                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = "Amill"; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+
+                        if (ExtensionMethods.EntryExists(newEntry) == null)
+                        {
+                            new HoursWorkedController().Create(newEntry);
+                        }
+                        else
+                        {
+                            hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
+                            existingEntry.hours += newEntry.hours;
+                            existingEntry.comments += newEntry.comments;
+                            new HoursWorkedController().AddHours(existingEntry);
+                        }
+                    }
+                    // Updating already existing entry
+                    else
+                    {
+                        // If we get to this point, entry is already saved to DB, and we're editing it
+                        hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                        existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
+                        existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
+                        existingEntry.hours = entry.hours;
+                        existingEntry.comments = entry.comments;
+                        existingEntry.date = entry.date;
+                        new HoursWorkedController().AddHours(existingEntry);
+                    }
+                }
+            }
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+            return View("Index", myModel);
         }
 
 
@@ -380,14 +440,40 @@ namespace Cronus.Controllers
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
         }
+    }
 
-        [HttpPost]
-        public ActionResult SubmitHours(HomeViewModel submittedHours)
+    public static class ExtensionMethods
+    {
+        public static DateTime Next(this DateTime from, DayOfWeek dayOfWeek)
         {
-            HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            return View("Index", myModel);
+            if (from.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return from;
+            }
+            int start = (int)from.DayOfWeek;
+            int target = (int)dayOfWeek;
+            if (target <= start)
+                target += 7;
+            return from.AddDays(target - start);
+        }
+
+        public static DateTime GetDateInWeek(this DateTime end, DayOfWeek dayOfWeek)
+        {
+            int day = (int)dayOfWeek;
+            if (day == 0) { day = 7; }
+            DateTime date = end.Date.AddDays(-(7 - day));
+            return date;
+        }
+        public static hoursworked EntryExists(hoursworked entry)
+        {
+            var existsQuery = from hw in new CronusDatabaseEntities().hoursworkeds
+                              where (hw.TimePeriod_employeeID.Equals(entry.TimePeriod_employeeID) && DbFunctions.TruncateTime(hw.date) == DbFunctions.TruncateTime(entry.date) && hw.Project_projectID == entry.Project_projectID && hw.Activity_activityID == entry.Activity_activityID)
+                              select hw;
+            if (existsQuery.Any())
+            {
+                return existsQuery.First();
+            }
+            return null;
         }
     }
 }

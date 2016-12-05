@@ -18,6 +18,7 @@ namespace Cronus.ViewModels
             public hoursworked hrsWorked { get; set; }
             public int totalHoursWorked { get; set; }
             public string Comment { get; set; }
+            public DateTime currentWeekEndDate { get; set; }
 
         //Working on pulling hours/activities based on week and employee
 
