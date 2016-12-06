@@ -64,6 +64,7 @@
           </Key>
           <Property Name="groupID" Type="int" Nullable="false" />
           <Property Name="groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="groupManager" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="group_has_employee">
           <Key>
@@ -202,6 +203,18 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Principal>
             <Dependent Role="favorite">
               <PropertyRef Name="Employee_employeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="group$fk_group_GroupManager1">
+          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+          <End Role="group" Type="Self.group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="employeeID" />
+            </Principal>
+            <Dependent Role="group">
+              <PropertyRef Name="groupManager" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -359,6 +372,10 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employee" />
             <End Role="favorite" EntitySet="favorite" />
           </AssociationSet>
+          <AssociationSet Name="group$fk_group_GroupManager1" Association="Self.group$fk_group_GroupManager1">
+            <End Role="employee" EntitySet="employee" />
+            <End Role="group" EntitySet="group" />
+          </AssociationSet>
           <AssociationSet Name="group_has_employee$fk_Group_has_Employee_Employee1" Association="Self.group_has_employee$fk_Group_has_Employee_Employee1">
             <End Role="employee" EntitySet="employee" />
             <End Role="group_has_employee" EntitySet="group_has_employee" />
@@ -443,7 +460,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <NavigationProperty Name="audittrails" Relationship="Self.audittrail_fk_AuditTrail_Employee1" FromRole="employee" ToRole="audittrail" />
           <NavigationProperty Name="employeetimeperiods" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employee" ToRole="employeetimeperiod" />
           <NavigationProperty Name="favorites" Relationship="Self.favorite_fk_Favorite_Employee1" FromRole="employee" ToRole="favorite" />
-          <NavigationProperty Name="groups" Relationship="Self.group_has_employee" FromRole="employee" ToRole="group" />
+          <NavigationProperty Name="groups" Relationship="Self.group_fk_group_GroupManager1" FromRole="employee" ToRole="group" />
+          <NavigationProperty Name="groups1" Relationship="Self.group_has_employee" FromRole="employee" ToRole="group" />
         </EntityType>
         <EntityType Name="employeetimeperiod">
           <Key>
@@ -473,6 +491,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           </Key>
           <Property Name="groupID" Type="Int32" Nullable="false" />
           <Property Name="groupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="groupManager" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="employee" Relationship="Self.group_fk_group_GroupManager1" FromRole="group" ToRole="employee" />
           <NavigationProperty Name="employees" Relationship="Self.group_has_employee" FromRole="group" ToRole="employee" />
           <NavigationProperty Name="projects" Relationship="Self.project_has_group" FromRole="group" ToRole="project" />
         </EntityType>
@@ -597,6 +617,18 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="group_fk_group_GroupManager1">
+          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+          <End Role="group" Type="Self.group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="employeeID" />
+            </Principal>
+            <Dependent Role="group">
+              <PropertyRef Name="groupManager" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1">
           <End Role="timeperiod" Type="Self.timeperiod" Multiplicity="1" />
           <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
@@ -678,6 +710,10 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <AssociationSet Name="favorite_fk_Favorite_Employee1" Association="Self.favorite_fk_Favorite_Employee1">
             <End Role="employee" EntitySet="employees" />
             <End Role="favorite" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="group_fk_group_GroupManager1" Association="Self.group_fk_group_GroupManager1">
+            <End Role="employee" EntitySet="employees" />
+            <End Role="group" EntitySet="groups" />
           </AssociationSet>
           <AssociationSet Name="employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" Association="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1">
             <End Role="timeperiod" EntitySet="timeperiods" />
@@ -769,6 +805,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
               <MappingFragment StoreEntitySet="group">
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="groupName" ColumnName="groupName" />
+                <ScalarProperty Name="groupManager" ColumnName="groupManager" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

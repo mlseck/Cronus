@@ -69,12 +69,22 @@ namespace Cronus.Controllers
                 projectIds = new int[0],
                 employeeIds = new string[0]
             };
+            List<employee> employeeList = employeeRepository.All.ToList();
 
-            
+
+            model.empList = employeeList.ConvertAll(a =>
+            {
+                return new SelectListItem()
+                {
+                    Text = a.employeeLastName.ToString(),
+                    Value = a.employeeID.ToString()
+                };
+            });
+
 
             ViewBag.PossibleProjects = projectRepository.All;
 
-            ViewBag.PossibleEmployees = employeeRepository.All;
+            ViewBag.PossibleEmployees = employeeRepository.All.ToList();
 
             return View(model);
         }
