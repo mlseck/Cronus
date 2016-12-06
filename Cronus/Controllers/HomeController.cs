@@ -41,7 +41,7 @@ namespace Cronus.Controllers
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
             myModel.HoursWorked = db.hoursworkeds.ToList();
-            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+            myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
             return View(myModel);
 
         }
@@ -380,15 +380,11 @@ namespace Cronus.Controllers
             {
                 if (entry.isDeleted)
                 {
-                    hoursworked test = db.hoursworkeds.Find(entry.entryID);
-                    var getEntry = from hw in db.hoursworkeds
-                                   where hw.entryID == entry.entryID
-                                   select hw;
-                    hoursworked deleteEntry = getEntry.First();
+                    hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
                     if (deleteEntry != null)
                     {
                         //Error is coming from here because PK is not only entryId. We need to update that from dbentities
-                        new HoursWorkedController().Delete(deleteEntry.entryID);
+                        new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
                     }
                 }
                 else if (entry.hours > 0 )
@@ -440,6 +436,7 @@ namespace Cronus.Controllers
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
             myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
             return View("Index", myModel);
         }
 
