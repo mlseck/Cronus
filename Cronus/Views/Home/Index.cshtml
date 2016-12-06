@@ -58,6 +58,7 @@
 
     using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
     {
+    @Html.HiddenFor(m => m.currentWeekEndDate)
     <div class="pull-left" width="80%">
         <table class="table table-striped">
             <thead>

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Data.Entity;
 using Cronus.Login;
+using System.Data.Entity.Core.Objects;
 
 namespace Cronus.Controllers
 {
@@ -42,11 +43,11 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
-                        select hw;
-            myModel.HoursWorked = query.ToList();
             myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            myModel.HoursWorked = query.ToList();  
             return View(myModel);
         }
 
@@ -85,6 +86,7 @@ namespace Cronus.Controllers
                             existingEntry.hours += newEntry.hours;
                             existingEntry.comments += newEntry.comments;
                             new HoursWorkedController().AddHours(existingEntry);
+                            db.SaveChanges();
                         }
                     }
                     // Updating already existing entry
@@ -104,11 +106,14 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            myModel.currentWeekEndDate = submittedHours.currentWeekEndDate;
             var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                         select hw;
-            myModel.HoursWorked = query.ToList();
-            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+            myModel.HoursWorked = query.ToList(); 
+            foreach(var hw in myModel.HoursWorked){
+                hw.currentDay = hw.date.DayOfWeek;
+            }
             return View("Index", myModel);
         }
 
