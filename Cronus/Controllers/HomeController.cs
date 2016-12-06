@@ -45,6 +45,32 @@ namespace Cronus.Controllers
             return View(myModel);
 
         }
+        //rewrite index
+        //manually call new index for prev based on js onclick
+        [HttpPost]
+        public ActionResult IndexPrev()
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(-7), DayOfWeek.Sunday);
+            return View("Index", myModel);
+
+        }
+
+        [HttpPost]
+        public ActionResult IndexNext()
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(7), DayOfWeek.Sunday);
+            return View("Index",myModel);
+
+        }
+
 
 
         public ActionResult AddHourWorked()

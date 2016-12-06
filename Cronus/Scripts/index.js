@@ -12,7 +12,7 @@ function addNewRows(table) {
     new_row.cells[0].innerHTML.id = len;
     x = x.firstElementChild;
     x.appendChild(new_row);
-   
+
     return;
 }
 
@@ -26,11 +26,34 @@ function removeRow(table, row) {
     return;
 }
 
-function getPreviousWeek(_currentWeek) {
+function getPreviousWeek(){
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexPrev",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        error: function () {
 
+        }
+    });
 }
-function getNextWeek(_currentWeek) {
 
+function getNextWeek() {
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexNext",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        error: function () {
+
+        }
+    });
 }
 
 $(document).ready(function () {
