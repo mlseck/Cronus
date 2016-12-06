@@ -69,3 +69,36 @@ $(document).ready(function () {
         alert("HERE");
     });
 });
+
+function getPreviousWeek(_currentWeek) {
+    $.ajax({
+        //contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexPrev",
+        data: { currentweek: _currentweek },
+        //dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        error: function () {
+
+        }
+    });
+}
+
+function getNextWeek(_currentWeek) {
+    console.log("Fetching next week")
+    $.ajax({
+        //contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexNext",
+        data: { currentweek: _currentweek },
+        //dataType: "json",
+        success: function (data) {
+            console.log(data);
+        },
+        error: function () {
+
+        }
+    })
+}

@@ -52,6 +52,36 @@ namespace Cronus.Controllers
         }
 
         [HttpPost]
+        public ActionResult IndexPrev(DateTime currentWeek)
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(-7), DayOfWeek.Sunday);
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            myModel.HoursWorked = query.ToList();
+            return View("Index", myModel);
+
+        }
+
+        [HttpPost]
+        public ActionResult IndexNext(DateTime currentWeek)
+        {
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(7), DayOfWeek.Sunday);
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            myModel.HoursWorked = query.ToList();
+            return View("Index", myModel);
+
+        }
+
+        [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours)
         {
             foreach (var entry in submittedHours.HoursWorked)

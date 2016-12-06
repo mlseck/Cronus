@@ -40,14 +40,14 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-xs-4">
-                <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
+                <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left" onclick="getPreviousWeek(@Model.currentWeekEndDate)"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
 
             </div>
             <div class="col-xs-4">
                 <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
             </div>
             <div class="col-xs-4">
-                <button type="button" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
+                <button type="button" onclick="getNextWeek(@Model.currentWeekEndDate)" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
             </div>
         </div>
     </div>
