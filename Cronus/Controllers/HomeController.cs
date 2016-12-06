@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Data.Entity;
+using Cronus.Login;
 
 namespace Cronus.Controllers
 {
@@ -35,13 +36,16 @@ namespace Cronus.Controllers
             this.activityRepository = activityRepository;
         }
 
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.HoursWorked = db.hoursworkeds.ToList();
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
+                        select hw;
+            myModel.HoursWorked = query.ToList();
             myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
             return View(myModel);
         }
@@ -69,7 +73,7 @@ namespace Cronus.Controllers
                         hoursworked newEntry = new hoursworked();
                         DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
                         newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
-                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = "Amill"; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
 
                         if (ExtensionMethods.EntryExists(newEntry) == null)
                         {
@@ -100,19 +104,27 @@ namespace Cronus.Controllers
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.HoursWorked = db.hoursworkeds.ToList();
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
+                        select hw;
+            myModel.HoursWorked = query.ToList();
             myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
             return View("Index", myModel);
         }
 
 
-        public ActionResult AddHourWorked()
+        public ActionResult AddHourWorked(int entryDay)
         {
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
+                        select hw;
             myModel.HoursWorked = db.hoursworkeds.ToList();
-            return PartialView("_hoursworkedrow", myModel);
+            myModel.hrsWorked = new hoursworked();
+            myModel.hrsWorked.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            return PartialView("_hoursworkedrow", myModel.hrsWorked);
         }
 
 
@@ -225,7 +237,7 @@ namespace Cronus.Controllers
 
             //creates a list of all hours worked for that employee, on the date passed through
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date == date select s).ToList();
-            //using this to add each enitity of hours worked to store in a list.
+            //using this to add each entity of hours worked to store in a list.
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
             project proj;
@@ -258,82 +270,6 @@ namespace Cronus.Controllers
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
-
-
-
-        [HttpGet]
-        public JsonResult GetBetweenDates(string empId)
-        {
-
-            //empId = "Amill";
-
-            DateTime startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
-            DateTime endDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
-
-
-            //when getting previous week, must have the start of the time period be the previous monday.
-            //For example lets say its sunday and you click previous week, youll be getting the incorrect dates.
-
-            //if 1 week ago was tuesday, set start to 1 day previous, so start date startes on a monday, ends on a sunday.
-            if (startDate.DayOfWeek == DayOfWeek.Tuesday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
-            }
-            //if 1 week ago was wednesday, set start to 2 day previous, so start date startes on a monday, ends on a sunday.
-            //repeat for each day.
-            else if (startDate.DayOfWeek == DayOfWeek.Wednesday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 1);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Thursday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 2);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Friday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 3);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Saturday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 4);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Sunday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 5);
-            }
-
-
-
-            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date >startDate && s.date < endDate select s).ToList();
-            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-
-            project proj;
-            employee emp;
-
-            foreach (hoursworked hrsW in hrs)
-            {
-                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
-
-                foreach (activity activ in activities)
-                {
-                    proj = db.projects.Find(hrsW.Project_projectID);
-                    emp = db.employees.Find(empId);
-                    hrsWrkd.Add(new MonthlyViewModel()
-                    {
-                        ActivityName = activ.activityName,
-                        HrsWorked = hrsW.hours.ToString(),
-                        ProjectName = proj.projectName,
-                        //isAdmin = 
-                    });
-                }
-            }
-
-
-            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
-        }
-
-        //[HttpPost]
-        //public JsonResult GetPreviousHours()
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]

@@ -26,7 +26,7 @@
         @Html.HiddenFor(m => m.isDeleted)
         @Html.DropDownListFor(m => m.Project_projectID, new SelectList(context.projects, "projectID", "projectName"), "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
         @Html.DropDownListFor(m => m.Activity_activityID, test, "---Select Activity", new { @class = "form-control" })
-        @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:7%;", @min = "0", @type = "number" } })
+        @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:10%;", @min = "0", @type = "number" } })
         @Html.TextBoxFor(m => m.comments, new { @class = "form-control" })
         @Html.Label(" ", new { @class = "glyphicon glyphicon-remove deleteRow", @onclick = "DeleteRow(this); SetDeleted(this)", @width = "200%" })
         @*<span id="deleteRow" class="glyphicon glyphicon-remove deleteRow" onclick="DeleteRow(this); SetDeleted($('#hoursWorkedRow').prev())" width="200%"></span>*@
