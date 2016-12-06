@@ -54,13 +54,14 @@ $(document).ready(function () {
     });
 });
 
-function AddRow(_day) {
+function AddRow(_dayOfRow, _entryday) {
     console.log("Executing Add Script");
     $.ajax({
         async: false,
+        data: { entryDay: _entryday },
         url: '/Home/AddHourWorked'
     }).success(function (partialView) {
-        var divID = "#hoursworkedrow" + _day.id.slice(-3);
+        var divID = "#hoursworkedrow" + _dayOfRow.id.slice(-3);
         console.log(divID);
         $(divID).append(partialView);
     });

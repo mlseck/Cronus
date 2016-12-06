@@ -39,7 +39,6 @@ namespace DatabaseEntities
         public string employeeEmailAddress { get; set; }
         [Display(Name = "Password")]
         public string employeePwd { get; set; }
-        [Display(Name = "Password")]
         public string employeeGroupManaged { get; set; }
 
 
@@ -51,7 +50,5 @@ namespace DatabaseEntities
         public virtual ICollection<favorite> favorites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<group> groups { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<group> groups1 { get; set; }
     }
 }

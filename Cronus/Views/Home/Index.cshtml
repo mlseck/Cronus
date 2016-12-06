@@ -6,6 +6,22 @@
     ViewBag.Title = "Home Page";
     DateTime timePeriod = Model.currentWeekEndDate;
 }
+@*@section Scripts
+    {
+    <script type="text/javascript">
+        function AddRow(_day) {
+            console.log("Executing Add Script")
+            $.ajax({
+                async: false,
+                url: '/Home/AddHourWorked'
+            }).success(function (partialView) {
+                var divID = "#hoursworkedrow" + _day.id.slice(-3);
+                console.log(divID);
+                $(divID).append(partialView);
+            });
+        }
+    </script>
+}*@
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -85,7 +101,7 @@
                             @Html.Partial("_hoursworkedrow", hrsMon)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this, 1)" value="Add Activity" />
                         </div>
 
                 </tr>
@@ -121,7 +137,7 @@
                             @Html.Partial("_hoursworkedrow", hrsTue)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this, 2)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
@@ -156,7 +172,7 @@
                             @Html.Partial("_hoursworkedrow", hrsWed)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this, 3)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
@@ -191,7 +207,7 @@
                             @Html.Partial("_hoursworkedrow", hrsThu)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this, 4)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
@@ -226,7 +242,7 @@
                             @Html.Partial("_hoursworkedrow", hrsFri)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this, 5)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
@@ -261,7 +277,7 @@
                             @Html.Partial("_hoursworkedrow", hrsSat)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this, 6)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
@@ -296,7 +312,7 @@
                             @Html.Partial("_hoursworkedrow", hrsSun)
                         </div>
                         <div>
-                            <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this)" value="Add Activity" />
+                            <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this, 0)" value="Add Activity" />
                         </div>
                     </td>
                 </tr>
