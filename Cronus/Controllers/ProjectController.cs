@@ -78,7 +78,10 @@ namespace Cronus.Controllers
             return View(projectRepository.Find(id));
         }
 
-        
+        public ViewResult ProjectActivities(int id)
+        {
+            return View(projectRepository.Find(id));
+        }
 
         //
         // GET: /Project/Create

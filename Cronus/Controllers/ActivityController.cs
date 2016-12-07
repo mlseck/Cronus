@@ -197,15 +197,19 @@ namespace Cronus.Controllers
         //
         // GET: /Activity/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int ProjectID, int id)
         {
             ViewBag.PossibleProjects = projectRepository.All;
 
             activity model = activityRepository.Find(id);
 
-            model.projectIds = (from s in model.projects select s.projectID).ToArray();
+            model.selectedProject = ProjectID;
 
-            return View(model);
+
+            //model.projectIds = (from s in model.projects select s.projectID).ToArray();
+
+
+            return PartialView(model);
         }
 
         //
@@ -222,19 +226,24 @@ namespace Cronus.Controllers
 
                 originalActivity.projects.Clear();
 
-                if (activity.projectIds != null)
-                {
-                    originalActivity.projects = (from s in this.projectRepository.All where activity.projectIds.Contains(s.projectID) select s).ToList();
-                }
+                //if (activity.projectIds != null)
+                //{
+                //    originalActivity.projects = (from s in this.projectRepository.All where activity.projectIds.Contains(s.projectID) select s).ToList();
+                //}
+                var project = projectRepository.Find(activity.selectedProject);
+                originalActivity.projects.Add(project);
+
 
                 activityRepository.InsertOrUpdate(originalActivity);
                 activityRepository.Save();
-                return RedirectToAction("Index");
+                string url = Url.Action("Index", "Activity", new { id = activity.selectedProject });
+                return Json(new { success = true, url = url });
             }
             else
             {
                 ViewBag.PossibleProjects = projectRepository.All;
-                return View(activity);
+                return PartialView("Edit", activity);
+
             }
 
         }
@@ -242,7 +251,7 @@ namespace Cronus.Controllers
         //
         // GET: /Activity/Delete/5
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int ProjectID, int id)
         {
             return View(activityRepository.Find(id));
         }

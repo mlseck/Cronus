@@ -487,6 +487,7 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Approver\TestView.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Project\ProjectActivities.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
