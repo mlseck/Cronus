@@ -98,7 +98,7 @@ $(document).ready(function () {
 //}
 
 function getPreviousWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "_" + _day + "00:00:00";
+    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00";
     console.log(_currentWeek);
     $.ajax({
         contentType: "application/json",
@@ -106,13 +106,15 @@ function getPreviousWeek(_day, _month, _year) {
         data: JSON.stringify({
             currentWeek: _currentWeek
         }),
+        url: '/Home/PreviousWeek/',
         dataType: "json",
-        url: '/Home/PreviousWeek/'
-    }).success(function (response) {
-        console.log(response);
-        console.log("Successfully fetched hours");
-    }).error(function (response) {
-        console.log("Failed");
+        success: function success(response) {
+            console.log(response);
+            console.log("Successfully fetched hours");
+        },
+        error: function error(response) {
+            console.log("Failed");
+        }
     });
 }
 
