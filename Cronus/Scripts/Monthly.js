@@ -1,28 +1,21 @@
-﻿var weeklyHrs = 0;
-var weekCount = 1;
-var count = 0;
-var empID = ''
+﻿
 
 
-//$('.fc-button-prev span').click(function () {
-//    getWeekHours();
-//    console.log("hey")
-//});
+$('body').on('click', 'button.fc-prev-button', function () {
+    //alert("asdsa");
+    count = count - 1;
+    getWeeklyHours();
+});
 
-//$('.fc-button-next span').click(function () {
-//    getWeekHours();
-//    console.log("hey")
-//});
-
-
-$(document).ready(function () {
-    empID = $("#empId").html()
-})
-
+$('body').on('click', 'button.fc-next-button', function() {
+    //alert("asdsa");
+    count++;
+    getWeeklyHours();
+});
 
 
 $(document).ready(function () {
-
+    var empID = $("#empId").html()
     $(function () {
         $.ajax({
             contentType: "application/json",
@@ -175,18 +168,3 @@ $(document).ready(function () {
     })
 });
 
-
-
-
-//function weeklyHours(hrs, date) {
-//    var dateDay = date.format("dddd");
-//    weeklyHrs = weeklyHrs + hrs
-//    count++
-
-//    if (dateDay == "Saturday") {
-//        $('#week' + weekCount).html(weeklyHrs + " hours logged this week. ")
-//        count = 0;
-//        weeklyHrs = 0
-//        weekCount ++
-//    }
-//}

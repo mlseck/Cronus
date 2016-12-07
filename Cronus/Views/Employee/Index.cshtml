@@ -4,10 +4,25 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h3>
+    Employees @Html.ActionLink(" ", "Create", "Employee", routeValues: new { }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-plus" })
+</h3>
+
+@{  List<DatabaseEntities.group> groups = ViewBag.PossibleGrous;}
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+
+    @using (Html.BeginForm("Index", "Employee", FormMethod.Get))
+    {
+        <div class="pull-right">
+            Search by LastName: @Html.TextBox("SearchString")  <input type="submit" value="Search" />
+        </div>
+        <p>
+
+            &nbsp;
+
+        </p>
+    }
 </p>
 <table class="table">
     <tr>
@@ -24,21 +39,19 @@
             @Html.DisplayNameFor(model => model.employeeMaxHours)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.employeePrivileges)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.employeeEmailAddress)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.employeePwd)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.employeeGroupManaged)
-        </th>
+            @Html.Label("Manager")
+        </th>        
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.employeeFirstName)
@@ -53,23 +66,32 @@
             @Html.DisplayFor(modelItem => item.employeeMaxHours)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.employeePrivileges)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.employeeEmailAddress)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.employeePwd)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.employeeGroupManaged)
+
+            @{
+                var group = groups.Select(g => g).Where(g => g.employees.Select(e => e.employeeID).Contains(item.employeeID)).FirstOrDefault();
+                if (group != null)
+                {
+                    {
+                        <label Font-Bold="false">@group.employee.employeeFirstName  @group.employee.employeeLastName</label>
+
+                        @*@Html.Label();*@
+                    }
+                }
+            }
+
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.employeeID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.employeeID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.employeeID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.employeeID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.employeeID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.employeeID })
         </td>
     </tr>
-}
+                }
 
 </table>

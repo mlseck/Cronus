@@ -20,6 +20,10 @@
     background-color: #003399;
 }
 
+div.navbar div.navbar-inner ul.nav a:hover {
+    color: #6190f2 !important; 
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,

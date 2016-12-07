@@ -62,34 +62,17 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
-    var emp_id='Amill';
-    $.ajax({
-        type: 'GET',
-        url: '/Home/GetBetweenDates',
-        data: { employeeID: emp_id },
-        success: function (data) {
-            console.log(data);
-        },
-        statusCode: {
-            404: function (content) { alert('cannot find resource'); },
-            500: function (content) { alert('internal server error'); }
-        },
-        error: function (req, status, errorObj) {
-        }
-    });
-});
-
-function AddRow(_day) {
+function AddRow(_dayOfRow, _entryday) {
     console.log("Executing Add Script")
     $.ajax({
         async: false,
+        data: { entryDay: _entryday },
         url: '/Home/AddHourWorked'
     }).success(function (partialView) {
-        var divID = "#hoursworkedrow" + _day.id.slice(-3);
+        var divID = "#hoursworkedrow" + _dayOfRow.id.slice(-3);
         console.log(divID);
         $(divID).append(partialView);
-    });
+    })
 }
 
 $(document).ready(function () {
@@ -97,3 +80,45 @@ $(document).ready(function () {
         alert("HERE");
     });
 });
+
+function getPreviousWeek(_day, _month, _year) {
+    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
+    console.log(_currentWeek)
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        dataType: "json",
+        data: JSON.stringify({
+            currentWeek: _currentWeek
+        }),
+        url: '/Home/Index/',
+        success: function (data) {
+            console.log("Successfully fetched hours")
+        },
+        error: function (response) {
+            console.log("Failed") 
+        }
+    });
+}
+
+function getNextWeek(_day, _month, _year) {
+    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
+    console.log(_currentWeek)
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        dataType: "json",
+        data: JSON.stringify({
+            currentWeek: _currentWeek
+        }),
+        url: '/Home/Index/'
+    }).success(function (data) {
+        console.log("Successfully fetched hours")
+    }).error(function(response) {
+        console.log("Failed")
+    })
+}
+
+function disableDiv(){
+    $("#EditHoursWorked :input").attr("disabled", true);
+}

@@ -9,7 +9,9 @@ using Cronus.ViewModels;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections;
-
+using System.Data.Entity;
+using Cronus.Login;
+using System.Data.Entity.Core.Objects;
 
 namespace Cronus.Controllers
 {
@@ -35,24 +37,149 @@ namespace Cronus.Controllers
             this.activityRepository = activityRepository;
         }
 
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.HoursWorked = db.hoursworkeds.ToList();
+            myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            try{
+                myModel.HoursWorked = query.ToList();
+            }
+            catch(Exception ex){
+                var exception = ex.Message;
+            }
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            try
+            {
+                myModel.isApproved = isApprovedQuery.First().isApproved;
+            }
+            catch (Exception ex)
+            {
+                var exception = ex.Message;
+            }
             return View(myModel);
+        }
+
+        [HttpPost]
+        public ActionResult Index(DateTime currentWeek)
+        {
+            ModelState.Clear();
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.currentWeekEndDate = currentWeek.AddDays(-7);
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            myModel.HoursWorked = query.ToList();
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
+            return View("Index", myModel);
 
         }
 
+        [HttpPost]
+        public ActionResult SubmitHours(HomeViewModel submittedHours)
+        {
+            foreach (var entry in submittedHours.HoursWorked)
+            {
+                if (entry.isDeleted)
+                {
+                    hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
+                    if (deleteEntry != null)
+                    {
+                        new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
+                    }
+                }
+                else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
+                {
+                    if (entry.entryID == 0)
+                    {
+                        // Check if the activity was already logged on the current date
+                        // If it was, just add hours to the entry
+                        // Otherwise, create a new entry
+                        hoursworked newEntry = new hoursworked();
+                        DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
+                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
 
-        public ActionResult AddHourWorked()
+                        if (ExtensionMethods.EntryExists(newEntry) == null)
+                        {
+                            new HoursWorkedController().Create(newEntry);
+                        }
+                        else
+                        {
+                            hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
+                            existingEntry.hours += newEntry.hours;
+                            existingEntry.comments += newEntry.comments;
+                            new HoursWorkedController().AddHours(existingEntry);
+                        }
+                    }
+                    // Updating already existing entry
+                    else
+                    {
+                        // If we get to this point, entry is already saved to DB, and we're editing it
+                        hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                        existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
+                        existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
+                        existingEntry.hours = entry.hours;
+                        existingEntry.comments = entry.comments;
+                        existingEntry.date = entry.date;
+                        new HoursWorkedController().AddHours(existingEntry);
+                    }
+                }
+                
+            }
+            ModelState.Clear();
+            HomeViewModel myModel = new HomeViewModel();
+            myModel.Projects = db.projects.ToList();
+            myModel.Activities = db.activities.ToList();
+            myModel.currentWeekEndDate = submittedHours.currentWeekEndDate;
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        select hw;
+            myModel.HoursWorked = query.ToList(); 
+            foreach(var hw in myModel.HoursWorked){
+                hw.currentDay = hw.date.DayOfWeek;
+            }
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
+
+            return View("Index", myModel);
+        }
+
+
+        public ActionResult AddHourWorked(int entryDay)
         {
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            return PartialView("_hoursworkedrow", myModel);
+            var query = from hw in db.hoursworkeds
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
+                        select hw;
+            myModel.HoursWorked = db.hoursworkeds.ToList();
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
+            myModel.hrsWorked = new hoursworked();
+            myModel.hrsWorked.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            return PartialView("_hoursworkedrow", myModel.hrsWorked);
         }
 
 
@@ -77,22 +204,6 @@ namespace Cronus.Controllers
         //gets projects for the calender
         public JsonResult GetEvents(string empId)
         {
-            //empId = "Amill";
-            //will get projects/activities for the month.
-            //List<project> projects = new List<project>();
-            //foreach (project proj in db.projects)
-            //{
-            //    projects.Add(new project()
-            //    {
-            //        projectID = proj.projectID,
-            //        projectName = proj.projectName,
-            //        projectStartDate = proj.projectStartDate,
-            //        projectEndDate = proj.projectEndDate
-            //    });
-            //}
-            //return Json(projects, JsonRequestBehavior.AllowGet);
-            //var projects = db.projects.ToList();
-
             //create an employee object mathcing the empId passed through
             employee emp = db.employees.Find(empId);
             var dbGrps = db.groups.ToList();
@@ -129,10 +240,10 @@ namespace Cronus.Controllers
 
         //GetWeeklyHours
         [HttpGet]
-        public JsonResult GetWeeklyHours(string empId)
+        public JsonResult GetWeeklyHours(string empId, int monthOffSet)
         {
             //empId = "Amill";
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now.AddMonths(monthOffSet);
             var StartDate = new DateTime(date.Year, date.Month, 1);
             var EndDate = StartDate.AddMonths(1).AddDays(-1);
             double numDays = (EndDate - StartDate).TotalDays;
@@ -181,7 +292,7 @@ namespace Cronus.Controllers
 
             //creates a list of all hours worked for that employee, on the date passed through
             List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date == date select s).ToList();
-            //using this to add each enitity of hours worked to store in a list.
+            //using this to add each entity of hours worked to store in a list.
             List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
 
             project proj;
@@ -214,82 +325,6 @@ namespace Cronus.Controllers
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
         }
 
-
-
-
-        [HttpGet]
-        public JsonResult GetBetweenDates(string empId)
-        {
-
-            //empId = "Amill";
-
-            DateTime startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
-            DateTime endDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
-
-
-            //when getting previous week, must have the start of the time period be the previous monday.
-            //For example lets say its sunday and you click previous week, youll be getting the incorrect dates.
-
-            //if 1 week ago was tuesday, set start to 1 day previous, so start date startes on a monday, ends on a sunday.
-            if (startDate.DayOfWeek == DayOfWeek.Tuesday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
-            }
-            //if 1 week ago was wednesday, set start to 2 day previous, so start date startes on a monday, ends on a sunday.
-            //repeat for each day.
-            else if (startDate.DayOfWeek == DayOfWeek.Wednesday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 1);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Thursday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 2);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Friday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 3);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Saturday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 4);
-            }
-            else if (startDate.DayOfWeek == DayOfWeek.Sunday)
-            {
-                startDate = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek - 5);
-            }
-
-
-
-            List<hoursworked> hrs = (from s in db.hoursworkeds where s.TimePeriod_employeeID == empId && s.date >startDate && s.date < endDate select s).ToList();
-            List<MonthlyViewModel> hrsWrkd = new List<MonthlyViewModel>();
-
-            project proj;
-            employee emp;
-
-            foreach (hoursworked hrsW in hrs)
-            {
-                List<activity> activities = (from s in this.activityRepository.All where s.activityID == hrsW.Activity_activityID select s).ToList();
-
-                foreach (activity activ in activities)
-                {
-                    proj = db.projects.Find(hrsW.Project_projectID);
-                    emp = db.employees.Find(empId);
-                    hrsWrkd.Add(new MonthlyViewModel()
-                    {
-                        ActivityName = activ.activityName,
-                        HrsWorked = hrsW.hours.ToString(),
-                        ProjectName = proj.projectName,
-                        //isAdmin = 
-                    });
-                }
-            }
-
-
-            return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
-        }
-
-        //[HttpPost]
-        //public JsonResult GetPreviousHours()
 
         //going to be working on saving the hours listed into the DB.
         [HttpPost]
@@ -396,14 +431,40 @@ namespace Cronus.Controllers
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
         }
+    }
 
-        [HttpPost]
-        public ActionResult SubmitHours(HomeViewModel submittedHours)
+    public static class ExtensionMethods
+    {
+        public static DateTime Next(this DateTime from, DayOfWeek dayOfWeek)
         {
-            HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            return View("Index", myModel);
+            if (from.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return from;
+            }
+            int start = (int)from.DayOfWeek;
+            int target = (int)dayOfWeek;
+            if (target <= start)
+                target += 7;
+            return from.AddDays(target - start);
+        }
+
+        public static DateTime GetDateInWeek(this DateTime end, DayOfWeek dayOfWeek)
+        {
+            int day = (int)dayOfWeek;
+            if (day == 0) { day = 7; }
+            DateTime date = end.Date.AddDays(-(7 - day));
+            return date;
+        }
+        public static hoursworked EntryExists(hoursworked entry)
+        {
+            var existsQuery = from hw in new CronusDatabaseEntities().hoursworkeds
+                              where (hw.TimePeriod_employeeID.Equals(entry.TimePeriod_employeeID) && DbFunctions.TruncateTime(hw.date) == DbFunctions.TruncateTime(entry.date) && hw.Project_projectID == entry.Project_projectID && hw.Activity_activityID == entry.Activity_activityID)
+                              select hw;
+            if (existsQuery.Any())
+            {
+                return existsQuery.First();
+            }
+            return null;
         }
     }
 }

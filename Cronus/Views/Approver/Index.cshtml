@@ -1,4 +1,7 @@
-﻿@model IEnumerable<DatabaseEntities.timeperiod>
+﻿
+
+@model   Cronus.ViewModels.TimePeriodViewModel
+
 
 @{
     ViewBag.Title = "Index";
@@ -7,15 +10,15 @@
 <h3>Pick a time period to approve hours</h3>
 
 
-@using (Html.BeginForm("ApproverIndex", "Approver", new { groupID = ViewBag.GroupId }))
+@using (Html.BeginForm("Approver_Index", "Approver", new { groupID = ViewBag.GroupId, periodEndDate = Model.periodEndDate}))
 {
     <table>
         <tr>
             <td>
-                @Html.DropDownList("periodEndDateString", new SelectList(Model.Distinct().ToList(), "periodEndDate", "periodEndDateString"))
+                @Html.DropDownListFor(n=>n.periodEndDate, Model.timePeriods, new { @class = "form-control", @style = "width: 300px;" })
             </td>
             <td>
-                <input type="submit" , value="Submit" />
+                <input type="submit" , value="Submit", class="form-control", style = "width: 75px;" />
             </td>
         </tr>
     </table>
@@ -24,7 +27,7 @@
 
 
 
-<table class="table">
+@*<table class="table">
 
 @foreach (var item in Model) {
     <tr>
@@ -38,4 +41,4 @@
     </tr>
 }
 
-</table>
+</table>*@

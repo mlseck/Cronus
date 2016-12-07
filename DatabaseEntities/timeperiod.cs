@@ -20,19 +20,22 @@ namespace DatabaseEntities
         {
             this.employeetimeperiods = new HashSet<employeetimeperiod>();
         }
+
         [Display(Name = "Period End Date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime periodEndDate { get; set; }
-    
+
         public string periodEndDateString
         {
             get
             {
                 return periodEndDate.ToShortDateString();
             }
-            
+
         }
+
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<employeetimeperiod> employeetimeperiods { get; set; }
     }

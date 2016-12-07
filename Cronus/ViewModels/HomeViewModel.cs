@@ -12,16 +12,17 @@ namespace Cronus.ViewModels
     {
             public ICollection<project> Projects { get; set; }
             public ICollection<activity> Activities { get; set; }
+            public ICollection<hoursworked> HoursWorked { get; set; }
             public int SelectedProjectID { get; set; }
             public int SelectedActivityID { get; set; }
             public hoursworked hrsWorked { get; set; }
             public int totalHoursWorked { get; set; }
             public string Comment { get; set; }
-            public virtual List<hoursworked> HoursWorked { get; set; }
-            public HomeViewModel(){
-            HoursWorked = new List<hoursworked>();
-            }
             public DateTime currentWeekEndDate { get; set; }
+            public bool isApproved { get; set; }
+
+        //Working on pulling hours/activities based on week and employee
+
 
 
     }
