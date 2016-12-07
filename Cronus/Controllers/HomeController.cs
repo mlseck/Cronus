@@ -71,7 +71,7 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult Index(DateTime currentWeek)
         {
-            ModelState.Clear();
+            ModelState.Remove("currentWeekEndDate");
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();

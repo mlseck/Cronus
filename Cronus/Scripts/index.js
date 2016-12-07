@@ -58,12 +58,11 @@ function getPreviousWeek(_day, _month, _year) {
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        dataType: "json",
         data: JSON.stringify({
             currentWeek: _currentWeek
         }),
         url: '/Home/Index/',
-        success: function (data) {
+        success: function (response){
             console.log("Successfully fetched hours")
         },
         error: function (response) {
@@ -78,12 +77,11 @@ function getNextWeek(_day, _month, _year) {
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        dataType: "json",
         data: JSON.stringify({
             currentWeek: _currentWeek
         }),
         url: '/Home/Index/'
-    }).success(function (data) {
+    }).success(function (response) {
         console.log("Successfully fetched hours")
     }).error(function(response) {
         console.log("Failed")
