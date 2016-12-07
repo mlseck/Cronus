@@ -58,17 +58,18 @@ function getPreviousWeek(_day, _month, _year) {
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        async: false,
         dataType: "json",
         data: JSON.stringify({
             currentWeek: _currentWeek
         }),
-        url: '/Home/Index/'
-    }).success(function (data) {
-        console.log("Successfully fetched hours")
-    }).error(function (data) {
-        console.log("Failed")
-    })
+        url: '/Home/Index/',
+        success: function (data) {
+            console.log("Successfully fetched hours")
+        },
+        error: function (response) {
+            console.log("Failed") 
+        }
+    });
 }
 
 function getNextWeek(_day, _month, _year) {
@@ -77,7 +78,6 @@ function getNextWeek(_day, _month, _year) {
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        async: false,
         dataType: "json",
         data: JSON.stringify({
             currentWeek: _currentWeek
@@ -85,7 +85,7 @@ function getNextWeek(_day, _month, _year) {
         url: '/Home/Index/'
     }).success(function (data) {
         console.log("Successfully fetched hours")
-    }).failure(function(data) {
+    }).error(function(response) {
         console.log("Failed")
     })
 }
