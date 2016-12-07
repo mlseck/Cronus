@@ -69,24 +69,21 @@ namespace Cronus.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(DateTime currentWeek)
+        public ActionResult PreviousWeek(HomeViewModel model)
         {
-            ModelState.Remove("currentWeekEndDate");
             HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            myModel.currentWeekEndDate = currentWeek.AddDays(-7);
+            myModel.Projects = model.Projects; myModel.Activities = model.Activities;
+            myModel.currentWeekEndDate = model.currentWeekEndDate.AddDays(-7);
             var query = from hw in db.hoursworkeds
                         where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                         select hw;
             myModel.HoursWorked = query.ToList();
-            // If Timeperiod was already approved, set Viewbag isApproved to true
             var isApprovedQuery = from a in db.employeetimeperiods
                                   where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                                   select a;
             myModel.isApproved = isApprovedQuery.First().isApproved;
+            //return Json(myModel, JsonRequestBehavior.AllowGet);
             return View("Index", myModel);
-
         }
 
         [HttpPost]

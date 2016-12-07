@@ -52,38 +52,34 @@ $(document).ready(function () {
     });
 });
 
-function getPreviousWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
-    console.log(_currentWeek)
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        data: JSON.stringify({
-            currentWeek: _currentWeek
-        }),
-        url: '/Home/Index/',
-        success: function (response){
-            console.log("Successfully fetched hours")
-        },
-        error: function (response) {
-            console.log("Failed") 
-        }
-    });
-}
+//function getPreviousWeek(_day, _month, _year) {
+//    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
+//    console.log(_currentWeek)
+//    $.ajax({
+//        contentType: "application/json",
+//        type: 'POST',
+//        data: JSON.stringify({
+//            currentWeek: _currentWeek
+//        }),
+//        url: '/Home/Index/',
+//        success: function (response){
+//            console.log("Successfully fetched hours")
+//        },
+//        error: function (response) {
+//            console.log("Failed") 
+//        }
+//    });
+//}
 
-function getNextWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
-    console.log(_currentWeek)
+function getPreviousWeek() {
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        data: JSON.stringify({
-            currentWeek: _currentWeek
-        }),
-        url: '/Home/Index/'
+        data: $('form').serialize(),
+        url: '/Home/PreviousWeek/'
     }).success(function (response) {
         console.log("Successfully fetched hours")
-    }).error(function(response) {
+    }).error(function (response) {
         console.log("Failed")
     })
 }
