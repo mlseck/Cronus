@@ -45,38 +45,46 @@ namespace Cronus.Controllers
             myModel.Activities = db.activities.ToList();
             myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
             var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                         select hw;
-            myModel.HoursWorked = query.ToList();  
+            try{
+                myModel.HoursWorked = query.ToList();
+            }
+            catch(Exception ex){
+                var exception = ex.Message;
+            }
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            try
+            {
+                myModel.isApproved = isApprovedQuery.First().isApproved;
+            }
+            catch (Exception ex)
+            {
+                var exception = ex.Message;
+            }
             return View(myModel);
         }
 
         [HttpPost]
-        public ActionResult IndexPrev(DateTime currentWeek)
+        public ActionResult Index(DateTime currentWeek)
         {
+            ModelState.Clear();
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
-            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(-7), DayOfWeek.Sunday);
+            myModel.currentWeekEndDate = currentWeek.AddDays(-7);
             var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                         select hw;
             myModel.HoursWorked = query.ToList();
-            return View("Index", myModel);
-
-        }
-
-        [HttpPost]
-        public ActionResult IndexNext(DateTime currentWeek)
-        {
-            HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            myModel.currentWeekEndDate = ExtensionMethods.Next(DateTime.Now.AddDays(7), DayOfWeek.Sunday);
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                        select hw;
-            myModel.HoursWorked = query.ToList();
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
             return View("Index", myModel);
 
         }
@@ -94,7 +102,7 @@ namespace Cronus.Controllers
                         new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
                     }
                 }
-                else if (entry.hours > 0)
+                else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
                 {
                     if (entry.entryID == 0)
                     {
@@ -116,7 +124,6 @@ namespace Cronus.Controllers
                             existingEntry.hours += newEntry.hours;
                             existingEntry.comments += newEntry.comments;
                             new HoursWorkedController().AddHours(existingEntry);
-                            db.SaveChanges();
                         }
                     }
                     // Updating already existing entry
@@ -132,7 +139,9 @@ namespace Cronus.Controllers
                         new HoursWorkedController().AddHours(existingEntry);
                     }
                 }
+                
             }
+            ModelState.Clear();
             HomeViewModel myModel = new HomeViewModel();
             myModel.Projects = db.projects.ToList();
             myModel.Activities = db.activities.ToList();
@@ -144,6 +153,12 @@ namespace Cronus.Controllers
             foreach(var hw in myModel.HoursWorked){
                 hw.currentDay = hw.date.DayOfWeek;
             }
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
+
             return View("Index", myModel);
         }
 
@@ -157,6 +172,11 @@ namespace Cronus.Controllers
                         where hw.TimePeriod_employeeID == UserManager.User.employeeID
                         select hw;
             myModel.HoursWorked = db.hoursworkeds.ToList();
+            // If Timeperiod was already approved, set Viewbag isApproved to true
+            var isApprovedQuery = from a in db.employeetimeperiods
+                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                  select a;
+            myModel.isApproved = isApprovedQuery.First().isApproved;
             myModel.hrsWorked = new hoursworked();
             myModel.hrsWorked.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
             return PartialView("_hoursworkedrow", myModel.hrsWorked);

@@ -33,24 +33,6 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
-    var emp_id='Amill';
-    $.ajax({
-        type: 'GET',
-        url: '/Home/GetBetweenDates',
-        data: { employeeID: emp_id },
-        success: function (data) {
-            console.log(data);
-        },
-        statusCode: {
-            404: function (content) { alert('cannot find resource'); },
-            500: function (content) { alert('internal server error'); }
-        },
-        error: function (req, status, errorObj) {
-        }
-    });
-});
-
 function AddRow(_dayOfRow, _entryday) {
     console.log("Executing Add Script")
     $.ajax({
@@ -70,35 +52,44 @@ $(document).ready(function () {
     });
 });
 
-function getPreviousWeek(_currentWeek) {
+function getPreviousWeek(_day, _month, _year) {
+    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
+    console.log(_currentWeek)
     $.ajax({
-        //contentType: "application/json",
+        contentType: "application/json",
         type: 'POST',
-        url: "/Home/IndexPrev",
-        data: { currentweek: _currentweek },
-        //dataType: "json",
-        success: function (data) {
-            console.log(data);
-        },
-        error: function () {
-
-        }
-    });
+        async: false,
+        dataType: "json",
+        data: JSON.stringify({
+            currentWeek: _currentWeek
+        }),
+        url: '/Home/Index/'
+    }).success(function (data) {
+        console.log("Successfully fetched hours")
+    }).error(function (data) {
+        console.log("Failed")
+    })
 }
 
-function getNextWeek(_currentWeek) {
-    console.log("Fetching next week")
+function getNextWeek(_day, _month, _year) {
+    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
+    console.log(_currentWeek)
     $.ajax({
-        //contentType: "application/json",
+        contentType: "application/json",
         type: 'POST',
-        url: "/Home/IndexNext",
-        data: { currentweek: _currentweek },
-        //dataType: "json",
-        success: function (data) {
-            console.log(data);
-        },
-        error: function () {
-
-        }
+        async: false,
+        dataType: "json",
+        data: JSON.stringify({
+            currentWeek: _currentWeek
+        }),
+        url: '/Home/Index/'
+    }).success(function (data) {
+        console.log("Successfully fetched hours")
+    }).failure(function(data) {
+        console.log("Failed")
     })
+}
+
+function disableDiv(){
+    $("#EditHoursWorked :input").attr("disabled", true);
 }

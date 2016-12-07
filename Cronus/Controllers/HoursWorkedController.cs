@@ -133,12 +133,14 @@ namespace Cronus.Controllers
             var result = db.hoursworkeds.Find(entry.entryID);
             if (result != null)
             {
-                //result.project = entry.project; result.activity = entry.activity;
                 result.Project_projectID = entry.Project_projectID; result.Activity_activityID = entry.Activity_activityID;
                 result.hours = entry.hours; result.comments = entry.comments;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Activity_activityID = new SelectList(db.activities, "activityID", "activityName");
+            ViewBag.TimePeriod_employeeID = new SelectList(db.employeetimeperiods, "Employee_employeeID", "Employee_employeeID");
+            ViewBag.Project_projectID = new SelectList(db.projects, "projectID", "projectName");
             return View();
         }
 
