@@ -34,9 +34,20 @@ namespace Cronus.Controllers
         //
         // GET: /employee/
 
-        public ViewResult Index()
+        public ViewResult Index(string searchString)
         {
-            return View(employeeRepository.AllIncluding(employee => employee.favorites));
+            ViewBag.PossibleGrous = groupRepository.All.ToList();
+
+            //ViewBag.GroupManager = id;
+
+            var employeeList = employeeRepository.AllIncluding(employee => employee.favorites);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                employeeList = employeeList.Where(s => s.employeeLastName.Contains(searchString));
+            }
+
+            return View(employeeList);
         }
 
         public ActionResult EmployeeIndex(int id)
@@ -76,6 +87,18 @@ namespace Cronus.Controllers
             {
                 favoriteIds = new int[0]
             };
+
+            //List<group> groupList = groupRepository.All.ToList();
+
+
+            //model.groupSelectList = groupList.ConvertAll(a =>
+            //{
+            //    return new SelectListItem()
+            //    {
+            //        Text = a.groupName.ToString(),
+            //        Value = a.groupID.ToString()
+            //    };
+            //});
 
             ViewBag.PossibleFavorites = favoriteRepository.All;
 

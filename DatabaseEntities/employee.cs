@@ -22,6 +22,7 @@ namespace DatabaseEntities
             this.employeetimeperiods = new HashSet<employeetimeperiod>();
             this.favorites = new HashSet<favorite>();
             this.groups = new HashSet<group>();
+            this.groups1 = new HashSet<group>();
         }
 
         public string employeeID { get; set; }
@@ -34,10 +35,12 @@ namespace DatabaseEntities
         [Display(Name = "Max Hours")]
         public Nullable<int> employeeMaxHours { get; set; }
         public int employeePrivileges { get; set; }
-        [Display(Name = "Email Address")]
+        [Display(Name = "Email address")]
         public string employeeEmailAddress { get; set; }
+        [Display(Name = "Password")]
         public string employeePwd { get; set; }
         public string employeeGroupManaged { get; set; }
+
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<audittrail> audittrails { get; set; }
@@ -47,5 +50,7 @@ namespace DatabaseEntities
         public virtual ICollection<favorite> favorites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<group> groups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<group> groups1 { get; set; }
     }
 }
