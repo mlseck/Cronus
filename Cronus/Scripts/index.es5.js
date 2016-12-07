@@ -23,6 +23,32 @@ function removeRow(table, row) {
     return;
 }
 
+function getPreviousWeek() {
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexPrev",
+        dataType: "json",
+        success: function success(data) {
+            console.log(data);
+        },
+        error: function error() {}
+    });
+}
+
+function getNextWeek() {
+    $.ajax({
+        contentType: "application/json",
+        type: 'POST',
+        url: "/Home/IndexNext",
+        dataType: "json",
+        success: function success(data) {
+            console.log(data);
+        },
+        error: function error() {}
+    });
+}
+
 $(document).ready(function () {
     $(".hoursInput").change(function () {
         var sum = 0;
