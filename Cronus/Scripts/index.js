@@ -100,13 +100,19 @@ $(document).ready(function () {
 //    });
 //}
 
-function getPreviousWeek() {
+function getPreviousWeek(_day, _month, _year) {
+    var _currentWeek = _year + "-" + _month + "_" + _day + "00:00:00";
+    console.log(_currentWeek)
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        data: $('form').serialize(),
+        data: JSON.stringify({
+            currentWeek: _currentWeek
+        }),
+        dataType: "json",
         url: '/Home/PreviousWeek/'
     }).success(function (response) {
+        console.log(response)
         console.log("Successfully fetched hours")
     }).error(function (response) {
         console.log("Failed")

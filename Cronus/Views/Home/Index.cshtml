@@ -22,8 +22,7 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-xs-3">
-                <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left" onclick="getPreviousWeek()"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
-
+                <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left" onclick="getPreviousWeek(@Model.currentWeekEndDate.Day, @Model.currentWeekEndDate.Month, @Model.currentWeekEndDate.Year)"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
             </div>
             <div class="col-xs-3">
                 <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
@@ -313,31 +312,31 @@
                             <input type="submit" value="Submit Hours" class="btn btn-default pull-left" />
                         </div>
 
-                                                    }
+                        }
 
 
                 </div>
             </div>
 
         </div>
-                                                    if (Model.isApproved)
-                                                    {
-                                                        <script>
-                                                            disableDiv(document.getElementById('EditHoursWorked'));
-                                                        </script>
-                                                    }
-                                                    <br />
-                                                    <br />
-                                                    <br />
-                                                    <br />
-                                                    <br />
+    if (Model.isApproved)
+    {
+        <script>
+            disableDiv(document.getElementById('EditHoursWorked'));
+        </script>
+    }
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 
-                                                    }
-                                                    else
-                                                    {
-                                                        Layout = null;
-                                                        @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
-                                                    }
+    }
+    else
+    {
+        Layout = null;
+        @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
+    }
 
 
 
