@@ -128,6 +128,24 @@ namespace Cronus.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult AddHours(hoursworked entry)
+        {
+            //hoursworked hoursworked = db.hoursworkeds.Find(id);
+            //db.hoursworkeds.Remove(hoursworked);
+            //db.hoursworkeds.
+            //db.SaveChanges();
+            //hoursworked hw = db.hoursworkeds.Find(entry.entryID);
+            var result = db.hoursworkeds.SingleOrDefault(hw => hw.entryID == entry.entryID);
+            if (result != null)
+            {
+                //result.project = entry.project; result.activity = entry.activity;
+                //result.Project_projectID = entry.Project_projectID; result.Activity_activityID = entry.Activity_activityID;
+                result.hours = entry.hours; result.comments = entry.comments;
+                db.SaveChanges();
+            }
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

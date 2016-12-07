@@ -76,10 +76,6 @@
         <EntityType Name="hoursworked">
           <Key>
             <PropertyRef Name="entryID" />
-            <PropertyRef Name="TimePeriod_employeeID" />
-            <PropertyRef Name="TimePeriod_periodEndDate" />
-            <PropertyRef Name="Activity_activityID" />
-            <PropertyRef Name="Project_projectID" />
           </Key>
           <Property Name="entryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="hours" Type="decimal" Precision="10" Scale="0" Nullable="false" />
@@ -483,10 +479,6 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
         <EntityType Name="hoursworked">
           <Key>
             <PropertyRef Name="entryID" />
-            <PropertyRef Name="TimePeriod_employeeID" />
-            <PropertyRef Name="TimePeriod_periodEndDate" />
-            <PropertyRef Name="Activity_activityID" />
-            <PropertyRef Name="Project_projectID" />
           </Key>
           <Property Name="entryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="hours" Type="Decimal" Precision="10" Scale="0" Nullable="false" />

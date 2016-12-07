@@ -22,6 +22,8 @@ namespace DatabaseEntities
         public System.DateTime TimePeriod_periodEndDate { get; set; }
         public int Activity_activityID { get; set; }
         public int Project_projectID { get; set; }
+        public Boolean isDeleted { get; set; }
+        public DayOfWeek currentDay { get; set; }
     
         public virtual activity activity { get; set; }
         public virtual employeetimeperiod employeetimeperiod { get; set; }
