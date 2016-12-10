@@ -48,7 +48,7 @@ namespace Cronus.Controllers
         {
             ViewBag.GroupId = id;
 
-            var group = groupRepository.Find(id);
+            var group = groupRepository.FindGroup(id);
 
             if (group == null)
             {
@@ -102,7 +102,7 @@ namespace Cronus.Controllers
         {
             //iewBag.ProjectID = ProjectID;
 
-            group model = groupRepository.Find(GroupId);
+            group model = groupRepository.FindGroup(GroupId);
 
             ViewBag.PossibleProjects = projectRepository.All;
 
@@ -123,7 +123,7 @@ namespace Cronus.Controllers
         {
             if (ModelState.IsValid)
             {
-                group originalGroup = this.groupRepository.Find(group.groupID);
+                group originalGroup = this.groupRepository.FindGroup(group.groupID);
 
                 originalGroup.groupName = group.groupName;
 
@@ -135,7 +135,7 @@ namespace Cronus.Controllers
                     originalGroup.projects = (from s in this.projectRepository.All where @group.projectIds.Contains(s.projectID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup);
+                groupRepository.InsertOrUpdate(originalGroup, null);
 
                 try
                 {

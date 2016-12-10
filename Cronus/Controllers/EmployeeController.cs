@@ -54,7 +54,7 @@ namespace Cronus.Controllers
         {
             ViewBag.GroupId = id;
 
-            var group = groupRepository.Find(id);
+            var group = groupRepository.FindGroup(id);
 
             if (group == null)
             {
@@ -135,7 +135,7 @@ namespace Cronus.Controllers
         {
             //iewBag.ProjectID = ProjectID;
 
-            group model = groupRepository.Find(GroupId);
+            group model = groupRepository.FindGroup(GroupId);
 
             ViewBag.PossibleEmployees = employeeRepository.All;
 
@@ -150,7 +150,7 @@ namespace Cronus.Controllers
         {
             if (ModelState.IsValid)
             {
-                group originalGroup = this.groupRepository.Find(group.groupID);
+                group originalGroup = this.groupRepository.FindGroup(group.groupID);
 
                 originalGroup.groupName = group.groupName;
 
@@ -162,7 +162,7 @@ namespace Cronus.Controllers
                     originalGroup.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup);
+                groupRepository.InsertOrUpdate(originalGroup, null);
 
 
                 try
