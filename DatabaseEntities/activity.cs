@@ -22,12 +22,12 @@ namespace DatabaseEntities
             this.hoursworkeds = new HashSet<hoursworked>();
             this.projects = new HashSet<project>();
         }
-
+    
         public int activityID { get; set; }
         [Display(Name = "Activity Name")]
         public string activityName { get; set; }
         public short isCap { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<favorite> favorites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

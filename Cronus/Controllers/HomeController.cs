@@ -55,9 +55,16 @@ namespace Cronus.Controllers
             var isApprovedQuery = from a in db.employeetimeperiods
                                   where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                                   select a;
-            if (isApprovedQuery.Any())
+            try
             {
-                myModel.isApproved = isApprovedQuery.First().isApproved;
+                if (isApprovedQuery.Any())
+                {
+                     myModel.isApproved = isApprovedQuery.First().isApproved;
+                }
+            }
+            catch (Exception ex)
+            {
+                var exception = ex.Message;
             }
             return View(myModel);
         }

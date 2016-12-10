@@ -33,7 +33,7 @@
             <div class="col-xs-3">
                 <div class="affix">
                     <button type="submit" value="Submit" id="submitButton" name="submitButton" class="btn btn-default pull-left">Submit</button>
-                    <button type="submit" width="100px" id="save" class="btn btn-default pull-right">Save <span class="glyphicon glyphicon-check"></span></button>
+                    <button type="button" width="100px" id="lastWeekHours" class="btn btn-default pull-right" onclick="CopyHours()">Copy Hours</button>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
             @Html.HiddenFor(m => m.currentWeekEndDate)
             <div class="row">
                 <div class="col-lg-9">        
-                        <div class="pull-left" width="90%">
+                        <div class="pull-left" width="100%">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
