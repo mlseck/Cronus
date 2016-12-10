@@ -55,13 +55,9 @@ namespace Cronus.Controllers
             var isApprovedQuery = from a in db.employeetimeperiods
                                   where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                                   select a;
-            try
+            if (isApprovedQuery.Any())
             {
                 myModel.isApproved = isApprovedQuery.First().isApproved;
-            }
-            catch (Exception ex)
-            {
-                var exception = ex.Message;
             }
             return View(myModel);
         }
@@ -185,7 +181,10 @@ namespace Cronus.Controllers
             var isApprovedQuery = from a in db.employeetimeperiods
                                   where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                                   select a;
-            myModel.isApproved = isApprovedQuery.First().isApproved;
+            if (isApprovedQuery.Any())
+            {
+                myModel.isApproved = isApprovedQuery.First().isApproved;
+            }
             myModel.hrsWorked = new hoursworked();
             myModel.hrsWorked.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
             return PartialView("_hoursworkedrow", myModel.hrsWorked);
