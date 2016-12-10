@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿"use strict";
 
 function addNewRows(table) {
     var t = table.toString();
@@ -21,32 +21,6 @@ function removeRow(table, row) {
         console.log(table.text);
     }
     return;
-}
-
-function getPreviousWeek() {
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexPrev",
-        dataType: "json",
-        success: function success(data) {
-            console.log(data);
-        },
-        error: function error() {}
-    });
-}
-
-function getNextWeek() {
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexNext",
-        dataType: "json",
-        success: function success(data) {
-            console.log(data);
-        },
-        error: function error() {}
-    });
 }
 
 $(document).ready(function () {
@@ -78,46 +52,8 @@ $(document).ready(function () {
     });
 });
 
-//function getPreviousWeek(_day, _month, _year) {
-//    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
-//    console.log(_currentWeek)
-//    $.ajax({
-//        contentType: "application/json",
-//        type: 'POST',
-//        data: JSON.stringify({
-//            currentWeek: _currentWeek
-//        }),
-//        url: '/Home/Index/',
-//        success: function (response){
-//            console.log("Successfully fetched hours")
-//        },
-//        error: function (response) {
-//            console.log("Failed")
-//        }
-//    });
-//}
-
-function getPreviousWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00";
-    console.log(_currentWeek);
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        data: JSON.stringify({
-            currentWeek: _currentWeek
-        }),
-        url: '/Home/PreviousWeek/',
-        dataType: "json",
-        success: function success(response) {
-            console.log(response[0]);
-        },
-        error: function error(response) {
-            console.log("Failed");
-        }
-    });
-}
-
 function disableDiv() {
-    $("#EditHoursWorked :input").attr("disabled", true);
+    $("#EditHoursWorked :input").attr("readonly", "readonly");
+    //$("#EditHoursWorked :input").attr("disabled", true);
 }
 

@@ -22,36 +22,6 @@ function removeRow(table, row) {
     return;
 }
 
-function getPreviousWeek(){
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexPrev",
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
-        },
-        error: function () {
-
-        }
-    });
-}
-
-function getNextWeek() {
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexNext",
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
-        },
-        error: function () {
-
-        }
-    });
-}
-
 $(document).ready(function () {
     $(".hoursInput").change(function () {
         var sum = 0;
@@ -81,45 +51,8 @@ $(document).ready(function () {
     });
 });
 
-//function getPreviousWeek(_day, _month, _year) {
-//    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00"
-//    console.log(_currentWeek)
-//    $.ajax({
-//        contentType: "application/json",
-//        type: 'POST',
-//        data: JSON.stringify({
-//            currentWeek: _currentWeek
-//        }),
-//        url: '/Home/Index/',
-//        success: function (response){
-//            console.log("Successfully fetched hours")
-//        },
-//        error: function (response) {
-//            console.log("Failed") 
-//        }
-//    });
-//}
 
-function getPreviousWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00";
-    console.log(_currentWeek)
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        data: JSON.stringify({
-            currentWeek: _currentWeek
-        }),
-        url: '/Home/PreviousWeek/',
-        dataType: "json",
-        success: function (response) {
-            console.log(response[0]);
-        },
-        error: function (response) {
-            console.log("Failed")
-        }
-    });
-}
-
-function disableDiv(){
-    $("#EditHoursWorked :input").attr("disabled", true);
+function disableDiv() {
+    $("#EditHoursWorked :input").attr("readonly", "readonly");
+    //$("#EditHoursWorked :input").attr("disabled", true);
 }
