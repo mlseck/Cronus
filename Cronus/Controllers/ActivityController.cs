@@ -223,6 +223,7 @@ namespace Cronus.Controllers
                 activity originalActivity = this.activityRepository.Find(activity.activityID);
 
                 originalActivity.activityName = activity.activityName;
+                originalActivity.isCap = activity.isCap;
 
                 originalActivity.projects.Clear();
 

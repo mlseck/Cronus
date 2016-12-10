@@ -54,7 +54,7 @@ namespace Cronus.Controllers
 
         public ViewResult Details(int id)
         {
-            return View(groupRepository.Find(id));
+            return View(groupRepository.FindGroup(id));
         }
 
 
@@ -94,7 +94,7 @@ namespace Cronus.Controllers
         {
             ViewBag.GroupId = GroupID;
 
-            var group = groupRepository.Find(GroupID);
+            var group = groupRepository.FindGroup(GroupID);
 
             ViewBag.GroupName = group.groupName;
 
@@ -122,7 +122,7 @@ namespace Cronus.Controllers
         {
             ViewBag.GroupId = GroupID;
 
-            var group = groupRepository.Find(GroupID);
+            var group = groupRepository.FindGroup(GroupID);
 
             ViewBag.GroupName = group.groupName;
 
@@ -159,9 +159,13 @@ namespace Cronus.Controllers
                 {
                     group.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
+                
+                employee manager = employeeRepository.Find(group.groupManager);
+                manager.employeeGroupManaged = group.groupID;
 
-                groupRepository.InsertOrUpdate(group);
+                groupRepository.InsertOrUpdate(group, manager);
                 groupRepository.Save();
+
                 return RedirectToAction("Index");
             }
             else
@@ -174,7 +178,6 @@ namespace Cronus.Controllers
             }
         }
 
-        
         //
         // GET: /Group/Edit/5
 
@@ -184,7 +187,7 @@ namespace Cronus.Controllers
 
             ViewBag.PossibleEmployees = employeeRepository.All;
 
-            group model = groupRepository.Find(id);
+            group model = groupRepository.FindGroup(id);
 
             model.projectIds = (from s in model.projects select s.projectID).ToArray();
 
@@ -201,7 +204,7 @@ namespace Cronus.Controllers
         {
             if (ModelState.IsValid)
             {
-                group originalProject = this.groupRepository.Find(group.groupID);
+                group originalProject = this.groupRepository.FindGroup(group.groupID);
 
                 //originalProject.projectName = project.projectName;
                 //originalProject.projectStartDate = project.projectStartDate;
@@ -237,7 +240,7 @@ namespace Cronus.Controllers
 
         public ActionResult Delete(int id)
         {
-            return View(groupRepository.Find(id));
+            return View(groupRepository.FindGroup(id));
         }
 
         //
