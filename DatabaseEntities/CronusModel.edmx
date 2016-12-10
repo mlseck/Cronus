@@ -9,20 +9,17 @@
           <Key>
             <PropertyRef Name="activityID" />
           </Key>
-          <Property Name="activityID" Type="int" Nullable="false" />
+          <Property Name="activityID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="activityName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="isCap" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="audittrail">
           <Key>
             <PropertyRef Name="auditID" />
-            <PropertyRef Name="timePeriodTable_periodEndDate" />
-            <PropertyRef Name="timePeriodTable_employeetable_employeeID" />
-            <PropertyRef Name="Employee_employeeID" />
           </Key>
           <Property Name="auditID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="timePeriodTable_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
-          <Property Name="timePeriodTable_employeetable_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="employeeTimeperiod_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="employeeTimeperiod_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="editDateTime" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="250" />
           <Property Name="Employee_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
@@ -39,7 +36,7 @@
           <Property Name="employeePrivileges" Type="int" Nullable="false" />
           <Property Name="employeeEmailAddress" Type="nvarchar" MaxLength="45" Nullable="false" />
           <Property Name="employeePwd" Type="nvarchar" MaxLength="16" Nullable="false" />
-          <Property Name="employeeGroupManaged" Type="nvarchar" MaxLength="45" />
+          <Property Name="employeeGroupManaged" Type="int" />
         </EntityType>
         <EntityType Name="employeetimeperiod">
           <Key>
@@ -62,7 +59,7 @@
           <Key>
             <PropertyRef Name="groupID" />
           </Key>
-          <Property Name="groupID" Type="int" Nullable="false" />
+          <Property Name="groupID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="groupManager" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
@@ -91,7 +88,7 @@
           <Key>
             <PropertyRef Name="projectID" />
           </Key>
-          <Property Name="projectID" Type="int" Nullable="false" />
+          <Property Name="projectID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="projectName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="projectStartDate" Type="datetime2" Precision="0" />
           <Property Name="projectEndDate" Type="datetime2" Precision="0" />
@@ -155,6 +152,32 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Principal>
             <Dependent Role="audittrail">
               <PropertyRef Name="Employee_employeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="audittrail$fk_AuditTrail_employeeTimeperiod1">
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
+          <End Role="audittrail" Type="Self.audittrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Principal>
+            <Dependent Role="audittrail">
+              <PropertyRef Name="employeeTimeperiod_employeeID" />
+              <PropertyRef Name="employeeTimeperiod_periodEndDate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="employee$fk_Employee_employeeGroupManaged">
+          <End Role="group" Type="Self.group" Multiplicity="0..1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="group">
+              <PropertyRef Name="groupID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="employeeGroupManaged" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -356,6 +379,14 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employee" />
             <End Role="audittrail" EntitySet="audittrail" />
           </AssociationSet>
+          <AssociationSet Name="audittrail$fk_AuditTrail_employeeTimeperiod1" Association="Self.audittrail$fk_AuditTrail_employeeTimeperiod1">
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
+            <End Role="audittrail" EntitySet="audittrail" />
+          </AssociationSet>
+          <AssociationSet Name="employee$fk_Employee_employeeGroupManaged" Association="Self.employee$fk_Employee_employeeGroupManaged">
+            <End Role="group" EntitySet="group" />
+            <End Role="employee" EntitySet="employee" />
+          </AssociationSet>
           <AssociationSet Name="employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1" Association="Self.employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1">
             <End Role="timeperiod" EntitySet="timeperiod" />
             <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
@@ -422,7 +453,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Key>
             <PropertyRef Name="activityID" />
           </Key>
-          <Property Name="activityID" Type="Int32" Nullable="false" />
+          <Property Name="activityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="activityName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="isCap" Type="Int16" Nullable="false" />
           <NavigationProperty Name="favorites" Relationship="Self.favorite_fk_Favorite_Activity1" FromRole="activity" ToRole="favorite" />
@@ -432,17 +463,15 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
         <EntityType Name="audittrail">
           <Key>
             <PropertyRef Name="auditID" />
-            <PropertyRef Name="timePeriodTable_periodEndDate" />
-            <PropertyRef Name="timePeriodTable_employeetable_employeeID" />
-            <PropertyRef Name="Employee_employeeID" />
           </Key>
           <Property Name="auditID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="timePeriodTable_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="timePeriodTable_employeetable_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="employeeTimeperiod_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="employeeTimeperiod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="editDateTime" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="employee" Relationship="Self.audittrail_fk_AuditTrail_Employee1" FromRole="audittrail" ToRole="employee" />
+          <NavigationProperty Name="employeetimeperiod" Relationship="Self.audittrail_fk_AuditTrail_employeeTimeperiod1" FromRole="audittrail" ToRole="employeetimeperiod" />
         </EntityType>
         <EntityType Name="employee">
           <Key>
@@ -456,8 +485,9 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Property Name="employeePrivileges" Type="Int32" Nullable="false" />
           <Property Name="employeeEmailAddress" Type="String" MaxLength="45" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="employeePwd" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="employeeGroupManaged" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
+          <Property Name="employeeGroupManaged" Type="Int32" />
           <NavigationProperty Name="audittrails" Relationship="Self.audittrail_fk_AuditTrail_Employee1" FromRole="employee" ToRole="audittrail" />
+          <NavigationProperty Name="group" Relationship="Self.employee_fk_Employee_employeeGroupManaged" FromRole="employee" ToRole="group" />
           <NavigationProperty Name="employeetimeperiods" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employee" ToRole="employeetimeperiod" />
           <NavigationProperty Name="favorites" Relationship="Self.favorite_fk_Favorite_Employee1" FromRole="employee" ToRole="favorite" />
           <NavigationProperty Name="groups" Relationship="Self.group_fk_group_GroupManager1" FromRole="employee" ToRole="group" />
@@ -471,6 +501,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TimePeriod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="audittrails" Relationship="Self.audittrail_fk_AuditTrail_employeeTimeperiod1" FromRole="employeetimeperiod" ToRole="audittrail" />
           <NavigationProperty Name="employee" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employeetimeperiod" ToRole="employee" />
           <NavigationProperty Name="timeperiod" Relationship="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" FromRole="employeetimeperiod" ToRole="timeperiod" />
           <NavigationProperty Name="hoursworkeds" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="employeetimeperiod" ToRole="hoursworked" />
@@ -489,11 +520,12 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Key>
             <PropertyRef Name="groupID" />
           </Key>
-          <Property Name="groupID" Type="Int32" Nullable="false" />
+          <Property Name="groupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="groupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="groupManager" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="employees" Relationship="Self.employee_fk_Employee_employeeGroupManaged" FromRole="group" ToRole="employee" />
           <NavigationProperty Name="employee" Relationship="Self.group_fk_group_GroupManager1" FromRole="group" ToRole="employee" />
-          <NavigationProperty Name="employees" Relationship="Self.group_has_employee" FromRole="group" ToRole="employee" />
+          <NavigationProperty Name="employees1" Relationship="Self.group_has_employee" FromRole="group" ToRole="employee" />
           <NavigationProperty Name="projects" Relationship="Self.project_has_group" FromRole="group" ToRole="project" />
         </EntityType>
         <EntityType Name="hoursworked">
@@ -516,7 +548,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Key>
             <PropertyRef Name="projectID" />
           </Key>
-          <Property Name="projectID" Type="Int32" Nullable="false" />
+          <Property Name="projectID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="projectName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="projectStartDate" Type="DateTime" Precision="0" />
           <Property Name="projectEndDate" Type="DateTime" Precision="0" />
@@ -590,6 +622,32 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Principal>
             <Dependent Role="audittrail">
               <PropertyRef Name="Employee_employeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="audittrail_fk_AuditTrail_employeeTimeperiod1">
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
+          <End Role="audittrail" Type="Self.audittrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Principal>
+            <Dependent Role="audittrail">
+              <PropertyRef Name="employeeTimeperiod_employeeID" />
+              <PropertyRef Name="employeeTimeperiod_periodEndDate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="employee_fk_Employee_employeeGroupManaged">
+          <End Role="group" Type="Self.group" Multiplicity="0..1" />
+          <End Role="employee" Type="Self.employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="group">
+              <PropertyRef Name="groupID" />
+            </Principal>
+            <Dependent Role="employee">
+              <PropertyRef Name="employeeGroupManaged" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -703,6 +761,14 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employees" />
             <End Role="audittrail" EntitySet="audittrails" />
           </AssociationSet>
+          <AssociationSet Name="audittrail_fk_AuditTrail_employeeTimeperiod1" Association="Self.audittrail_fk_AuditTrail_employeeTimeperiod1">
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
+            <End Role="audittrail" EntitySet="audittrails" />
+          </AssociationSet>
+          <AssociationSet Name="employee_fk_Employee_employeeGroupManaged" Association="Self.employee_fk_Employee_employeeGroupManaged">
+            <End Role="group" EntitySet="groups" />
+            <End Role="employee" EntitySet="employees" />
+          </AssociationSet>
           <AssociationSet Name="employeetimeperiod_fk_EmployeTimePeriod_Employee1" Association="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1">
             <End Role="employee" EntitySet="employees" />
             <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
@@ -759,8 +825,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <EntityTypeMapping TypeName="CronusDatabaseModel.audittrail">
               <MappingFragment StoreEntitySet="audittrail">
                 <ScalarProperty Name="auditID" ColumnName="auditID" />
-                <ScalarProperty Name="timePeriodTable_periodEndDate" ColumnName="timePeriodTable_periodEndDate" />
-                <ScalarProperty Name="timePeriodTable_employeetable_employeeID" ColumnName="timePeriodTable_employeetable_employeeID" />
+                <ScalarProperty Name="employeeTimeperiod_employeeID" ColumnName="employeeTimeperiod_employeeID" />
+                <ScalarProperty Name="employeeTimeperiod_periodEndDate" ColumnName="employeeTimeperiod_periodEndDate" />
                 <ScalarProperty Name="editDateTime" ColumnName="editDateTime" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Employee_employeeID" ColumnName="Employee_employeeID" />

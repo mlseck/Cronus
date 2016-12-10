@@ -12,29 +12,28 @@
     <div>
         You're logged in as @UserManager.User.employeeFirstName @UserManager.User.employeeLastName
     </div>
-
-    <h2>Weekly view</h2>
-
+    <h3 align="center">Week Ending @Model.currentWeekEndDate.Date</h3>
 
 
-    <h2 id="dateTitle" align="center"></h2>
+    using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post, new { id = "submitForm" }))
+    {
+    <h3 id="dateTitle" align="center"></h3>
 
     <div class="col-lg-12">
         <div class="row">
             <div class="col-xs-3">
-                <button type="button" width="100px" id="prevWeek" class="btn btn-default pull-left" onclick="getPreviousWeek(@Model.currentWeekEndDate.Day, @Model.currentWeekEndDate.Month, @Model.currentWeekEndDate.Year)"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
-
+                <button type="submit" value="Previous" id="prevWeekButton" name="submitButton" width="100px" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
             </div>
             <div class="col-xs-3">
                 <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
             </div>
-            <div class="col-xs-3">
-                ;
-                <button type="button" onclick="getNextWeek(@Model.currentWeekEndDate.Day, @Model.currentWeekEndDate.Month, @Model.currentWeekEndDate.Year)" width="100px" id="nextWeek" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
+            <div class="col-xs-3">  
+                <button type="submit" value="Next" id="nextWeekButton" name="submitButton" width="100px" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
             </div>
             <div class="col-xs-3">
                 <div class="affix">
-                    <button type="button" width="100px" id="save" class="btn btn-default pull-right">Save <span class="glyphicon glyphicon-check"></span></button>
+                    <button type="submit" value="Submit" id="submitButton" name="submitButton" class="btn btn-default pull-left">Submit</button>
+                    <button type="button" width="100px" id="lastWeekHours" class="btn btn-default pull-right" onclick="CopyHours()">Copy Hours</button>
                 </div>
             </div>
         </div>
@@ -43,14 +42,10 @@
 
         <br />
         <div id="EditHoursWorked" name="EditHoursWorked" class="col-lg-12">
+            @Html.HiddenFor(m => m.currentWeekEndDate)
             <div class="row">
-                <div class="col-lg-9">
-
-
-                    @using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post))
-                    {
-                        @Html.HiddenFor(m => m.currentWeekEndDate)
-                        <div class="pull-left" width="90%">
+                <div class="col-lg-9">        
+                        <div class="pull-left" width="100%">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -310,34 +305,26 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <input type="submit" value="Submit Hours" class="btn btn-default pull-left" />
                         </div>
-
-                                                    }
 
 
                 </div>
             </div>
 
         </div>
-                                                    if (Model.isApproved)
-                                                    {
-                                                        <script>
-                                                            disableDiv(document.getElementById('EditHoursWorked'));
-                                                        </script>
-                                                    }
-                                                    <br />
-                                                    <br />
-                                                    <br />
-                                                    <br />
-                                                    <br />
-
-                                                    }
-                                                    else
-                                                    {
-                                                        Layout = null;
-                                                        @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
-                                                    }
+        if (Model.isApproved)
+        {
+            <script>
+                disableDiv(document.getElementById('EditHoursWorked'));
+            </script>
+        }
+        }
+    }
+    else
+    {
+    Layout = null;
+        @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
+    }
 
 
 

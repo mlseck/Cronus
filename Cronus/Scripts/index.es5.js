@@ -1,66 +1,17 @@
-﻿"use strict";
+﻿
+//$(document).ready(function () {
+//    $(".hoursInput").change(function () {
+//        var sum = 0;
+//        $(".hoursInput").each(function () {
+//            sum += parseInt($(this).val()) || 0;
+//        });
+//        $('#totalHours').text(sum + " Total Hours");
+//    });
+//});
 
-function addNewRows(table) {
-    var t = table.toString();
-    var x = document.getElementById(t);
-    var new_row = x.rows[1].cloneNode(true);
-    var len = x.rows.length;
-    len = $('.tr').id + 1;
-    new_row.cells[0].innerHTML.id = len;
-    x = x.firstElementChild;
-    x.appendChild(new_row);
-
-    return;
-}
-
-function removeRow(table, row) {
-    var t = table.toString();
-    var i = row.parentNode.parentNode.rowIndex;
-    if (i !== 1) {
-        document.getElementById(t).deleteRow(i);
-        console.log(table.text);
-    }
-    return;
-}
-
-function getPreviousWeek() {
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexPrev",
-        dataType: "json",
-        success: function success(data) {
-            console.log(data);
-        },
-        error: function error() {}
-    });
-}
-
-function getNextWeek() {
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        url: "/Home/IndexNext",
-        dataType: "json",
-        success: function success(data) {
-            console.log(data);
-        },
-        error: function error() {}
-    });
-}
-
-$(document).ready(function () {
-    $(".hoursInput").change(function () {
-        var sum = 0;
-        $(".hoursInput").each(function () {
-            sum += parseInt($(this).val()) || 0;
-        });
-        $('#totalHours').text(sum + " Total Hours");
-    });
-});
+"use strict";
 
 function AddRow(_dayOfRow, _entryday) {
-    console.log("Executing Add Script");
     $.ajax({
         async: false,
         data: { entryDay: _entryday },
@@ -72,51 +23,47 @@ function AddRow(_dayOfRow, _entryday) {
     });
 }
 
-$(document).ready(function () {
-    $('#save').click(function () {
-        alert("HERE");
-    });
-});
+//$(document).ready(function () {
+//    $('#save').click(function () {
+//        alert("HERE");
+//    });
+//});
 
-function getPreviousWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00";
-    console.log(_currentWeek);
-    $.ajax({
-        contentType: "application/json",
-        type: 'POST',
-        dataType: "json",
-        data: JSON.stringify({
-            currentWeek: _currentWeek
-        }),
-        url: '/Home/Index/',
-        success: function success(data) {
-            console.log("Successfully fetched hours");
-        },
-        error: function error(response) {
-            console.log("Failed");
-        }
-    });
+function disableDiv() {
+    $("#EditHoursWorked :input").attr("readonly", "readonly");
+    //$("#EditHoursWorked :input").attr("disabled", true);
 }
 
-function getNextWeek(_day, _month, _year) {
-    var _currentWeek = _year + "-" + _month + "-" + _day + " 00:00:00";
-    console.log(_currentWeek);
+function CopyHours() {
+    var _currentWeek = new Date($('#currentWeekEndDate').val());
+    //var _currentWeek = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " 00:00:00";
+    console.log("Current Week ISO: " + _currentWeek);
     $.ajax({
         contentType: "application/json",
         type: 'POST',
-        dataType: "json",
         data: JSON.stringify({
             currentWeek: _currentWeek
         }),
-        url: '/Home/Index/'
-    }).success(function (data) {
-        console.log("Successfully fetched hours");
+        url: '/Home/GetLastWeek',
+        dataType: 'json'
+    }).success(function (response) {
+        console.log("Success");
+        console.log(response);
+        for (var x = 0; x < response.length; x++) {
+            var _entryDay = response[x].CurrentDay;
+            console.log(_entryDay);
+            $.ajax({
+                async: false,
+                data: { entryDay: _entryDay },
+                url: '/Home/AddHourWorked'
+            }).success(function (partialView) {
+                console.log("Success");
+                var divID = "#hoursworkedrowMon";
+                $(divID).append(partialView);
+            });
+        }
     }).error(function (response) {
         console.log("Failed");
     });
-}
-
-function disableDiv() {
-    $("#EditHoursWorked :input").attr("disabled", true);
 }
 

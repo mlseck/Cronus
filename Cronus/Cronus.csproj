@@ -212,6 +212,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\TimeperiodController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -237,6 +238,7 @@
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\MonthlyViewModel.cs" />
+    <Compile Include="ViewModels\ProjectActivityViewModel.cs" />
     <Compile Include="ViewModels\TimePeriodViewModel.cs" />
     <Compile Include="ViewModels\WeeklyHoursModel.cs" />
   </ItemGroup>
@@ -488,6 +490,11 @@
     <Content Include="Views\Approver\TestView.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Project\ProjectActivities.cshtml" />
+    <Content Include="Views\Timeperiod\Create.cshtml" />
+    <Content Include="Views\Timeperiod\Delete.cshtml" />
+    <Content Include="Views\Timeperiod\Details.cshtml" />
+    <Content Include="Views\Timeperiod\Edit.cshtml" />
+    <Content Include="Views\Timeperiod\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
