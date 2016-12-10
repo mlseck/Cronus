@@ -69,6 +69,28 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours, string submitButton)
         {
+            // Check if timeperiod already exists
+            // If not create it
+            DateTime timePeriod = submittedHours.currentWeekEndDate.Date;
+            if (db.timeperiods.Find(timePeriod) == null)
+            {
+                timeperiod newTimePeriod = new timeperiod();
+                newTimePeriod.periodEndDate = timePeriod;
+                new TimeperiodController().Create(newTimePeriod);
+            }
+            // Check if employee already has this timeperiod
+            // If not create it
+            var employeeTPexists = from tp in db.employeetimeperiods
+                                   where tp.Employee_employeeID == UserManager.User.employeeID && tp.TimePeriod_periodEndDate == timePeriod
+                                   select tp;
+            if (!employeeTPexists.Any())
+            {
+                employeetimeperiod etp = new employeetimeperiod();
+                etp.Employee_employeeID = UserManager.User.employeeID; etp.TimePeriod_periodEndDate = timePeriod;
+                etp.isApproved = false;
+                new EmployeeTimeperiodsController().Create(etp);
+            }
+
             if (submitButton == "Submit")
             {
                 foreach (var entry in submittedHours.HoursWorked)
@@ -144,8 +166,10 @@ namespace Cronus.Controllers
             var isApprovedQuery = from a in db.employeetimeperiods
                                   where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                                   select a;
-            myModel.isApproved = isApprovedQuery.First().isApproved;
-
+            if (isApprovedQuery.Any())
+            {
+                myModel.isApproved = isApprovedQuery.First().isApproved;
+            }
             return View("Index", myModel);
         }
 
@@ -308,19 +332,6 @@ namespace Cronus.Controllers
             //return a list of models that hold all the varaibles we need. Each object in the list stores activity name, hrs worked,
             //and project name on the date passed through date. 
             return Json(hrsWrkd, JsonRequestBehavior.AllowGet);
-        }
-
-
-        //going to be working on saving the hours listed into the DB.
-        [HttpPost]
-        public ActionResult SaveHours(HomeViewModel model)
-        {
-            //pass through a model filled with information, push that information to the corresponding DB table.
-            hoursworked hoursWorked = new hoursworked();
-            hoursWorked.comments = model.hrsWorked.comments;
-            hoursWorked.date = model.hrsWorked.date;
-            //finish that later
-            return View(model);
         }
 
         public ActionResult About()
