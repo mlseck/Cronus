@@ -69,6 +69,36 @@ namespace Cronus.Controllers
             return View(myModel);
         }
 
+        public JsonResult GetLastWeek(DateTime currentWeek) {
+            DateTime lastWeek = currentWeek.AddDays(-7).Date;
+            var getPrevious = from hw in db.hoursworkeds
+                              where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == lastWeek
+                              select hw;
+            List<hoursworked> lastWeekHours = new List<hoursworked>();
+            List<hoursworked> returnHours = new List<hoursworked>();
+            lastWeekHours = getPrevious.ToList();
+            foreach (var hour in lastWeekHours)
+            {
+                returnHours.Add(new hoursworked()
+                {
+                    Activity_activityID = hour.Activity_activityID,
+                    currentDay = hour.date.DayOfWeek,
+                    Project_projectID = hour.Project_projectID,
+                });
+            }
+            return Json(returnHours, JsonRequestBehavior.AllowGet);
+
+        }
+        public ActionResult AddLastWeekPartials(int entryDay, int projectID, int activityID)
+        {
+            var getProject = from proj in db.projects where proj.projectID == projectID select proj;
+            hoursworked myHour = new hoursworked();
+            myHour.project = getProject.First();
+            myHour.Project_projectID = projectID;
+            myHour.Activity_activityID = activityID;
+            myHour.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            return PartialView("_hoursworkedrow", myHour);
+        }
         [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours, string submitButton)
         {

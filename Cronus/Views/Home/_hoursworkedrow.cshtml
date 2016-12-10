@@ -9,6 +9,7 @@
     SelectList test;
     try
     {
+        
         var activities = Model.project.activities;
         test = new SelectList(activities, "activityID", "activityName");
     }
