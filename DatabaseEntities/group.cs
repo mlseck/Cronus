@@ -20,7 +20,7 @@ namespace DatabaseEntities
             this.employees = new HashSet<employee>();
             this.projects = new HashSet<project>();
         }
-    
+
         public int groupID { get; set; }
         [Display(Name = "Group Name")]
         public string groupName { get; set; }

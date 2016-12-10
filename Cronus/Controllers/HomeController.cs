@@ -41,8 +41,6 @@ namespace Cronus.Controllers
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
             myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
             var query = from hw in db.hoursworkeds
                         where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
@@ -69,84 +67,74 @@ namespace Cronus.Controllers
         }
 
         [HttpPost]
-        public JsonResult PreviousWeek(DateTime currentWeek)
+        public ActionResult SubmitHours(HomeViewModel submittedHours, string submitButton)
         {
-            HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
-            myModel.currentWeekEndDate = currentWeek.AddDays(-7);
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                        select hw;
-             myModel.HoursWorked = query.ToList();
-            // If Timeperiod was already approved, set Viewbag isApproved to true
-            var isApprovedQuery = from a in db.employeetimeperiods
-                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                                  select a;
-            myModel.isApproved = isApprovedQuery.First().isApproved;
-
-            return Json(myModel, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult SubmitHours(HomeViewModel submittedHours)
-        {
-            foreach (var entry in submittedHours.HoursWorked)
+            if (submitButton == "Submit")
             {
-                if (entry.isDeleted)
+                foreach (var entry in submittedHours.HoursWorked)
                 {
-                    hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
-                    if (deleteEntry != null)
+                    if (entry.isDeleted)
                     {
-                        new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
-                    }
-                }
-                else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
-                {
-                    if (entry.entryID == 0)
-                    {
-                        // Check if the activity was already logged on the current date
-                        // If it was, just add hours to the entry
-                        // Otherwise, create a new entry
-                        hoursworked newEntry = new hoursworked();
-                        DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
-                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
-                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
-
-                        if (ExtensionMethods.EntryExists(newEntry) == null)
+                        hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
+                        if (deleteEntry != null)
                         {
-                            new HoursWorkedController().Create(newEntry);
+                            new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
                         }
+                    }
+                    else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
+                    {
+                        if (entry.entryID == 0)
+                        {
+                            // Check if the activity was already logged on the current date
+                            // If it was, just add hours to the entry
+                            // Otherwise, create a new entry
+                            hoursworked newEntry = new hoursworked();
+                            DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
+                            newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
+                            newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+
+                            if (ExtensionMethods.EntryExists(newEntry) == null)
+                            {
+                                new HoursWorkedController().Create(newEntry);
+                            }
+                            else
+                            {
+                                hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
+                                existingEntry.hours += newEntry.hours;
+                                existingEntry.comments += newEntry.comments;
+                                new HoursWorkedController().AddHours(existingEntry);
+                            }
+                        }
+                        // Updating already existing entry
                         else
                         {
-                            hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
-                            existingEntry.hours += newEntry.hours;
-                            existingEntry.comments += newEntry.comments;
+                            // If we get to this point, entry is already saved to DB, and we're editing it
+                            hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                            existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
+                            existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
+                            existingEntry.hours = entry.hours;
+                            existingEntry.comments = entry.comments;
+                            existingEntry.date = entry.date;
                             new HoursWorkedController().AddHours(existingEntry);
                         }
                     }
-                    // Updating already existing entry
-                    else
-                    {
-                        // If we get to this point, entry is already saved to DB, and we're editing it
-                        hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
-                        existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
-                        existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
-                        existingEntry.hours = entry.hours;
-                        existingEntry.comments = entry.comments;
-                        existingEntry.date = entry.date;
-                        new HoursWorkedController().AddHours(existingEntry);
-                    }
+
                 }
-                
             }
+            else if (submitButton == "Previous")
+            {
+                submittedHours.currentWeekEndDate = submittedHours.currentWeekEndDate.AddDays(-7);
+            }
+            else
+            {
+                submittedHours.currentWeekEndDate = submittedHours.currentWeekEndDate.AddDays(7);
+            }
+
             ModelState.Clear();
             HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
             myModel.currentWeekEndDate = submittedHours.currentWeekEndDate;
             var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && EntityFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
                         select hw;
             myModel.HoursWorked = query.ToList(); 
             foreach(var hw in myModel.HoursWorked){
@@ -165,8 +153,6 @@ namespace Cronus.Controllers
         public ActionResult AddHourWorked(int entryDay)
         {
             HomeViewModel myModel = new HomeViewModel();
-            myModel.Projects = db.projects.ToList();
-            myModel.Activities = db.activities.ToList();
             var query = from hw in db.hoursworkeds
                         where hw.TimePeriod_employeeID == UserManager.User.employeeID
                         select hw;

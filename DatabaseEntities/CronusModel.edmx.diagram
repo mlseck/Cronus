@@ -4,21 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ab5a64fadf814eb6bb37eb878313d632" Name="Diagram1">
-        <EntityTypeShape EntityType="CronusDatabaseModel.activity" Width="1.5" PointX="3.75" PointY="1.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.audittrail" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.employee" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.employeetimeperiod" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.favorite" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.group" Width="1.5" PointX="3" PointY="14" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.hoursworked" Width="1.5" PointX="7.5" PointY="11.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.project" Width="1.5" PointX="5.25" PointY="13.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.timeperiod" Width="1.5" PointX="0.75" PointY="11.25" IsExpanded="true" />
+      <Diagram DiagramId="b417ad4def3f4af8806bbaef1c695323" Name="Diagram1">
+        <EntityTypeShape EntityType="CronusDatabaseModel.activity" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.audittrail" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.employee" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.employeetimeperiod" Width="1.5" PointX="6" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.favorite" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.group" Width="1.5" PointX="3" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.hoursworked" Width="1.5" PointX="8.25" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.project" Width="1.5" PointX="5.25" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.timeperiod" Width="1.5" PointX="3.75" PointY="10.25" IsExpanded="true" />
         <EntityTypeShape EntityType="CronusDatabaseModel.Table" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CronusDatabaseModel.database_firewall_rules" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CronusDatabaseModel.database_firewall_rules" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="CronusDatabaseModel.favorite_fk_Favorite_Activity1" ManuallyRouted="false" />
         <AssociationConnector Association="CronusDatabaseModel.hoursworked_fk_HoursWorked_Activity1" ManuallyRouted="false" />
         <AssociationConnector Association="CronusDatabaseModel.audittrail_fk_AuditTrail_Employee1" ManuallyRouted="false" />
+        <AssociationConnector Association="CronusDatabaseModel.audittrail_fk_AuditTrail_employeeTimeperiod1" ManuallyRouted="false" />
         <AssociationConnector Association="CronusDatabaseModel.employeetimeperiod_fk_EmployeTimePeriod_Employee1" ManuallyRouted="false" />
         <AssociationConnector Association="CronusDatabaseModel.favorite_fk_Favorite_Employee1" ManuallyRouted="false" />
         <AssociationConnector Association="CronusDatabaseModel.group_fk_group_GroupManager1" ManuallyRouted="false" />

@@ -18,14 +18,12 @@ namespace DatabaseEntities
         public decimal hours { get; set; }
         public System.DateTime date { get; set; }
         public string comments { get; set; }
-        public bool isDeleted { get; set; }
-        public DayOfWeek currentDay { get; set; }
         public string TimePeriod_employeeID { get; set; }
         public System.DateTime TimePeriod_periodEndDate { get; set; }
         public int Activity_activityID { get; set; }
         public int Project_projectID { get; set; }
-        
-
+        public bool isDeleted { get; set; }
+        public DayOfWeek currentDay { get; set; }
 
         public virtual activity activity { get; set; }
         public virtual employeetimeperiod employeetimeperiod { get; set; }

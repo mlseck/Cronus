@@ -109,8 +109,7 @@ function getPreviousWeek(_day, _month, _year) {
         url: '/Home/PreviousWeek/',
         dataType: "json",
         success: function success(response) {
-            console.log(response);
-            console.log("Successfully fetched hours");
+            console.log(response[0]);
         },
         error: function error(response) {
             console.log("Failed");

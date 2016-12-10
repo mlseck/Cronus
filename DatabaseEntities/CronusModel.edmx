@@ -16,13 +16,10 @@
         <EntityType Name="audittrail">
           <Key>
             <PropertyRef Name="auditID" />
-            <PropertyRef Name="timePeriodTable_periodEndDate" />
-            <PropertyRef Name="timePeriodTable_employeetable_employeeID" />
-            <PropertyRef Name="Employee_employeeID" />
           </Key>
           <Property Name="auditID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="timePeriodTable_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
-          <Property Name="timePeriodTable_employeetable_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="employeeTimeperiod_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="employeeTimeperiod_periodEndDate" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="editDateTime" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="250" />
           <Property Name="Employee_employeeID" Type="nvarchar" MaxLength="10" Nullable="false" />
@@ -155,6 +152,20 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Principal>
             <Dependent Role="audittrail">
               <PropertyRef Name="Employee_employeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="audittrail$fk_AuditTrail_employeeTimeperiod1">
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
+          <End Role="audittrail" Type="Self.audittrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Principal>
+            <Dependent Role="audittrail">
+              <PropertyRef Name="employeeTimeperiod_employeeID" />
+              <PropertyRef Name="employeeTimeperiod_periodEndDate" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -356,6 +367,10 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employee" />
             <End Role="audittrail" EntitySet="audittrail" />
           </AssociationSet>
+          <AssociationSet Name="audittrail$fk_AuditTrail_employeeTimeperiod1" Association="Self.audittrail$fk_AuditTrail_employeeTimeperiod1">
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
+            <End Role="audittrail" EntitySet="audittrail" />
+          </AssociationSet>
           <AssociationSet Name="employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1" Association="Self.employeetimeperiod$fk_EmployeeTimePeriod_TimePeriod1">
             <End Role="timeperiod" EntitySet="timeperiod" />
             <End Role="employeetimeperiod" EntitySet="employeetimeperiod" />
@@ -432,17 +447,15 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
         <EntityType Name="audittrail">
           <Key>
             <PropertyRef Name="auditID" />
-            <PropertyRef Name="timePeriodTable_periodEndDate" />
-            <PropertyRef Name="timePeriodTable_employeetable_employeeID" />
-            <PropertyRef Name="Employee_employeeID" />
           </Key>
           <Property Name="auditID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="timePeriodTable_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="timePeriodTable_employeetable_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="employeeTimeperiod_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="employeeTimeperiod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="editDateTime" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Comment" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="employee" Relationship="Self.audittrail_fk_AuditTrail_Employee1" FromRole="audittrail" ToRole="employee" />
+          <NavigationProperty Name="employeetimeperiod" Relationship="Self.audittrail_fk_AuditTrail_employeeTimeperiod1" FromRole="audittrail" ToRole="employeetimeperiod" />
         </EntityType>
         <EntityType Name="employee">
           <Key>
@@ -471,6 +484,7 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
           <Property Name="Employee_employeeID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TimePeriod_periodEndDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="audittrails" Relationship="Self.audittrail_fk_AuditTrail_employeeTimeperiod1" FromRole="employeetimeperiod" ToRole="audittrail" />
           <NavigationProperty Name="employee" Relationship="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1" FromRole="employeetimeperiod" ToRole="employee" />
           <NavigationProperty Name="timeperiod" Relationship="Self.employeetimeperiod_fk_EmployeeTimePeriod_TimePeriod1" FromRole="employeetimeperiod" ToRole="timeperiod" />
           <NavigationProperty Name="hoursworkeds" Relationship="Self.hoursworked_fk_HoursWorked_TimePeriod1" FromRole="employeetimeperiod" ToRole="hoursworked" />
@@ -593,6 +607,20 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="audittrail_fk_AuditTrail_employeeTimeperiod1">
+          <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="1" />
+          <End Role="audittrail" Type="Self.audittrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employeetimeperiod">
+              <PropertyRef Name="Employee_employeeID" />
+              <PropertyRef Name="TimePeriod_periodEndDate" />
+            </Principal>
+            <Dependent Role="audittrail">
+              <PropertyRef Name="employeeTimeperiod_employeeID" />
+              <PropertyRef Name="employeeTimeperiod_periodEndDate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="employeetimeperiod_fk_EmployeTimePeriod_Employee1">
           <End Role="employee" Type="Self.employee" Multiplicity="1" />
           <End Role="employeetimeperiod" Type="Self.employeetimeperiod" Multiplicity="*" />
@@ -703,6 +731,10 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <End Role="employee" EntitySet="employees" />
             <End Role="audittrail" EntitySet="audittrails" />
           </AssociationSet>
+          <AssociationSet Name="audittrail_fk_AuditTrail_employeeTimeperiod1" Association="Self.audittrail_fk_AuditTrail_employeeTimeperiod1">
+            <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
+            <End Role="audittrail" EntitySet="audittrails" />
+          </AssociationSet>
           <AssociationSet Name="employeetimeperiod_fk_EmployeTimePeriod_Employee1" Association="Self.employeetimeperiod_fk_EmployeTimePeriod_Employee1">
             <End Role="employee" EntitySet="employees" />
             <End Role="employeetimeperiod" EntitySet="employeetimeperiods" />
@@ -759,8 +791,8 @@ warning 6002: The table/view 'CronusDatabase.sys.database_firewall_rules' does n
             <EntityTypeMapping TypeName="CronusDatabaseModel.audittrail">
               <MappingFragment StoreEntitySet="audittrail">
                 <ScalarProperty Name="auditID" ColumnName="auditID" />
-                <ScalarProperty Name="timePeriodTable_periodEndDate" ColumnName="timePeriodTable_periodEndDate" />
-                <ScalarProperty Name="timePeriodTable_employeetable_employeeID" ColumnName="timePeriodTable_employeetable_employeeID" />
+                <ScalarProperty Name="employeeTimeperiod_employeeID" ColumnName="employeeTimeperiod_employeeID" />
+                <ScalarProperty Name="employeeTimeperiod_periodEndDate" ColumnName="employeeTimeperiod_periodEndDate" />
                 <ScalarProperty Name="editDateTime" ColumnName="editDateTime" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Employee_employeeID" ColumnName="Employee_employeeID" />
