@@ -32,12 +32,7 @@ namespace Cronus.Models
             return context.groups.Find(id);
         }
 
-        public employee FindEmployee(string id)
-        {
-            return context.employees.Find(id);
-        }
-
-        public void InsertOrUpdate(group group, employee manager)
+        public void InsertOrUpdate(group group)
         {
             //if (group.groupID == default(int))
             if (FindGroup(group.groupID) == null)
@@ -51,11 +46,6 @@ namespace Cronus.Models
                 context.Entry(group).State = EntityState.Modified;
             }
 
-            if (manager != null && FindEmployee(manager.employeeID) != null)
-            {
-                // Existing entity
-                context.Entry(manager).State = EntityState.Modified;
-            }
         }
 
         public void Delete(int id)
@@ -80,7 +70,7 @@ namespace Cronus.Models
         IQueryable<group> All { get; }
         IQueryable<group> AllIncluding(params Expression<Func<group, object>>[] includeProperties);
         group FindGroup(int id);
-        void InsertOrUpdate(group group, employee employee);
+        void InsertOrUpdate(group group);
         void Delete(int id);
         void Save();
     }

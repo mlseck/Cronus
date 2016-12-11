@@ -160,10 +160,8 @@ namespace Cronus.Controllers
                     group.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
                 
-                employee manager = employeeRepository.Find(group.groupManager);
-                manager.employeeGroupManaged = group.groupID;
 
-                groupRepository.InsertOrUpdate(group, manager);
+                groupRepository.InsertOrUpdate(group);
                 groupRepository.Save();
 
                 return RedirectToAction("Index");
@@ -232,7 +230,7 @@ namespace Cronus.Controllers
                 //    originalProject.activities = (from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
                 //}
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
+                groupRepository.InsertOrUpdate(originalGroup);
                 groupRepository.Save();
                 return RedirectToAction("Index");
             }

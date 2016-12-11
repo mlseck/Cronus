@@ -136,6 +136,9 @@ namespace Cronus.Controllers
 
                 originalGroup.groupName = group.groupName;
 
+                originalGroup.groupManager = group.groupManager;
+
+
                 originalGroup.projects.Clear();
 
 
@@ -144,7 +147,7 @@ namespace Cronus.Controllers
                     originalGroup.projects = (from s in this.projectRepository.All where @group.projectIds.Contains(s.projectID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
+                groupRepository.InsertOrUpdate(originalGroup);
 
                 try
                 {

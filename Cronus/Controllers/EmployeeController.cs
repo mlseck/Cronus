@@ -148,16 +148,17 @@ namespace Cronus.Controllers
 
                 originalGroup.groupName = group.groupName;
 
-                originalGroup.employees.Clear();
+                originalGroup.groupManager = group.groupManager;
 
+
+                originalGroup.employees.Clear();
 
                 if (group.employeeIds != null)
                 {
                     originalGroup.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
-
+                groupRepository.InsertOrUpdate(originalGroup);
 
                 try
                 {

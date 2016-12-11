@@ -36,6 +36,7 @@ namespace DatabaseEntities
         [Display(Name = "Max Hours")]
         public Nullable<int> employeeMaxHours { get; set; }
         public int employeePrivileges { get; set; }
+        public bool isManager { get; set; }
 
         public string employeePrivilegesString
         {
