@@ -219,12 +219,11 @@ namespace Cronus.Controllers
                 originalemployee.employeeFirstName = employee.employeeFirstName;
                 originalemployee.employeeLastName = employee.employeeLastName;
                 originalemployee.employeeEmailAddress = employee.employeeEmailAddress;
-                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
+                originalemployee.managesgroup = employee.managesgroup;
                 originalemployee.employeeMaxHours = employee.employeeMaxHours;
                 originalemployee.employeeMinHours = employee.employeeMinHours;
                 originalemployee.employeePrivileges = employee.employeePrivileges;
                 originalemployee.employeePwd = employee.employeePwd;
-                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
                 //originalemployee. = employee.employeeGroupManaged;
 
 

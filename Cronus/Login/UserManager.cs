@@ -51,14 +51,16 @@ namespace Cronus.Login
             if (employeeIDList.Contains(username))
             {
                 user = db.employees.Find(username);
+
+                //bool isManager = db.groups.Select(g => g).Where(g => g.groupManager.Equals(user.employeeID)).Any();
                 
-                bool isAdmin = db.groups.Select(g => g).Where(g => g.groupManager.Equals(user.employeeID)).Any();
+                int employeeManages = db.groups.Select(g => g).Where(g => g.groupManager.Equals(user.employeeID)).FirstOrDefault().groupID;
 
                 if (user.employeePwd == password)
                 {
                     user = new employee { employeeID = user.employeeID, employeeFirstName = user.employeeFirstName,
                         employeeLastName = user.employeeLastName, employeePrivileges = user.employeePrivileges,
-                        employeeGroupManaged = user.employeeGroupManaged, isManager = isAdmin};
+                        managesgroup = employeeManages/*, isManager = isManager*/};
                     return user;
                 }
 

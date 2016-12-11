@@ -39,7 +39,7 @@ namespace Cronus.Controllers
 
             //loggedinEmp.employeeGroupManaged
 
-            ViewBag.GroupId = loggedinEmp.employeeGroupManaged;
+            ViewBag.GroupId = loggedinEmp.managesgroup;
             return View(model);
 
             //return View(db.timeperiods.ToList());
