@@ -41,25 +41,21 @@ namespace Cronus.Controllers
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
-            myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                        select hw;
-            try{
-                myModel.HoursWorked = query.ToList();
-            }
-            catch(Exception ex){
-                var exception = ex.Message;
-            }
-            // If Timeperiod was already approved, set Viewbag isApproved to true
-            var isApprovedQuery = from a in db.employeetimeperiods
-                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                                  select a;
             try
             {
+                var emp = UserManager.User.employeeID;
+                myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
+                var query = from hw in db.hoursworkeds
+                            where hw.TimePeriod_employeeID == emp && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                            select hw;
+                myModel.HoursWorked = query.ToList();
+                // If Timeperiod was already approved, set Viewbag isApproved to true
+                var isApprovedQuery = from a in db.employeetimeperiods
+                                      where a.Employee_employeeID == emp && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                      select a;
                 if (isApprovedQuery.Any())
                 {
-                     myModel.isApproved = isApprovedQuery.First().isApproved;
+                        myModel.isApproved = isApprovedQuery.First().isApproved;
                 }
             }
             catch (Exception ex)
@@ -104,6 +100,7 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours, string submitButton)
         {
+            var emp = UserManager.User.employeeID;
             // Check if timeperiod already exists
             // If not create it
             DateTime timePeriod = submittedHours.currentWeekEndDate.Date;
@@ -116,12 +113,12 @@ namespace Cronus.Controllers
             // Check if employee already has this timeperiod
             // If not create it
             var employeeTPexists = from tp in db.employeetimeperiods
-                                   where tp.Employee_employeeID == UserManager.User.employeeID && tp.TimePeriod_periodEndDate == timePeriod
+                                   where tp.Employee_employeeID == emp && tp.TimePeriod_periodEndDate == timePeriod
                                    select tp;
             if (!employeeTPexists.Any())
             {
                 employeetimeperiod etp = new employeetimeperiod();
-                etp.Employee_employeeID = UserManager.User.employeeID; etp.TimePeriod_periodEndDate = timePeriod;
+                etp.Employee_employeeID = emp; etp.TimePeriod_periodEndDate = timePeriod;
                 etp.isApproved = false;
                 new EmployeeTimeperiodsController().Create(etp);
             }
@@ -148,7 +145,7 @@ namespace Cronus.Controllers
                             hoursworked newEntry = new hoursworked();
                             DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
                             newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
-                            newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+                            newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = emp; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
 
                             if (ExtensionMethods.EntryExists(newEntry) == null)
                             {
@@ -205,6 +202,7 @@ namespace Cronus.Controllers
             {
                 myModel.isApproved = isApprovedQuery.First().isApproved;
             }
+           
             return View("Index", myModel);
         }
 

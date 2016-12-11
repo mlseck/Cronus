@@ -1,4 +1,5 @@
 ﻿@using DatabaseEntities
+@using Cronus.Login
 @model hoursworked
 @{
     var context = new CronusDatabaseEntities();
@@ -6,16 +7,32 @@
 @Scripts.Render("~/Scripts/_hoursworkedrow.js")
 
 @{
-    SelectList test;
+    SelectList projectList = new SelectList(Enumerable.Empty<SelectListItem>());
+    SelectList activityList;
     try
     {
-        
+        CronusDatabaseEntities db = new CronusDatabaseEntities();
+        var dbGrps = db.groups.ToList();
+        employee employee = db.employees.Find(@UserManager.User.employeeID);
+        var groups = (from g in dbGrps where g.employees.Contains(employee) select g).ToList();
+        List<project> groupProjects = new List<project>();
+        foreach (var group in groups)
+        {
+            foreach (var proj in group.projects)
+            {
+                if (proj.projectActive == 1)
+                {
+                    groupProjects.Add(proj);
+                }
+            }
+        }
+        projectList = new SelectList(groupProjects, "projectID", "projectName");
         var activities = Model.project.activities;
-        test = new SelectList(activities, "activityID", "activityName");
+        activityList = new SelectList(activities, "activityID", "activityName");
     }
     catch (Exception)
     {
-        test = new SelectList(Enumerable.Empty<SelectListItem>());
+        activityList = new SelectList(Enumerable.Empty<SelectListItem>());
     }
 }
 @using (Html.BeginCollectionItem("HoursWorked"))
@@ -25,19 +42,15 @@
         @Html.HiddenFor(m => m.date)
         @Html.HiddenFor(m => m.currentDay)
         @Html.HiddenFor(m => m.isDeleted)
-        @Html.DropDownListFor(m => m.Project_projectID, new SelectList(context.projects, "projectID", "projectName"), "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
-        @Html.DropDownListFor(m => m.Activity_activityID, test, "---Select Activity", new { @class = "form-control" })
+        @Html.DropDownListFor(m => m.Project_projectID, projectList, "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
+        @Html.DropDownListFor(m => m.Activity_activityID, activityList, "---Select Activity", new { @class = "form-control" })
         @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:10%;", @min = "0", @type = "number" } })
         @Html.TextBoxFor(m => m.comments, new { @class = "form-control" })
         @Html.Label(" ", new { @class = "glyphicon glyphicon-remove deleteRow", @onclick = "DeleteRow(this); SetDeleted(this)", @width = "200%" })
-        @*<span id="deleteRow" class="glyphicon glyphicon-remove deleteRow" onclick="DeleteRow(this); SetDeleted($('#hoursWorkedRow').prev())" width="200%"></span>*@
         <br />
         <br />
     </div>
 }
-@*@{
-        var partialGuid = $('#hoursWorkedRow').children().first();
-    }*@
 
 
 
