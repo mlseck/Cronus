@@ -41,25 +41,21 @@ namespace Cronus.Controllers
         public ActionResult Index()
         {
             HomeViewModel myModel = new HomeViewModel();
-            myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                        select hw;
-            try{
-                myModel.HoursWorked = query.ToList();
-            }
-            catch(Exception ex){
-                var exception = ex.Message;
-            }
-            // If Timeperiod was already approved, set Viewbag isApproved to true
-            var isApprovedQuery = from a in db.employeetimeperiods
-                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                                  select a;
             try
             {
+                var emp = UserManager.User.employeeID;
+                myModel.currentWeekEndDate = (ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday));
+                var query = from hw in db.hoursworkeds
+                            where hw.TimePeriod_employeeID == emp && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                            select hw;
+                myModel.HoursWorked = query.ToList();
+                // If Timeperiod was already approved, set Viewbag isApproved to true
+                var isApprovedQuery = from a in db.employeetimeperiods
+                                      where a.Employee_employeeID == emp && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
+                                      select a;
                 if (isApprovedQuery.Any())
                 {
-                     myModel.isApproved = isApprovedQuery.First().isApproved;
+                        myModel.isApproved = isApprovedQuery.First().isApproved;
                 }
             }
             catch (Exception ex)
@@ -69,9 +65,43 @@ namespace Cronus.Controllers
             return View(myModel);
         }
 
+        public JsonResult GetLastWeek(DateTime currentWeek) {
+            DateTime lastWeek = currentWeek.AddDays(-7).Date;
+            var getPrevious = from hw in db.hoursworkeds
+                              where hw.TimePeriod_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(hw.TimePeriod_periodEndDate) == lastWeek
+                              select hw;
+            List<hoursworked> lastWeekHours = new List<hoursworked>();
+            List<hoursworked> returnHours = new List<hoursworked>();
+            lastWeekHours = getPrevious.ToList();
+            foreach (var hour in lastWeekHours)
+            {
+                returnHours.Add(new hoursworked()
+                {
+                    Activity_activityID = hour.Activity_activityID,
+                    currentDay = hour.date.DayOfWeek,
+                    Project_projectID = hour.Project_projectID,
+                });
+            }
+            return Json(returnHours, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult AddLastWeekPartials(int entryDay, int projectID, int activityID)
+        {
+            var getProject = from proj in db.projects where proj.projectID == projectID select proj;
+            hoursworked myHour = new hoursworked();
+            myHour.project = getProject.First();
+            myHour.Project_projectID = projectID;
+            myHour.Activity_activityID = activityID;
+            myHour.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            return PartialView("_hoursworkedrow", myHour);
+        }
+
         [HttpPost]
         public ActionResult SubmitHours(HomeViewModel submittedHours, string submitButton)
         {
+            var emp = UserManager.User.employeeID;
+            DateTime AddToWeek = submittedHours.currentWeekEndDate.Date;
             // Check if timeperiod already exists
             // If not create it
             DateTime timePeriod = submittedHours.currentWeekEndDate.Date;
@@ -84,73 +114,69 @@ namespace Cronus.Controllers
             // Check if employee already has this timeperiod
             // If not create it
             var employeeTPexists = from tp in db.employeetimeperiods
-                                   where tp.Employee_employeeID == UserManager.User.employeeID && tp.TimePeriod_periodEndDate == timePeriod
+                                   where tp.Employee_employeeID == emp && tp.TimePeriod_periodEndDate == timePeriod
                                    select tp;
             if (!employeeTPexists.Any())
             {
                 employeetimeperiod etp = new employeetimeperiod();
-                etp.Employee_employeeID = UserManager.User.employeeID; etp.TimePeriod_periodEndDate = timePeriod;
+                etp.Employee_employeeID = emp; etp.TimePeriod_periodEndDate = timePeriod;
                 etp.isApproved = false;
                 new EmployeeTimeperiodsController().Create(etp);
             }
-
-            if (submitButton == "Submit")
+            foreach (var entry in submittedHours.HoursWorked)
             {
-                foreach (var entry in submittedHours.HoursWorked)
+                if (entry.isDeleted)
                 {
-                    if (entry.isDeleted)
+                    hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
+                    if (deleteEntry != null)
                     {
-                        hoursworked deleteEntry = db.hoursworkeds.Find(entry.entryID);
-                        if (deleteEntry != null)
-                        {
-                            new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
-                        }
+                        new HoursWorkedController().DeleteConfirmed(deleteEntry.entryID);
                     }
-                    else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
+                }
+                else if (entry.hours > 0 && entry.Activity_activityID != 0 && entry.Project_projectID != 0)
+                {
+                    if (entry.entryID == 0)
                     {
-                        if (entry.entryID == 0)
-                        {
-                            // Check if the activity was already logged on the current date
-                            // If it was, just add hours to the entry
-                            // Otherwise, create a new entry
-                            hoursworked newEntry = new hoursworked();
-                            DateTime periodEndDate = ExtensionMethods.Next(DateTime.Now, DayOfWeek.Sunday);
-                            newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
-                            newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = UserManager.User.employeeID; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
+                        // Check if the activity was already logged on the current date
+                        // If it was, just add hours to the entry
+                        // Otherwise, create a new entry
+                        hoursworked newEntry = new hoursworked();
+                        DateTime periodEndDate = AddToWeek;
+                        newEntry.hours = entry.hours; newEntry.Project_projectID = entry.Project_projectID; newEntry.Activity_activityID = entry.Activity_activityID; newEntry.date = ExtensionMethods.GetDateInWeek(periodEndDate, entry.currentDay);
+                        newEntry.comments = entry.comments; newEntry.TimePeriod_employeeID = emp; newEntry.TimePeriod_periodEndDate = periodEndDate.Date;
 
-                            if (ExtensionMethods.EntryExists(newEntry) == null)
-                            {
-                                new HoursWorkedController().Create(newEntry);
-                            }
-                            else
-                            {
-                                hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
-                                existingEntry.hours += newEntry.hours;
-                                existingEntry.comments += newEntry.comments;
-                                new HoursWorkedController().AddHours(existingEntry);
-                            }
+                        if (ExtensionMethods.EntryExists(newEntry) == null)
+                        {
+                            new HoursWorkedController().Create(newEntry);
                         }
-                        // Updating already existing entry
                         else
                         {
-                            // If we get to this point, entry is already saved to DB, and we're editing it
-                            hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
-                            existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
-                            existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
-                            existingEntry.hours = entry.hours;
-                            existingEntry.comments = entry.comments;
-                            existingEntry.date = entry.date;
+                            hoursworked existingEntry = ExtensionMethods.EntryExists(newEntry);
+                            existingEntry.hours += newEntry.hours;
+                            existingEntry.comments += ", " + newEntry.comments;
                             new HoursWorkedController().AddHours(existingEntry);
                         }
                     }
-
+                    // Updating already existing entry
+                    else
+                    {
+                        // If we get to this point, entry is already saved to DB, and we're editing it
+                        hoursworked existingEntry = db.hoursworkeds.First(hw => hw.entryID == entry.entryID);
+                        existingEntry.Activity_activityID = entry.Activity_activityID; existingEntry.activity = entry.activity;
+                        existingEntry.Project_projectID = entry.Project_projectID; existingEntry.project = entry.project;
+                        existingEntry.hours = entry.hours;
+                        existingEntry.comments = entry.comments;
+                        existingEntry.date = entry.date;
+                        new HoursWorkedController().AddHours(existingEntry);
+                    }
                 }
-            }
-            else if (submitButton == "Previous")
+
+            } 
+            if (submitButton == "Previous")
             {
                 submittedHours.currentWeekEndDate = submittedHours.currentWeekEndDate.AddDays(-7);
             }
-            else
+            else if(submitButton == "Next")
             {
                 submittedHours.currentWeekEndDate = submittedHours.currentWeekEndDate.AddDays(7);
             }
@@ -173,6 +199,7 @@ namespace Cronus.Controllers
             {
                 myModel.isApproved = isApprovedQuery.First().isApproved;
             }
+           
             return View("Index", myModel);
         }
 
@@ -239,13 +266,16 @@ namespace Cronus.Controllers
                 foreach (project proj in projects)
                 {
                     //for each of those projects, add them to the returnProj list. 
-                    returnProj.Add(new project()
+                    if (proj.projectActive == 1)
                     {
-                        projectID = proj.projectID,
-                        projectName = proj.projectName,
-                        projectStartDate = proj.projectStartDate,
-                        projectEndDate = proj.projectEndDate
-                    });
+                        returnProj.Add(new project()
+                        {
+                            projectID = proj.projectID,
+                            projectName = proj.projectName,
+                            projectStartDate = proj.projectStartDate,
+                            projectEndDate = proj.projectEndDate
+                        });
+                    }
                 }
             }
 
@@ -358,6 +388,7 @@ namespace Cronus.Controllers
         [HttpGet]
         public ActionResult Favorite()
         {
+            var userloggedIn = UserManager.User.employeeID;
             ViewBag.Message = "Your Favorites Page";
             FavoriteViewModel myModel = new FavoriteViewModel();
             myModel.Activities = db.activities.ToList();
@@ -366,7 +397,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("TestID")
+                        where b.Employee_employeeID.Equals(userloggedIn)
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             myModel.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View(myModel);
@@ -378,15 +409,16 @@ namespace Cronus.Controllers
         {
             //Need to make sure it's not adding favorites that already exist
             ViewBag.Message = "Your Favorites Page";
+            var userloggedIn = UserManager.User.employeeID;
             int selectedActivity = favorite.selectedActivityID;
             if (selectedActivity != 0)
-            {
+            {  
                 favorite AddFavorite = new favorite();
                 AddFavorite.Activity_activityID = selectedActivity;
-                AddFavorite.Employee_employeeID = "TestID";
+                AddFavorite.Employee_employeeID = userloggedIn;
                 // Check if selected activity is already a favorite. If not, add to Favorite Table
                 var existsQuery = from f in db.favorites
-                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals("TestID"))
+                                  where (f.Activity_activityID.Equals(AddFavorite.Activity_activityID) && f.Employee_employeeID.Equals(userloggedIn))
                                   select f;
                 if (!existsQuery.Any())
                 {
@@ -399,7 +431,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("TestID")
+                        where b.Employee_employeeID.Equals(userloggedIn)
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
@@ -409,18 +441,21 @@ namespace Cronus.Controllers
         [HttpPost]
         public ActionResult RemoveFavorite(FavoriteViewModel favorite)
         {
+            var userloggedIn = UserManager.User.employeeID;
             ViewBag.Message = "Your Favorites Page";
             if (favorite != null)
             {
                 int[] removeFav = favorite.RemoveFavorites;
-                for (int i = 0; i < removeFav.Length; i++)
+                if (removeFav!= null)
                 {
-                    if (removeFav[i] != 0)
+                    for (int i = 0; i < removeFav.Length; i++)
                     {
-                        new FavoriteController().DeleteConfirmed(removeFav[i]);
+                        if (removeFav[i] != 0)
+                        {
+                            new FavoriteController().DeleteConfirmed(removeFav[i]);
+                        }
                     }
-                }
-
+                }  
             }
             favorite = new FavoriteViewModel();
             favorite.Activities = db.activities.ToList();
@@ -428,7 +463,7 @@ namespace Cronus.Controllers
             var query = from a in db.activities
                         join b in db.favorites
                         on a.activityID equals b.Activity_activityID
-                        where b.Employee_employeeID.Equals("TestID")
+                        where b.Employee_employeeID.Equals(userloggedIn)
                         select new FavoriteViewModel { SelectedActivity = a, SelectedFavorite = b };
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);

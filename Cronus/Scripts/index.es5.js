@@ -1,20 +1,33 @@
-﻿
+﻿"use strict";
+
+$(document).ready(function () {
+    var startHours = $("#totalHoursStart").html();
+    $('#totalHours').text(startHours + " Total Hours");
+
+    $(".hoursInput").change(function () {
+        var sum = 0;
+        $(".hoursInput").each(function () {
+            sum += parseInt($(this).val()) || 0;
+        });
+        $('#totalHours').text(sum + " Total Hours");
+    });
+});
+
 //$(document).ready(function () {
-//    $(".hoursInput").change(function () {
-//        var sum = 0;
-//        $(".hoursInput").each(function () {
-//            sum += parseInt($(this).val()) || 0;
-//        });
-//        $('#totalHours').text(sum + " Total Hours");
+//    function changeTotalHours() {
+//        $('#totalHours').text(15);
+//    };
+
+//    $('#_hoursworkedrow').change(function () {
+//        changeTotalHours();
+//        console.log("hit")
 //    });
 //});
-
-"use strict";
 
 function AddRow(_dayOfRow, _entryday) {
     $.ajax({
         async: false,
-        data: { entryDay: _entryday },
+        data: { entryDay: _entryday, projectID: 0, activityID: 0 },
         url: '/Home/AddHourWorked'
     }).success(function (partialView) {
         var divID = "#hoursworkedrow" + _dayOfRow.id.slice(-3);
@@ -31,12 +44,14 @@ function AddRow(_dayOfRow, _entryday) {
 
 function disableDiv() {
     $("#EditHoursWorked :input").attr("readonly", "readonly");
-    //$("#EditHoursWorked :input").attr("disabled", true);
+    $("#addhourworkedMon").attr("disabled", true);$("#addhourworkedTue").attr("disabled", true);
+    $("#addhourworkedWed").attr("disabled", true);$("#addhourworkedThu").attr("disabled", true);
+    $("#addhourworkedFri").attr("disabled", true);$("#addhourworkedSat").attr("disabled", true);
+    $("#addhourworkedSun").attr("disabled", true);
 }
 
 function CopyHours() {
     var _currentWeek = new Date($('#currentWeekEndDate').val());
-    //var _currentWeek = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " 00:00:00";
     console.log("Current Week ISO: " + _currentWeek);
     $.ajax({
         contentType: "application/json",
@@ -50,16 +65,16 @@ function CopyHours() {
         console.log("Success");
         console.log(response);
         for (var x = 0; x < response.length; x++) {
-            var _entryDay = response[x].CurrentDay;
-            console.log(_entryDay);
+            var weekday = new Array(7);
+            weekday[0] = "Sun";weekday[1] = "Mon";weekday[2] = "Tue";weekday[3] = "Wed";
+            weekday[4] = "Thu";weekday[5] = "Fri";weekday[6] = "Sat";
             $.ajax({
                 async: false,
-                data: { entryDay: _entryDay },
-                url: '/Home/AddHourWorked'
+                data: { entryDay: response[x].currentDay, projectID: response[x].Project_projectID, activityID: response[x].Activity_activityID },
+                url: '/Home/AddLastWeekPartials'
             }).success(function (partialView) {
-                console.log("Success");
-                var divID = "#hoursworkedrowMon";
-                $(divID).append(partialView);
+                var divID = "#hoursworkedrow" + weekday[response[x].currentDay];
+                $(divID).prepend(partialView);
             });
         }
     }).error(function (response) {

@@ -8,26 +8,26 @@
 <div>
     @using (Html.BeginForm("AddFavorite", "Home", FormMethod.Post))
     {
-        <table>
-            <tr>
-                <td>
-                    @Html.DropDownListFor(m => m.selectedActivityID, Model.ActivityNames, "--Select Activity--")
-                </td>
-                <td>
-                    <input type="submit" , value="Add To Favorites" />
-                </td>
-            </tr>
-        </table>
+        @Html.DropDownListFor(m => m.selectedActivityID, Model.ActivityNames, "--Select Activity--", new { @class = "form-control", @style = "width:100%;" })
+        <input type="submit" value="Add To Favorites" class="btn btn-default pull-left"/>         
     }
 </div>
-<div>
-    @using (Html.BeginForm("RemoveFavorite", "Home", FormMethod.Post))
-    {
-        @Html.ListBoxFor(m => m.RemoveFavorites, Model.UserFavorites)
-        <input type="submit" , value="Remove From Favorites" />
-    }
-
-</div>
+<br />
+<br/>
+@using (Html.BeginForm("RemoveFavorite", "Home", FormMethod.Post))
+{
+    <div>
+        @Html.ListBoxFor(m => m.RemoveFavorites, Model.UserFavorites, new { @class = "form-control" })
+    </div>
+    <br />
+    <br />
+    <br />
+    <br/>
+    <br />
+    <input type="submit" value="Remove From Favorites" class="btn btn-default pull-left"/>
+    <br />
+}
+    
 
 
 
