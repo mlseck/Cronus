@@ -35,11 +35,10 @@ namespace Cronus.Controllers
 
             
 
-                var loggedinEmp = db.employees.Find(UserManager.User.employeeID);
 
             //loggedinEmp.employeeGroupManaged
 
-            ViewBag.GroupId = loggedinEmp.managesgroup;
+            ViewBag.GroupId = UserManager.User.managesgroup;
             return View(model);
 
             //return View(db.timeperiods.ToList());

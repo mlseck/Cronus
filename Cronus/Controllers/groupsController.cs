@@ -69,7 +69,9 @@ namespace Cronus.Controllers
                 projectIds = new int[0],
                 employeeIds = new string[0]
             };
-            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.managesgroup == null).ToList();
+            var managers = groupRepository.All.Select(g => g.groupManager).ToList();
+
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => !managers.Contains(e.employeeID)).ToList();
 
 
             model.empList = availableManagerList.ConvertAll(a =>
@@ -189,7 +191,9 @@ namespace Cronus.Controllers
 
             employee manager = employeeRepository.Find(model.groupManager);
 
-            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.managesgroup == null).ToList();
+            var managers = groupRepository.All.Select(g => g.groupManager).ToList();
+
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => !managers.Contains(e.employeeID)).ToList();
 
             availableManagerList.Add(manager);
 
