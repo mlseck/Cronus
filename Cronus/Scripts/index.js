@@ -43,7 +43,11 @@ function AddRow(_dayOfRow, _entryday) {
 
 function disableDiv() {
     $("#EditHoursWorked :input").attr("readonly", "readonly");
-    //$("#EditHoursWorked :input").attr("disabled", true);
+    $("#addhourworkedMon").attr("disabled", true); $("#addhourworkedTue").attr("disabled", true);
+    $("#addhourworkedWed").attr("disabled", true); $("#addhourworkedThu").attr("disabled", true);
+    $("#addhourworkedFri").attr("disabled", true); $("#addhourworkedSat").attr("disabled", true);
+    $("#addhourworkedSun").attr("disabled", true);
+
 }
 
 function CopyHours(){
