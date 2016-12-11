@@ -7,6 +7,9 @@
     ViewBag.Title = "Home Page";
     DateTime timePeriod = Model.currentWeekEndDate;
 }
+@{var@totalHoursCount = 0.0;}
+
+
 @if (User.Identity.IsAuthenticated)
 {
     <div>
@@ -17,314 +20,331 @@
 
     using (Html.BeginForm("SubmitHours", "Home", FormMethod.Post, new { id = "submitForm" }))
     {
-    <h3 id="dateTitle" align="center"></h3>
+        <h3 id="dateTitle" align="center"></h3>
 
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-xs-3">
-                <button type="submit" value="Previous" id="prevWeekButton" name="submitButton" width="100px" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
-            </div>
-            <div class="col-xs-3">
-                <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
-            </div>
-            <div class="col-xs-3">  
-                <button type="submit" value="Next" id="nextWeekButton" name="submitButton" width="100px" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
-            </div>
-            <div class="col-xs-3">
-                <div class="affix">
-                    <button type="submit" value="Submit" id="submitButton" name="submitButton" class="btn btn-default pull-left">Submit</button>
-                    <button type="button" width="100px" id="lastWeekHours" class="btn btn-default pull-right" onclick="CopyHours()">Copy Hours</button>
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-xs-3">
+                    <button type="submit" value="Previous" id="prevWeekButton" name="submitButton" width="100px" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-left"></span> Previous Week</button>
+                </div>
+                <div class="col-xs-3">
+                    <a href="/Home/Monthly" width="100px" class="btn btn-default"> Go to Monthly view</a>
+                </div>
+                <div class="col-xs-3">
+                    <button type="submit" value="Next" id="nextWeekButton" name="submitButton" width="100px" class="btn btn-default pull-right">Next Week <span class="glyphicon glyphicon-arrow-right"></span></button>
+                </div>
+                <div class="col-xs-3">
+                    <div class="affix">
+                        <div>
+                            <button type="submit" value="Submit" id="submitButton" name="submitButton" style="margin-bottom: 10px" class="btn btn-default pull-left">Submit</button>
+                        </div>
+                        <div>
+                            <button type="button" width="100px" id="lastWeekHours" style="margin-bottom: 10px" class="btn btn-default pull-right" onclick="CopyHours()">Copy Hours</button>
+                            <label id="totalHours">
+                                @totalHoursCount Total Hours
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
 
         <br />
         <div id="EditHoursWorked" name="EditHoursWorked" class="col-lg-12">
             @Html.HiddenFor(m => m.currentWeekEndDate)
             <div class="row">
-                <div class="col-lg-9">        
-                        <div class="pull-left" width="100%">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Day</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th id="totalHours">0 Total Hours</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Monday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableMon">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowMon">
-                                                @foreach (var entry in Model.HoursWorked)
-                                                {
+                <div class="col-lg-9">
+                    <div class="pull-left" width="100%">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th></th>
+                                    <th></th>
 
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Monday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Monday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
-                                                }
-                                                @{
-                                                    hoursworked hrsMon = new hoursworked();
-                                                    hrsMon.currentDay = DayOfWeek.Monday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsMon)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this, 1)" value="Add Activity" />
-                                            </div>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Monday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableMon">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowMon">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
 
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Tuesday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableTues">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
+                                                if (entry.date.DayOfWeek == DayOfWeek.Monday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
+                                                {
+                                                    entry.currentDay = DayOfWeek.Monday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    totalHoursCount = totalHoursCount + (double)entry.hours;
+                                                }
+                                            }
+                                            @{
+                                                hoursworked hrsMon = new hoursworked();
+                                                hrsMon.currentDay = DayOfWeek.Monday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsMon)
+                                            
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this, 1)" value="Add Activity" />
+                                        </div>
 
-                                            <div id="hoursworkedrowTue">
-                                                @foreach (var entry in Model.HoursWorked)
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Tuesday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableTues">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+
+                                        <div id="hoursworkedrowTue">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Tuesday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Tuesday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Tuesday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Tuesday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
                                                 }
-                                                @{
-                                                    hoursworked hrsTue = new hoursworked();
-                                                    hrsTue.currentDay = DayOfWeek.Tuesday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsTue)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this, 2)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Wednesday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableWed">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowWed">
-                                                @foreach (var entry in Model.HoursWorked)
+                                            }
+                                            @{
+                                                hoursworked hrsTue = new hoursworked();
+                                                hrsTue.currentDay = DayOfWeek.Tuesday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsTue)
+       
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this, 2)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Wednesday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableWed">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowWed">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Wednesday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Wednesday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Wednesday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Wednesday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    //@totalHoursCount = @totalHoursCount + (double)entry.hours;
                                                 }
-                                                @{
-                                                    hoursworked hrsWed = new hoursworked();
-                                                    hrsWed.currentDay = DayOfWeek.Wednesday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsWed)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this, 3)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Thursday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableThu">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowThu">
-                                                @foreach (var entry in Model.HoursWorked)
+                                            }
+                                            @{
+                                                hoursworked hrsWed = new hoursworked();
+                                                hrsWed.currentDay = DayOfWeek.Wednesday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsWed)
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this, 3)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Thursday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableThu">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowThu">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Thursday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Thursday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Thursday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Thursday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    //@totalHoursCount = @totalHoursCount + (double)entry.hours;
                                                 }
-                                                @{
-                                                    hoursworked hrsThu = new hoursworked();
-                                                    hrsThu.currentDay = DayOfWeek.Thursday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsThu)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this, 4)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Friday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableFri">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowFri">
-                                                @foreach (var entry in Model.HoursWorked)
+                                            }
+                                            @{
+                                                hoursworked hrsThu = new hoursworked();
+                                                hrsThu.currentDay = DayOfWeek.Thursday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsThu)
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this, 4)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Friday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableFri">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowFri">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Friday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Friday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Friday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Friday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    //@totalHoursCount = @totalHoursCount + (double)entry.hours;
                                                 }
-                                                @{
-                                                    hoursworked hrsFri = new hoursworked();
-                                                    hrsFri.currentDay = DayOfWeek.Friday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsFri)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this, 5)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Saturday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableSat">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowSat">
-                                                @foreach (var entry in Model.HoursWorked)
+                                            }
+                                            @{
+                                                hoursworked hrsFri = new hoursworked();
+                                                hrsFri.currentDay = DayOfWeek.Friday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsFri)
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this, 5)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Saturday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableSat">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowSat">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Saturday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Saturday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Saturday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Saturday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    //@totalHoursCount = @totalHoursCount + (double)entry.hours;
                                                 }
-                                                @{
-                                                    hoursworked hrsSat = new hoursworked();
-                                                    hrsSat.currentDay = DayOfWeek.Saturday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsSat)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this, 6)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <text class="dayLabel">Sunday</text>
-                                            <table class="table table-striped col-md-12" id="actProjSubTableSun">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="col-md-3">Project</th>
-                                                        <th class="col-md-3">Activity</th>
-                                                        <th class="col-md-1">Hours</th>
-                                                        <th class="col-md-3">Comments</th>
-                                                        <th class="col-md-2"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                            <div id="hoursworkedrowSun">
-                                                @foreach (var entry in Model.HoursWorked)
+                                            }
+                                            @{
+                                                hoursworked hrsSat = new hoursworked();
+                                                hrsSat.currentDay = DayOfWeek.Saturday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsSat)
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this, 6)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <text class="dayLabel">Sunday</text>
+                                        <table class="table table-striped col-md-12" id="actProjSubTableSun">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-3">Project</th>
+                                                    <th class="col-md-3">Activity</th>
+                                                    <th class="col-md-1">Hours</th>
+                                                    <th class="col-md-3">Comments</th>
+                                                    <th class="col-md-2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="hoursworkedrowSun">
+                                            @foreach (var entry in Model.HoursWorked)
+                                            {
+                                                if (entry.date.DayOfWeek == DayOfWeek.Sunday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
                                                 {
-                                                    if (entry.date.DayOfWeek == DayOfWeek.Sunday && entry.TimePeriod_periodEndDate.Date == timePeriod.Date)
-                                                    {
-                                                        entry.currentDay = DayOfWeek.Sunday;
-                                                        @Html.Partial("_hoursworkedrow", entry);
-                                                    }
+                                                    entry.currentDay = DayOfWeek.Sunday;
+                                                    @Html.Partial("_hoursworkedrow", entry);
+                                                    //@totalHoursCount = @totalHoursCount + (double)entry.hours;
                                                 }
-                                                @{
-                                                    hoursworked hrsSun = new hoursworked();
-                                                    hrsSun.currentDay = DayOfWeek.Sunday;
-                                                }
-                                                @Html.Partial("_hoursworkedrow", hrsSun)
-                                            </div>
-                                            <div>
-                                                <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this, 0)" value="Add Activity" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                            }
+                                            @{
+                                                hoursworked hrsSun = new hoursworked();
+                                                hrsSun.currentDay = DayOfWeek.Sunday;
+                                            }
+                                            @Html.Partial("_hoursworkedrow", hrsSun)
+                                        </div>
+                                        <div>
+                                            <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this, 0)" value="Add Activity" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
 
                 </div>
             </div>
 
         </div>
-        if (Model.isApproved)
-        {
-            <script>
-                disableDiv(document.getElementById('EditHoursWorked'));
-            </script>
-        }
-        }
-    }
-    else
-    {
-    Layout = null;
-        @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
-    }
+        <div id="totalHoursStart" style="display: none;">@totalHoursCount</div>
+
+                                                if (Model.isApproved)
+                                                {
+                                                    <script>
+                                                        disableDiv(document.getElementById('EditHoursWorked'));
+                                                    </script>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Layout = null;
+                                                    @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
+            }
 
 
 

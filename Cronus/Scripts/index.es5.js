@@ -1,15 +1,28 @@
-﻿
+﻿"use strict";
+
+$(document).ready(function () {
+    var startHours = $("#totalHoursStart").html();
+    $('#totalHours').text(startHours + " Total Hours");
+
+    $(".hoursInput").change(function () {
+        var sum = 0;
+        $(".hoursInput").each(function () {
+            sum += parseInt($(this).val()) || 0;
+        });
+        $('#totalHours').text(sum + " Total Hours");
+    });
+});
+
 //$(document).ready(function () {
-//    $(".hoursInput").change(function () {
-//        var sum = 0;
-//        $(".hoursInput").each(function () {
-//            sum += parseInt($(this).val()) || 0;
-//        });
-//        $('#totalHours').text(sum + " Total Hours");
+//    function changeTotalHours() {
+//        $('#totalHours').text(15);
+//    };
+
+//    $('#_hoursworkedrow').change(function () {
+//        changeTotalHours();
+//        console.log("hit")
 //    });
 //});
-
-"use strict";
 
 function AddRow(_dayOfRow, _entryday) {
     $.ajax({
