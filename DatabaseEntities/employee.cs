@@ -12,6 +12,7 @@ namespace DatabaseEntities
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
     public partial class employee
     {
@@ -35,6 +36,22 @@ namespace DatabaseEntities
         [Display(Name = "Max Hours")]
         public Nullable<int> employeeMaxHours { get; set; }
         public int employeePrivileges { get; set; }
+
+        public string employeePrivilegesString
+        {
+            get
+            {
+                return employeePrivileges.ToString();
+            }
+            set
+            {
+                employeePrivileges = int.Parse(value);
+            }
+        }
+
+        [Display(Name = "Privileges")]
+        public List<SelectListItem> privileges;
+
         [Display(Name = "Email address")]
         public string employeeEmailAddress { get; set; }
         [Display(Name = "Password")]

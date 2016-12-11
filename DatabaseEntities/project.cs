@@ -51,7 +51,7 @@ namespace DatabaseEntities
             }
             set
             {
-                short.Parse(value);
+                projectActive = short.Parse(value);
             }
         }
 

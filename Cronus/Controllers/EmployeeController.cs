@@ -88,17 +88,11 @@ namespace Cronus.Controllers
                 favoriteIds = new int[0]
             };
 
-            //List<group> groupList = groupRepository.All.ToList();
-
-
-            //model.groupSelectList = groupList.ConvertAll(a =>
-            //{
-            //    return new SelectListItem()
-            //    {
-            //        Text = a.groupName.ToString(),
-            //        Value = a.groupID.ToString()
-            //    };
-            //});
+            model.privileges = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Adminstrator", Value = "1" },
+            new SelectListItem { Text = "Employee", Value = "0" }
+        };
 
             ViewBag.PossibleFavorites = favoriteRepository.All;
 
@@ -202,6 +196,12 @@ namespace Cronus.Controllers
 
             model.favoriteIds = (from s in model.favorites select s.favoriteID).ToArray();
 
+            model.privileges = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Adminstrator", Value = "1" },
+            new SelectListItem { Text = "Employee", Value = "0" }
+        };
+
             return View(model);
         }
 
@@ -215,14 +215,24 @@ namespace Cronus.Controllers
             {
                 employee originalemployee = this.employeeRepository.Find(employee.employeeID);
 
+                originalemployee.employeeFirstName = employee.employeeFirstName;
                 originalemployee.employeeLastName = employee.employeeLastName;
+                originalemployee.employeeEmailAddress = employee.employeeEmailAddress;
+                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
+                originalemployee.employeeMaxHours = employee.employeeMaxHours;
+                originalemployee.employeeMinHours = employee.employeeMinHours;
+                originalemployee.employeePrivileges = employee.employeePrivileges;
+                originalemployee.employeePwd = employee.employeePwd;
+                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
+                //originalemployee. = employee.employeeGroupManaged;
 
-                originalemployee.favorites.Clear();
 
-                if (employee.favoriteIds != null)
-                {
-                    originalemployee.favorites = (from s in this.favoriteRepository.All where employee.favoriteIds.Contains(s.favoriteID) select s).ToList();
-                }
+                //originalemployee.favorites.Clear();
+
+                //if (employee.favoriteIds != null)
+                //{
+                //    originalemployee.favorites = (from s in this.favoriteRepository.All where employee.favoriteIds.Contains(s.favoriteID) select s).ToList();
+                //}
 
                 employeeRepository.InsertOrUpdate(originalemployee);
                 employeeRepository.Save();
