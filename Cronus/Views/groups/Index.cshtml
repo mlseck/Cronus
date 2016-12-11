@@ -4,18 +4,17 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h3>Groups  @Html.ActionLink(" ", "Create", "groups", routeValues: new { }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-plus" })</h3>
 
 <p>
 </p>
+
+            &nbsp;
+
 <table class="table">
     <tr>
         <th>
-            Groups
-            &nbsp;
-            &nbsp;
-            @Html.ActionLink(" ", "Create", "groups", routeValues: new { }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-plus" })
-
+            Group Name
         </th>
        
         <th></th>
@@ -33,6 +32,7 @@
                 @Html.ActionLink("Delete", "Delete", new { id = item.groupID })
             </td>*@
             <td>
+                @Html.ActionLink(" ","Edit", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-pencil" })
                 @Html.ActionLink(" ", "EmployeeList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-user" })
                 @Html.ActionLink(" ", "ProjectList", "groups", routeValues: new { GroupID = item.groupID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-tasks" })
 

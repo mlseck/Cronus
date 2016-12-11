@@ -69,10 +69,10 @@ namespace Cronus.Controllers
                 projectIds = new int[0],
                 employeeIds = new string[0]
             };
-            List<employee> employeeList = employeeRepository.All.ToList();
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.employeeGroupManaged == null).ToList();
 
 
-            model.empList = employeeList.ConvertAll(a =>
+            model.empList = availableManagerList.ConvertAll(a =>
             {
                 return new SelectListItem()
                 {
@@ -181,13 +181,27 @@ namespace Cronus.Controllers
         //
         // GET: /Group/Edit/5
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int GroupID)
         {
             ViewBag.PossibleProjects = projectRepository.All;
 
             ViewBag.PossibleEmployees = employeeRepository.All;
 
-            group model = groupRepository.FindGroup(id);
+            group model = groupRepository.FindGroup(GroupID);
+
+
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.employeeGroupManaged == null).ToList();
+
+
+            model.empList = availableManagerList.ConvertAll(a =>
+            {
+                return new SelectListItem()
+                {
+                    Text = a.employeeLastName.ToString(),
+                    Value = a.employeeID.ToString()
+                };
+            });
+
 
             model.projectIds = (from s in model.projects select s.projectID).ToArray();
 
@@ -204,27 +218,18 @@ namespace Cronus.Controllers
         {
             if (ModelState.IsValid)
             {
-                group originalProject = this.groupRepository.FindGroup(group.groupID);
+                group originalGroup = this.groupRepository.FindGroup(group.groupID);
 
-                //originalProject.projectName = project.projectName;
-                //originalProject.projectStartDate = project.projectStartDate;
-                //originalProject.projectEndDate = project.projectEndDate;
-                //originalProject.projectDescription = project.projectDescription;
-                //originalProject.projectCapitalCode = project.projectCapitalCode;
-                //originalProject.projectAbbreviation = project.projectAbbreviation;
-                //originalProject.projectActive = project.projectActive;
-                //originalProject.projectName = project.projectName;
-
-
-                //originalProject.activities.Clear();
-
+                originalGroup.groupName = group.groupName;
+                originalGroup.groupManager = group.groupManager;
+                
                 //if (project.activityIds != null)
                 //{
                 //    originalProject.activities = (from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
                 //}
 
-                //projectRepository.InsertOrUpdate(originalProject);
-                //projectRepository.Save();
+                groupRepository.InsertOrUpdate(originalGroup, null);
+                groupRepository.Save();
                 return RedirectToAction("Index");
             }
             else
