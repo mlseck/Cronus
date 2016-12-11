@@ -1,0 +1,155 @@
+﻿@model IEnumerable<DatabaseEntities.group>
+
+@{
+    ViewBag.Title = "Workspace";
+}
+
+<h3>
+    WorkSpace
+</h3>
+    &nbsp;
+    &nbsp;
+
+
+
+@if (Model.Count() == 0)
+{
+    @:
+    <script type="text/javascript">alert('You are currently not assigned to any group/project, Please contact your adminstrator')</script>
+}
+else
+{
+        foreach (var group in Model)
+        {
+            <h3 class="panel-title">
+                <strong>
+                    Group @Html.Label(group.groupName)
+                </strong>
+            </h3>
+
+            <div class="panel panel-default">
+                    <div class="panel-group" id="accordion_1">
+                        <div class="panel panel-default" id="panel_1">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <a data-toggle="collapse" data-target="#collapseOne_1" href="#collapseOne_1">
+                                        Group Members
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseOne_1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>
+                                                @Html.Label("First Name")
+                                            </th>
+                                            <th>
+                                                @Html.Label("Last Name")
+                                            </th>
+                                            <th>
+                                                @Html.Label("Email Address")
+                                            </th>
+
+                                            <th></th>
+                                        </tr>
+
+                                        @foreach (var item in group.employees)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.employeeFirstName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.employeeLastName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.employeeEmailAddress)
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    </table>
+                                         
+                                    Group Manager: @Html.Label(group.employee.employeeFirstName) @Html.Label(group.employee.employeeLastName)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="panel-group" id="accordion_2">
+                    <div class="panel panel-default" id="panel_2">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-target="#collapseOne_2" href="#collapseOne_2">
+                                    Projects assigned to Group
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="collapseOne_2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>
+                                            @Html.Label("Project Name")
+                                        </th>
+                                        <th>
+                                            @Html.Label("Start Date")
+                                        </th>
+                                        <th>
+                                            @Html.Label("End Date")
+                                        </th>
+                                        <th>
+                                            @Html.Label("Description")
+                                        </th>
+                                        <th>
+                                            @Html.Label("Cap Code")
+                                        </th>
+                                        <th></th>
+                                    </tr>
+
+                                    @foreach (var item in group.projects)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.projectName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.projectStartDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.projectEndDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.projectDescription)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.projectCapitalCode)
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="panel panel-default">
+                
+            </div>*@
+
+        }
+
+
+
+
+
+
+
+
+
+
+}
+
+

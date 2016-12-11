@@ -468,6 +468,25 @@ namespace Cronus.Controllers
             favorite.UserFavorites = new SelectList(query.ToArray(), "SelectedFavorite.favoriteID", "SelectedActivity.ActivityName");
             return View("Favorite", favorite);
         }
+
+        [HttpGet]
+        public ActionResult Workspace()
+        {
+
+            var groups = db.groups.Select(g => g).Where(g => g.employees.Select(e => e.employeeID).Contains(UserManager.User.employeeID)).ToList();
+
+            //if (group != null)
+            //{
+            //    //var projects = db.projects.Select(p => p).Where(p => p.groups.Select(g => g.groupID).Contains(group.groupID)).ToList();
+            //    //var members = db.employees.Select(e => e).Where(e => e.groups.Select(g => g.groupID).Contains(group.groupID)).ToList();
+            //    var projects = group.projects.ToList();
+            //    var members = group.employees.ToList();
+            //    wsViewModel.GroupMembers = members;
+            //    wsViewModel.Projects = projects;
+            //}
+            
+            return View(groups);
+        }
     }
 
     public static class ExtensionMethods
@@ -503,5 +522,10 @@ namespace Cronus.Controllers
             }
             return null;
         }
+
+        
     }
+
+
+    
 }

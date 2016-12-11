@@ -40,15 +40,6 @@
         <th>
             @Html.DisplayNameFor(model => model.projectCapitalCode)
         </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.projectAbbreviation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.projectActive)
-        </th>*@
-        @*<th>
-            @Html.DisplayNameFor(model => model.activities)
-        </th>*@
         <th></th>
     </tr>
 
@@ -69,15 +60,6 @@
         <td>
             @Html.DisplayFor(modelItem => item.projectCapitalCode)
         </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.projectAbbreviation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.projectActive)
-        </td>*@
-        @*<td>
-            @Html.ListBox("Id", new SelectList(item.activities, "activityID", "activityName"))
-        </td>*@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.projectID }) |
             @Html.ActionLink("Details", "Details", new { id=item.projectID }) |
