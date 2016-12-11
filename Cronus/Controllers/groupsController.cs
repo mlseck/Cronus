@@ -189,19 +189,23 @@ namespace Cronus.Controllers
 
             group model = groupRepository.FindGroup(GroupID);
 
+            employee manager = employeeRepository.Find(model.groupManager);
 
             List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.employeeGroupManaged == null).ToList();
 
+            availableManagerList.Add(manager);
 
             model.empList = availableManagerList.ConvertAll(a =>
             {
                 return new SelectListItem()
                 {
                     Text = a.employeeLastName.ToString(),
-                    Value = a.employeeID.ToString()
+                    Value = a.employeeID.ToString(),
+                    
                 };
             });
 
+            model.empList.First(x => x.Value == model.groupManager).Selected = true;
 
             model.projectIds = (from s in model.projects select s.projectID).ToArray();
 
