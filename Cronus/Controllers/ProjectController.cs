@@ -93,6 +93,15 @@ namespace Cronus.Controllers
                 activityIds = new int[0]
             };
 
+            short i = short.Parse("1");
+
+
+            model.status = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Active", Value = "1" },
+            new SelectListItem { Text = "Inactive", Value = "0" }
+        };
+            
             ViewBag.PossibleActivities = activityRepository.All;
 
             return View(model);
@@ -202,6 +211,12 @@ namespace Cronus.Controllers
             {
                 throw e;
             }
+
+            model.status = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Active", Value = "1" },
+            new SelectListItem { Text = "Inactive", Value = "0" }
+        };
             return View(model);
         }
 

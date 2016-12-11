@@ -12,6 +12,7 @@ namespace DatabaseEntities
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
     public partial class project
     {
@@ -42,6 +43,20 @@ namespace DatabaseEntities
         public string projectAbbreviation { get; set; }
         [Display(Name = "Status")]
         public short projectActive { get; set; }
+
+        public string projectActiveString {
+            get
+            {
+                return projectActive.ToString();
+            }
+            set
+            {
+                short.Parse(value);
+            }
+        }
+
+        [Display(Name = "Status")]
+        public List<SelectListItem> status;
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
