@@ -96,7 +96,7 @@ $(document).ready(function () {
                                         hrsWrkd = hrsWrkd + parseInt(element.HrsWorked)
                                         //weeklyHours(parseInt(element.HrsWorked), date)
                                     });
-                                    cell.append("<br />" + "<br />" + "<br />" + hrsWrkd + "hour(s)")
+                                    cell.append("<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd)
                                 }
 
                                
@@ -123,8 +123,6 @@ $(document).ready(function () {
                         //window.location = "/Project/Edit/" + event.id;
                     },
 
-
-                    //Getting events
 
                     //adding buttong to go to weekly
                     customButtons: {

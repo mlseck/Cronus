@@ -269,13 +269,16 @@ namespace Cronus.Controllers
                 foreach (project proj in projects)
                 {
                     //for each of those projects, add them to the returnProj list. 
-                    returnProj.Add(new project()
+                    if (proj.projectActive == 1)
                     {
-                        projectID = proj.projectID,
-                        projectName = proj.projectName,
-                        projectStartDate = proj.projectStartDate,
-                        projectEndDate = proj.projectEndDate
-                    });
+                        returnProj.Add(new project()
+                        {
+                            projectID = proj.projectID,
+                            projectName = proj.projectName,
+                            projectStartDate = proj.projectStartDate,
+                            projectEndDate = proj.projectEndDate
+                        });
+                    }
                 }
             }
 
