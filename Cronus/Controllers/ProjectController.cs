@@ -58,7 +58,7 @@ namespace Cronus.Controllers
                 //};
 
                 return PartialView("_index", newProjects.ToList());
-            }
+            } 
             //ViewBag.ProjectID = id;
             //var addresses = db.Addresses.Where(a => a.PersonID == id).OrderBy(a => a.City);
 
