@@ -9,14 +9,13 @@
     Approve hours for the time peried ending @Html.DisplayFor(modelItem => Model.timeperiod.periodEndDate)
 </h3>
 
-@if(Model.employeetimeperiods.Count() != Model.Employees.Count())
+@*@if(Model.employeetimeperiods.Count() != Model.Employees.Count())
 {
 @:
     <script type="text/javascript">alert('Employees do not have times recorded for this timeperiod')</script>
-}
-else
-{
-using (Html.BeginForm("ApproverIndex", "Approver"))
+}*@
+
+@using (Html.BeginForm("ApproverIndex", "Approver"))
 {
 
 
@@ -32,7 +31,7 @@ using (Html.BeginForm("ApproverIndex", "Approver"))
         @{int i = 0;}
 
         @*@foreach (var employee in Model.Employees)*@
-        @for (var j = 0; j < Model.Employees.Count; j++)
+        @for (var j = 0; j < Model.employeetimeperiods.Count; j++)
         {
             var employee = Model.Employees[j];
 
@@ -40,24 +39,6 @@ using (Html.BeginForm("ApproverIndex", "Approver"))
             @*@Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].isApproved)*@
             @Html.HiddenFor(modelItem => modelItem.employeetimeperiods[j].TimePeriod_periodEndDate)
 
-            @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeeID)
-                @Html.HiddenFor(modelItem => modelItem.Employees[j].employeeLastName)
-                @Html.HiddenFor(modelItem => modelItem.Employees[j].employeeFirstName)*@
-
-            @*@Html.HiddenFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().Employee_employeeID)
-                @Html.HiddenFor(modelItem => modelItem.Employees[j].employeetimeperiods.Select(e => e).Where(e => e.TimePeriod_periodEndDate == Model.timeperiod.periodEndDate).FirstOrDefault().TimePeriod_periodEndDate)*@
-
-
-
-            @*<div class="panel-heading">
-                        <strong>
-                            @Html.DisplayFor(modelItem => employee.employeeFirstName) @Html.DisplayFor(modelItem => employee.employeeLastName)
-                        </strong>
-                    <div class="pull-right">
-                            <label>Approved</label>
-                            @Html.CheckBoxFor(modelItem => Model.timeperiod.isApprovedBool)
-                    </div>
-                </div>*@
 
             <h3 class="panel-title">
                 <strong>
@@ -160,7 +141,7 @@ using (Html.BeginForm("ApproverIndex", "Approver"))
             }
 
 
-            }
+            
 
 
 

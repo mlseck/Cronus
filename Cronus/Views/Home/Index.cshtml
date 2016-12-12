@@ -7,8 +7,9 @@
     ViewBag.Title = "Home Page";
     DateTime timePeriod = Model.currentWeekEndDate;
 }
-@{var @totalHoursCount = 0.0;}
 
+
+@{var @totalHoursCount = 0.0;}
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -132,6 +133,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Tuesday;
                                                         @Html.Partial("_hoursworkedrow", entry);
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
@@ -168,7 +170,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Wednesday;
                                                         @Html.Partial("_hoursworkedrow", entry);
-                                                        //@totalHoursCount = @totalHoursCount + (double)entry.hours;
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
@@ -205,7 +207,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Thursday;
                                                         @Html.Partial("_hoursworkedrow", entry);
-                                                        //@totalHoursCount = @totalHoursCount + (double)entry.hours;
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
@@ -242,7 +244,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Friday;
                                                         @Html.Partial("_hoursworkedrow", entry);
-                                                        //@totalHoursCount = @totalHoursCount + (double)entry.hours;
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
@@ -279,7 +281,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Saturday;
                                                         @Html.Partial("_hoursworkedrow", entry);
-                                                        //@totalHoursCount = @totalHoursCount + (double)entry.hours;
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
@@ -316,7 +318,7 @@
                                                     {
                                                         entry.currentDay = DayOfWeek.Sunday;
                                                         @Html.Partial("_hoursworkedrow", entry);
-                                                        //@totalHoursCount = @totalHoursCount + (double)entry.hours;
+                                                        totalHoursCount = totalHoursCount + (double)entry.hours;
                                                     }
                                                 }
                                                 @{
