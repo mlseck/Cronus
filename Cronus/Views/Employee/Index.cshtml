@@ -87,9 +87,9 @@
 
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.employeeID }) |
-            @Html.ActionLink("Details", "Details", new { id = item.employeeID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.employeeID })
+            
+            @Html.ActionLink(" ", "Edit", new { id = item.employeeID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-pencil" }) |
+            @Html.ActionLink(" ", "Details", new { id = item.employeeID }, htmlAttributes: new { data_modal = "", @class = "glyphicon glyphicon-briefcase" })
         </td>
     </tr>
                 }
