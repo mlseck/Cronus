@@ -87,16 +87,11 @@ $(document).ready(function () {
                             dataType: "json",
                             success: function (data) {
                                 var hrsWrkd = 0
-                                if (data.length == 0) {
-                                    //weeklyHours(parseInt(0), date)
-                                }
-                                else {
+                                if (data.length !== 0) {
                                     $.each(data, function (index, element) {
-                                        //link.setAttribute('href', '/');
                                         hrsWrkd = hrsWrkd + parseInt(element.HrsWorked)
-                                        //weeklyHours(parseInt(element.HrsWorked), date)
                                     });
-                                    cell.append("<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd)
+                                    cell.append("<br />" + "<br />" + "<br />" + "<br />" + hrsWrkd + " Hrs")
                                 }
 
                                
