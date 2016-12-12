@@ -93,6 +93,15 @@ namespace Cronus.Controllers
                 activityIds = new int[0]
             };
 
+            short i = short.Parse("1");
+
+
+            model.status = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Active", Value = "1" },
+            new SelectListItem { Text = "Inactive", Value = "0" }
+        };
+            
             ViewBag.PossibleActivities = activityRepository.All;
 
             return View(model);
@@ -114,7 +123,7 @@ namespace Cronus.Controllers
             //    projectIds = new int[0]
             //};
 
-
+            
             return PartialView("ProjectCheckList", model);
         }
 
@@ -127,6 +136,9 @@ namespace Cronus.Controllers
 
                 originalGroup.groupName = group.groupName;
 
+                originalGroup.groupManager = group.groupManager;
+
+
                 originalGroup.projects.Clear();
 
 
@@ -135,7 +147,7 @@ namespace Cronus.Controllers
                     originalGroup.projects = (from s in this.projectRepository.All where @group.projectIds.Contains(s.projectID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
+                groupRepository.InsertOrUpdate(originalGroup);
 
                 try
                 {
@@ -202,6 +214,12 @@ namespace Cronus.Controllers
             {
                 throw e;
             }
+
+            model.status = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Active", Value = "1" },
+            new SelectListItem { Text = "Inactive", Value = "0" }
+        };
             return View(model);
         }
 
