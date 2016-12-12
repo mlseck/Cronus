@@ -57,6 +57,13 @@ namespace Cronus.Controllers
                 {
                         myModel.isApproved = isApprovedQuery.First().isApproved;
                 }
+                // Get list of active projects that group is working on 
+                List<project> groupProjects = GetGroupProjects(emp.ToString());
+                foreach(var hrworked in myModel.HoursWorked)
+                {
+                    hrworked.ProjectList = groupProjects;
+                }
+                myModel.ProjectList = groupProjects;
             }
             catch (Exception ex)
             {
@@ -86,14 +93,35 @@ namespace Cronus.Controllers
 
         }
 
+        public List<project> GetGroupProjects(string empID)
+        {
+            var dbGrps = db.groups.ToList();
+            employee employee = db.employees.Find(@UserManager.User.employeeID);
+            var groups = (from g in dbGrps where g.employees.Contains(employee) select g).ToList();
+            List<project> groupProjects = new List<project>();
+            foreach (var group in groups)
+            {
+                foreach (var proj in group.projects)
+                {
+                    if (proj.projectActive == 1)
+                    {
+                        groupProjects.Add(proj);
+                    }
+                }
+            }
+            return groupProjects;
+        }
+
         public ActionResult AddLastWeekPartials(int entryDay, int projectID, int activityID)
         {
+            var emp = UserManager.User.employeeID;
             var getProject = from proj in db.projects where proj.projectID == projectID select proj;
             hoursworked myHour = new hoursworked();
             myHour.project = getProject.First();
             myHour.Project_projectID = projectID;
             myHour.Activity_activityID = activityID;
             myHour.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            myHour.ProjectList = GetGroupProjects(emp);
             return PartialView("_hoursworkedrow", myHour);
         }
 
@@ -199,32 +227,26 @@ namespace Cronus.Controllers
             {
                 myModel.isApproved = isApprovedQuery.First().isApproved;
             }
-           
+            // Get list of active projects that group is working on 
+            List<project> groupProjects = GetGroupProjects(emp.ToString());
+            foreach (var hrworked in myModel.HoursWorked)
+            {
+                hrworked.ProjectList = groupProjects;
+            }
+            myModel.ProjectList = groupProjects;
+
             return View("Index", myModel);
         }
 
 
         public ActionResult AddHourWorked(int entryDay)
         {
-            HomeViewModel myModel = new HomeViewModel();
-            var query = from hw in db.hoursworkeds
-                        where hw.TimePeriod_employeeID == UserManager.User.employeeID
-                        select hw;
-            myModel.HoursWorked = db.hoursworkeds.ToList();
-            // If Timeperiod was already approved, set Viewbag isApproved to true
-            var isApprovedQuery = from a in db.employeetimeperiods
-                                  where a.Employee_employeeID == UserManager.User.employeeID && DbFunctions.TruncateTime(a.TimePeriod_periodEndDate) == myModel.currentWeekEndDate.Date
-                                  select a;
-            if (isApprovedQuery.Any())
-            {
-                myModel.isApproved = isApprovedQuery.First().isApproved;
-            }
-            myModel.hrsWorked = new hoursworked();
-            myModel.hrsWorked.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
-            return PartialView("_hoursworkedrow", myModel.hrsWorked);
+            var emp = UserManager.User.employeeID;
+            hoursworked newHour = new hoursworked();
+            newHour.currentDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entryDay.ToString());
+            newHour.ProjectList = GetGroupProjects(emp.ToString());
+            return PartialView("_hoursworkedrow", newHour);
         }
-
-
 
         //Method will update the activities dropdownlist in index page when specific project is picked
         [HttpPost]
@@ -472,19 +494,7 @@ namespace Cronus.Controllers
         [HttpGet]
         public ActionResult Workspace()
         {
-
             var groups = db.groups.Select(g => g).Where(g => g.employees.Select(e => e.employeeID).Contains(UserManager.User.employeeID)).ToList();
-
-            //if (group != null)
-            //{
-            //    //var projects = db.projects.Select(p => p).Where(p => p.groups.Select(g => g.groupID).Contains(group.groupID)).ToList();
-            //    //var members = db.employees.Select(e => e).Where(e => e.groups.Select(g => g.groupID).Contains(group.groupID)).ToList();
-            //    var projects = group.projects.ToList();
-            //    var members = group.employees.ToList();
-            //    wsViewModel.GroupMembers = members;
-            //    wsViewModel.Projects = projects;
-            //}
-            
             return View(groups);
         }
     }

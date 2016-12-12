@@ -148,7 +148,7 @@ namespace Cronus.Controllers
 
                 originalGroup.groupName = group.groupName;
 
-                originalGroup.groupManager = group.groupManager;
+                //originalGroup.groupManager = group.groupManager;
 
 
                 originalGroup.employees.Clear();
