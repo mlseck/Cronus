@@ -55,7 +55,11 @@
             @Html.DisplayFor(modelItem => item.projectEndDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.projectDescription)
+
+            <div style="width: 200px; text-overflow: ellipsis; white-space: nowrap;
+            overflow: hidden;">@Html.DisplayFor(modelItem => item.projectDescription)</div>
+
+            
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.projectCapitalCode)
