@@ -90,7 +90,7 @@ namespace Cronus.Controllers
 
             model.privileges = new List<SelectListItem>
         {
-            new SelectListItem { Text = "Adminstrator", Value = "1" },
+            new SelectListItem { Text = "Administrator", Value = "1" },
             new SelectListItem { Text = "Employee", Value = "0" }
         };
 

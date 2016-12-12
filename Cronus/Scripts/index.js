@@ -26,7 +26,7 @@ $(document).ready(function () {
 function AddRow(_dayOfRow, _entryday) {
     $.ajax({
         async: false,
-        data: { entryDay: _entryday, projectID: 0, activityID: 0 },
+        data: { entryDay: _entryday},
         url: '/Home/AddHourWorked'
     }).success(function (partialView) {
         var divID = "#hoursworkedrow" + _dayOfRow.id.slice(-3);
