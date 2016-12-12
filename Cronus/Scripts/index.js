@@ -1,6 +1,11 @@
 ﻿
 $(document).ready(function () {
     var startHours = $("#totalHoursStart").html()
+    getTotalHours();
+})
+
+function getTotalHours()
+{
     $('#totalHours').text(startHours + " Total Hours");
 
     $(".hoursInput").change(function () {
@@ -10,7 +15,7 @@ $(document).ready(function () {
         });
         $('#totalHours').text(sum + " Total Hours");
     });
-});
+}
 
 $(document).ready(function () {
     function changeTotalHours() {
