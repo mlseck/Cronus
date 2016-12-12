@@ -148,16 +148,17 @@ namespace Cronus.Controllers
 
                 originalGroup.groupName = group.groupName;
 
-                originalGroup.employees.Clear();
+                originalGroup.groupManager = group.groupManager;
 
+
+                originalGroup.employees.Clear();
 
                 if (group.employeeIds != null)
                 {
                     originalGroup.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
-
+                groupRepository.InsertOrUpdate(originalGroup);
 
                 try
                 {
@@ -218,12 +219,11 @@ namespace Cronus.Controllers
                 originalemployee.employeeFirstName = employee.employeeFirstName;
                 originalemployee.employeeLastName = employee.employeeLastName;
                 originalemployee.employeeEmailAddress = employee.employeeEmailAddress;
-                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
+                originalemployee.managesgroup = employee.managesgroup;
                 originalemployee.employeeMaxHours = employee.employeeMaxHours;
                 originalemployee.employeeMinHours = employee.employeeMinHours;
                 originalemployee.employeePrivileges = employee.employeePrivileges;
                 originalemployee.employeePwd = employee.employeePwd;
-                originalemployee.employeeGroupManaged = employee.employeeGroupManaged;
                 //originalemployee. = employee.employeeGroupManaged;
 
 

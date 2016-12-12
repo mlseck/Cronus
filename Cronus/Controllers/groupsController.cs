@@ -69,7 +69,9 @@ namespace Cronus.Controllers
                 projectIds = new int[0],
                 employeeIds = new string[0]
             };
-            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.employeeGroupManaged == null).ToList();
+            var managers = groupRepository.All.Select(g => g.groupManager).ToList();
+
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => !managers.Contains(e.employeeID)).ToList();
 
 
             model.empList = availableManagerList.ConvertAll(a =>
@@ -160,10 +162,8 @@ namespace Cronus.Controllers
                     group.employees = (from s in this.employeeRepository.All where @group.employeeIds.Contains(s.employeeID) select s).ToList();
                 }
                 
-                employee manager = employeeRepository.Find(group.groupManager);
-                manager.employeeGroupManaged = group.groupID;
 
-                groupRepository.InsertOrUpdate(group, manager);
+                groupRepository.InsertOrUpdate(group);
                 groupRepository.Save();
 
                 return RedirectToAction("Index");
@@ -191,7 +191,9 @@ namespace Cronus.Controllers
 
             employee manager = employeeRepository.Find(model.groupManager);
 
-            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => e.employeeGroupManaged == null).ToList();
+            var managers = groupRepository.All.Select(g => g.groupManager).ToList();
+
+            List<employee> availableManagerList = employeeRepository.All.Select(e => e).Where(e => !managers.Contains(e.employeeID)).ToList();
 
             availableManagerList.Add(manager);
 
@@ -232,7 +234,7 @@ namespace Cronus.Controllers
                 //    originalProject.activities = (from s in this.activityRepository.All where project.activityIds.Contains(s.activityID) select s).ToList();
                 //}
 
-                groupRepository.InsertOrUpdate(originalGroup, null);
+                groupRepository.InsertOrUpdate(originalGroup);
                 groupRepository.Save();
                 return RedirectToAction("Index");
             }

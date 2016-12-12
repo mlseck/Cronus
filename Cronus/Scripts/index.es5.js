@@ -47,7 +47,8 @@ function disableDiv() {
     $("#addhourworkedMon").attr("disabled", true);$("#addhourworkedTue").attr("disabled", true);
     $("#addhourworkedWed").attr("disabled", true);$("#addhourworkedThu").attr("disabled", true);
     $("#addhourworkedFri").attr("disabled", true);$("#addhourworkedSat").attr("disabled", true);
-    $("#addhourworkedSun").attr("disabled", true);
+    $("#addhourworkedSun").attr("disabled", true);$("#lastWeekHours").attr("disabled", true);
+    $("#submitButton").attr("disabled", true);
 }
 
 function CopyHours() {

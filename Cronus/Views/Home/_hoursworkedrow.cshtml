@@ -11,22 +11,7 @@
     SelectList activityList;
     try
     {
-        CronusDatabaseEntities db = new CronusDatabaseEntities();
-        var dbGrps = db.groups.ToList();
-        employee employee = db.employees.Find(@UserManager.User.employeeID);
-        var groups = (from g in dbGrps where g.employees.Contains(employee) select g).ToList();
-        List<project> groupProjects = new List<project>();
-        foreach (var group in groups)
-        {
-            foreach (var proj in group.projects)
-            {
-                if (proj.projectActive == 1)
-                {
-                    groupProjects.Add(proj);
-                }
-            }
-        }
-        projectList = new SelectList(groupProjects, "projectID", "projectName");
+        projectList = new SelectList(Model.ProjectList, "projectID", "projectName");
         var activities = Model.project.activities;
         activityList = new SelectList(activities, "activityID", "activityName");
     }
@@ -44,7 +29,7 @@
         @Html.HiddenFor(m => m.isDeleted)
         @Html.DropDownListFor(m => m.Project_projectID, projectList, "--- Select Project ---", new { @class = "form-control", @onchange = "javascript:GetActivities(this);", @onloadstart = "javascript:GetActivities(this);" })
         @Html.DropDownListFor(m => m.Activity_activityID, activityList, "---Select Activity", new { @class = "form-control" })
-        @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:10%;", @min = "0", @type = "number" } })
+        @Html.EditorFor(m => m.hours, new { htmlAttributes = new { @class = "form-control hoursInput", @style = "width:10%;", @min = "0", @max = "50", @type = "number" } })
         @Html.TextBoxFor(m => m.comments, new { @class = "form-control" })
         @Html.Label(" ", new { @class = "glyphicon glyphicon-remove deleteRow", @onclick = "DeleteRow(this); SetDeleted(this)", @width = "200%" })
         <br />

@@ -858,8 +858,8 @@ pre code {
 .col-lg-12 {
   position: relative;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .col-xs-1,
@@ -1096,7 +1096,7 @@ pre code {
     float: left;
   }
   .col-md-1 {
-    width: 8.333333333333332%;
+    width: 10%;
   }
   .col-md-2 {
     width: 16.666666666666664%;
