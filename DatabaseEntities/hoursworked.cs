@@ -24,6 +24,7 @@ namespace DatabaseEntities
         public int Project_projectID { get; set; }
         public bool isDeleted { get; set; }
         public DayOfWeek currentDay { get; set; }
+        public List<project> ProjectList { get; set; }
         public virtual activity activity { get; set; }
         public virtual employeetimeperiod employeetimeperiod { get; set; }
         public virtual project project { get; set; }
