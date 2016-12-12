@@ -13,16 +13,16 @@ $(document).ready(function () {
     });
 });
 
-//$(document).ready(function () {
-//    function changeTotalHours() {
-//        $('#totalHours').text(15);
-//    };
+$(document).ready(function () {
+    function changeTotalHours() {
+        $('#totalHours').text(15);
+    };
 
-//    $('#_hoursworkedrow').change(function () {
-//        changeTotalHours();
-//        console.log("hit")
-//    });
-//});
+    $('#_hoursworkedrow').change(function () {
+        changeTotalHours();
+        console.log("hit");
+    });
+});
 
 function AddRow(_dayOfRow, _entryday) {
     $.ajax({

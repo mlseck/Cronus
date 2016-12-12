@@ -101,11 +101,9 @@
                                                     hrsMon.ProjectList = Model.ProjectList;
                                                     hrsMon.currentDay = DayOfWeek.Monday;
                                                 }
-                                                @Html.Partial("_hoursworkedrow", hrsMon)
-                                                
-                                                <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this, 1)" value="Add Activity" />
-                                                
+                                                @Html.Partial("_hoursworkedrow", hrsMon)  
                                             </div>
+                                            <input type="button" id="addhourworkedMon" name="addhourworkedMon" onclick="AddRow(this, 1)" value="Add Activity" />
                                         </div>
 
                                 </tr>
@@ -142,8 +140,8 @@
                                                     hrsTue.currentDay = DayOfWeek.Tuesday;
                                                 }
                                                 @Html.Partial("_hoursworkedrow", hrsTue)
-                                                <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this, 2)" value="Add Activity" />
                                             </div>
+                                            <input type="button" id="addhourworkedTue" name="addhourworkedTue" onclick="AddRow(this, 2)" value="Add Activity" />
                                             </div>
                                 </td>
                                 </tr>
@@ -179,10 +177,10 @@
                                                     hrsWed.currentDay = DayOfWeek.Wednesday;
                                                 }
                                                 @Html.Partial("_hoursworkedrow", hrsWed)
-                                                <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this, 3)" value="Add Activity" />
-                                            </div>                      
+
                                             </div>
-                                </td>
+                                            <input type="button" id="addhourworkedWed" name="addhourworkedWed" onclick="AddRow(this, 3)" value="Add Activity" /></div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -216,8 +214,8 @@
                                                     hrsThu.currentDay = DayOfWeek.Thursday;
                                                 }
                                                 @Html.Partial("_hoursworkedrow", hrsThu)
-                                                <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this, 4)" value="Add Activity" />
                                             </div> 
+                                            <input type="button" id="addhourworkedThu" name="addhourworkedThu" onclick="AddRow(this, 4)" value="Add Activity" />
                                             </div>
                                 </td>
                                 </tr>
@@ -253,8 +251,9 @@
                                                     hrsFri.currentDay = DayOfWeek.Friday;
                                                 }
                                                 @Html.Partial("_hoursworkedrow", hrsFri)
-                                                <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this, 5)" value="Add Activity" />
+                                                
                                             </div>   
+                                            <input type="button" id="addhourworkedFri" name="addhourworkedFri" onclick="AddRow(this, 5)" value="Add Activity" />
                                             </div>
                                 </td>
                                 </tr>
@@ -290,10 +289,10 @@
                                                     hrsSat.currentDay = DayOfWeek.Saturday;
                                                 }
                                                 @Html.Partial("_hoursworkedrow", hrsSat)
-                                                <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this, 6)" value="Add Activity" />
-                                            </div>                      
                                             </div>
-                                </td>
+                                            <input type="button" id="addhourworkedSat" name="addhourworkedSat" onclick="AddRow(this, 6)" value="Add Activity" />
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -326,9 +325,9 @@
                                                     hrsSun.ProjectList = Model.ProjectList;
                                                     hrsSun.currentDay = DayOfWeek.Sunday;
                                                 }
-                                                @Html.Partial("_hoursworkedrow", hrsSun)
-                                                <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this, 0)" value="Add Activity" />
+                                                @Html.Partial("_hoursworkedrow", hrsSun)                 
                                             </div>
+                                            <input type="button" id="addhourworkedSun" name="addhourworkedSun" onclick="AddRow(this, 0)" value="Add Activity" />
                                             </div>
                                             </td>
                                 </tr>
@@ -356,8 +355,5 @@ else
     Layout = null;
     @Html.Partial("~/Views/Login/Login.cshtml", new Logon());
 }
-
-
-
 
 
